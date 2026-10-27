@@ -1,0 +1,301 @@
+{
+  "batch": "samples",
+  "records": [
+    {
+      "date": "2026-01-01",
+      "title": "Spill the Tea",
+      "constructor": "Arvind Lakhani",
+      "grid": [
+        "##PCO",
+        "#BEAT",
+        "TOAST",
+        "EACH#",
+        "ATE##"
+      ],
+      "clues": {
+        "1A": {
+          "tag": "N",
+          "clue": "Yellow booth where you watched the meter tick on an STD call",
+          "easy": "Public Call Office, in three letters",
+          "why": "PCO meant Public Call Office. STD calls were cheaper late at night, so the queue started after 11.",
+          "source": ""
+        },
+        "4A": {
+          "tag": "R",
+          "clue": "The dhol gives it, and your heart skips one when your crush says hi",
+          "easy": "Rhythm of a song, or of your heart",
+          "why": "'Skip a beat': your heart does it, the baraat dhol never does.",
+          "source": ""
+        },
+        "5A": {
+          "tag": "R",
+          "clue": "Bread that got a tan, or a glass raised at the sangeet",
+          "easy": "Crisp bread from a toaster",
+          "why": "Breakfast and a speech, one word.",
+          "source": ""
+        },
+        "6A": {
+          "tag": "R",
+          "clue": "Har ek, in English",
+          "easy": "Every single one",
+          "why": "Har ek = each. Small word, big glue in a grid.",
+          "source": ""
+        },
+        "7A": {
+          "tag": "N",
+          "clue": "What she did, and left no crumbs",
+          "easy": "Past tense of eat",
+          "why": "Gen Z slang: if she 'ate and left no crumbs', she nailed it.",
+          "source": ""
+        },
+        "1D": {
+          "tag": "N",
+          "clue": "Shanti, or the two-finger selfie pose",
+          "easy": "Shanti, in English",
+          "why": "The V-sign went from 1960s protest posters to every group selfie.",
+          "source": ""
+        },
+        "2D": {
+          "tag": "R",
+          "clue": "What the sabziwala wants when UPI says \"server down\"",
+          "easy": "Notes and coins",
+          "why": "UPI rules the market, until the server goes down.",
+          "source": ""
+        },
+        "3D": {
+          "tag": "N",
+          "clue": "Where Friday releases now land without a ticket queue",
+          "easy": "Streaming platforms, three letters",
+          "why": "OTT stands for Over The Top: streamed straight to you, skipping cable.",
+          "source": ""
+        },
+        "4D": {
+          "tag": "N",
+          "clue": "Floats on Dal Lake, or plugs into a Gen Z's ears",
+          "easy": "It floats on water",
+          "why": "boAt, the Indian earphone brand, and the shikaras of Dal Lake share a name.",
+          "source": ""
+        },
+        "5D": {
+          "tag": "R",
+          "clue": "Chai in English, or gossip in Gen Z",
+          "easy": "Chai",
+          "why": "'Spill the tea' means share the gossip.",
+          "source": ""
+        }
+      },
+      "warnings": [],
+      "selfsolve": []
+    },
+    {
+      "date": "2026-01-21",
+      "title": "Aal Izz Well",
+      "constructor": "Arvind Lakhani",
+      "grid": [
+        "#RAO#",
+        "SOUND",
+        "RADIO",
+        "IDIOT",
+        "#SON#"
+      ],
+      "clues": {
+        "1A": {
+          "tag": "GK",
+          "clue": "Kiran ___, director of Laapataa Ladies",
+          "easy": "Surname shared by Kiran and P V Narasimha",
+          "why": "Kiran Rao's Laapataa Ladies was India's official Oscar entry for the 2025 Academy Awards.",
+          "source": "https://en.wikipedia.org/wiki/Laapataa_Ladies"
+        },
+        "4A": {
+          "tag": "R",
+          "clue": "You hear it in a theatre, and it's how you sleep after Sunday biryani",
+          "easy": "Noise, or healthy, as in a ___ mind",
+          "why": "Two meanings in one word: noise, and solid, as in a sound sleep.",
+          "source": ""
+        },
+        "6A": {
+          "tag": "N",
+          "clue": "Ameen Sayani's Binaca Geetmala came out of this box",
+          "easy": "Vividh Bharati and FM play on it",
+          "why": "Binaca Geetmala, hosted by Ameen Sayani, was the country's favourite countdown show for decades.",
+          "source": ""
+        },
+        "7A": {
+          "tag": "GK",
+          "clue": "Rancho's gang had three of these",
+          "easy": "3 ___, the Aamir Khan film",
+          "why": "3 Idiots (2009): Rancho, Farhan and Raju. Aal izz well.",
+          "source": "https://en.wikipedia.org/wiki/3_Idiots"
+        },
+        "8A": {
+          "tag": "R",
+          "clue": "Beta in English, and the one asked \"shaadi kab karoge?\"",
+          "easy": "Beta, in English",
+          "why": "Every Indian son's annual exam: the shaadi question at family functions.",
+          "source": ""
+        },
+        "1D": {
+          "tag": "R",
+          "clue": "Where potholes live, and they multiply every monsoon",
+          "easy": "Streets, plural",
+          "why": "Monsoon plus roads equals potholes, a national tradition.",
+          "source": ""
+        },
+        "2D": {
+          "tag": "N",
+          "clue": "___ note, sent when you're too lazy to type",
+          "easy": "Sound, in tech speak",
+          "why": "Voice notes: loved by senders, feared by listeners.",
+          "source": ""
+        },
+        "3D": {
+          "tag": "GK",
+          "clue": "Makes you cry in the kitchen, and has made governments cry at the ballot box",
+          "easy": "Pyaaz",
+          "why": "Soaring onion prices are widely blamed for the BJP's 1998 Delhi election loss.",
+          "source": "https://en.wikipedia.org/wiki/1998_Delhi_Legislative_Assembly_election"
+        },
+        "4D": {
+          "tag": "GK",
+          "clue": "___ Lanka, across the Palk Strait",
+          "easy": "___ Lanka",
+          "why": "The Palk Strait separates Tamil Nadu from Sri Lanka.",
+          "source": "https://en.wikipedia.org/wiki/Palk_Strait"
+        },
+        "5D": {
+          "tag": "R",
+          "clue": "Shape of a bindi, and the end of every sentence",
+          "easy": "A tiny round mark, like a full stop",
+          "why": "A bindi and a full stop share one shape.",
+          "source": ""
+        }
+      },
+      "warnings": [],
+      "selfsolve": []
+    },
+    {
+      "date": "2026-02-10",
+      "title": "Summer Vacation",
+      "constructor": "Arvind Lakhani",
+      "grid": [
+        "##GAS",
+        "#HINT",
+        "VALID",
+        "HILL#",
+        "SRI##"
+      ],
+      "clues": {
+        "1A": {
+          "tag": "R",
+          "clue": "Arrives in a red cylinder, carried up by a man who never takes the lift",
+          "easy": "LPG is one",
+          "why": "The LPG cylinder was India's most awaited home delivery long before Swiggy.",
+          "source": ""
+        },
+        "4A": {
+          "tag": "R",
+          "clue": "Mummy drops one for weeks before her birthday, and nobody picks it up",
+          "easy": "A small clue",
+          "why": "Indian mothers drop hints for weeks. The family still asks 'kya chahiye?' the night before.",
+          "source": ""
+        },
+        "5A": {
+          "tag": "N",
+          "clue": "What your train ticket must be, and Gen Z's way of saying 'fair point'",
+          "easy": "Legally acceptable, like a ticket or an argument",
+          "why": "'That's valid' is Gen Z for 'fair enough'.",
+          "source": ""
+        },
+        "6A": {
+          "tag": "GK",
+          "clue": "___ station: where the British ran from the plains every summer",
+          "easy": "Shimla and Ooty are ___ stations",
+          "why": "Shimla was the summer capital of British India.",
+          "source": "https://en.wikipedia.org/wiki/Shimla"
+        },
+        "7A": {
+          "tag": "GK",
+          "clue": "___devi, the leading lady of Chandni",
+          "easy": "Respectful prefix, as in ___ Lanka",
+          "why": "Sridevi starred in Yash Chopra's Chandni (1989).",
+          "source": "https://en.wikipedia.org/wiki/Sridevi"
+        },
+        "1D": {
+          "tag": "N",
+          "clue": "Danda's partner in the original gully sport",
+          "easy": "___-danda, the stick-and-peg game",
+          "why": "Gilli-danda: one stick, one peg and at least one broken window.",
+          "source": ""
+        },
+        "2D": {
+          "tag": "GK",
+          "clue": "Kapoor who has been saying 'jhakaas' for decades",
+          "easy": "Mr India actor, ___ Kapoor",
+          "why": "'Jhakaas' has been Anil Kapoor's catchphrase for decades.",
+          "source": "https://en.wikipedia.org/wiki/Anil_Kapoor"
+        },
+        "3D": {
+          "tag": "N",
+          "clue": "Three letters on the yellow board, next to ISD and PCO",
+          "easy": "Long-distance calling code, pre-mobile",
+          "why": "STD stood for Subscriber Trunk Dialling.",
+          "source": ""
+        },
+        "4D": {
+          "tag": "R",
+          "clue": "What the barber cuts while explaining national politics",
+          "easy": "Grows on your head",
+          "why": "Every Indian barber is also a political analyst.",
+          "source": ""
+        },
+        "5D": {
+          "tag": "N",
+          "clue": "Tape you rented on Sunday and rewound before returning",
+          "easy": "Video cassette format, three letters",
+          "why": "Video parlours rented out VHS tapes, and you were expected to rewind them first.",
+          "source": ""
+        }
+      },
+      "warnings": [],
+      "selfsolve": []
+    }
+  ],
+  "expectedSlots": [
+    [
+      "1A:PCO",
+      "4A:BEAT",
+      "5A:TOAST",
+      "6A:EACH",
+      "7A:ATE",
+      "1D:PEACE",
+      "2D:CASH",
+      "3D:OTT",
+      "4D:BOAT",
+      "5D:TEA"
+    ],
+    [
+      "1A:RAO",
+      "4A:SOUND",
+      "6A:RADIO",
+      "7A:IDIOT",
+      "8A:SON",
+      "1D:ROADS",
+      "2D:AUDIO",
+      "3D:ONION",
+      "4D:SRI",
+      "5D:DOT"
+    ],
+    [
+      "1A:GAS",
+      "4A:HINT",
+      "5A:VALID",
+      "6A:HILL",
+      "7A:SRI",
+      "1D:GILLI",
+      "2D:ANIL",
+      "3D:STD",
+      "4D:HAIR",
+      "5D:VHS"
+    ]
+  ]
+}

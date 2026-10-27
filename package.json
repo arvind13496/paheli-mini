@@ -1,0 +1,19 @@
+{
+  "name": "paheli-mini",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Paheli Mini: a daily desi mini crossword",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "check": "node tools/check.mjs puzzles/",
+    "sheet": "node tools/make-sheet.mjs",
+    "publish": "node tools/publish.mjs"
+  },
+  "devDependencies": {
+    "exceljs": "^4.4.0"
+  }
+}
