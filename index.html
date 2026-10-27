@@ -4,9 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="Paheli Mini: a daily desi mini crossword. Riddles, GK and nostalgia in a 5x5 grid.">
-<script defer src="https://cloud.umami.is/script.js" data-website-id="39a75d8a-8134-4bf6-83f1-b7cf7795fea6" data-domains="arvind13496.github.io"></script>
+<script defer src="https://cloud.umami.is/script.js" data-website-id="39a75d8a-8134-4bf6-83f1-b7cf7795fea6" data-domains="arvind13496.github.io" data-auto-track="false"></script>
 <title>Paheli Mini</title>
-<meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Libre+Franklin:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,700;1,8..60,400&display=swap">
@@ -40,14 +39,6 @@ header{display:grid;gap:4px;border-bottom:3px double var(--rule);padding-bottom:
 .icon svg{width:20px;height:20px}
 .pill{font-family:var(--f-ui);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--checked);color:var(--checked);padding:2px 6px}
 
-.switch{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--rule)}
-.switch button{border:0;background:var(--paper);padding:7px 10px;text-align:left;cursor:pointer;display:grid;min-width:0}
-.switch button+button{border-left:1px solid var(--rule)}
-.switch button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
-.switch button[aria-pressed="true"] span{color:#C9C9C9}
-.switch b{font-family:var(--f-clue);font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.switch span{font-family:var(--f-ui);font-size:10.5px;color:var(--ink-soft);letter-spacing:.12em;text-transform:uppercase}
-.switch .done{font-weight:700}
 
 .play{display:grid;gap:12px;grid-template-columns:minmax(0,1fr)}
 .left{display:grid;gap:10px;min-width:0}
@@ -137,18 +128,26 @@ header{display:grid;gap:4px;border-bottom:3px double var(--rule);padding-bottom:
 .menu-note{margin:2px 6px 4px;font-size:14px;color:var(--ink-soft);line-height:1.4;text-align:center;font-style:italic}
 .menu-head{margin:4px 6px 0;font-family:var(--f-ui);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft)}
 .menu .two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-</style>
-</head>
+
+.veil-card .by{font-family:var(--f-ui);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);margin:0}
+.share .streak{font-family:var(--f-ui);font-size:13px;font-weight:600;margin-top:4px}
+.note{font-family:var(--f-ui);font-size:12px;color:var(--ink-soft);text-align:center;margin:0}
+.countdown{font-family:var(--f-ui);font-size:14px;text-align:center;margin:0}
+.countdown b{font-variant-numeric:tabular-nums}
+.report{display:grid;gap:6px;justify-items:center;border-top:1px solid var(--hair);padding-top:10px}
+.report .addr{font-family:var(--f-ui);font-size:12.5px;color:var(--ink-soft);display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center}
+.report .addr button{border:1px solid var(--rule);background:var(--paper);font-family:var(--f-ui);font-size:12px;padding:3px 8px;cursor:pointer}
+.newtoast{position:fixed;left:50%;top:calc(12px + env(safe-area-inset-top,0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 14px;font-family:var(--f-ui);font-size:14px;z-index:40;display:flex;gap:12px;align-items:center;max-width:calc(100% - 32px)}
+.newtoast button{border:1px solid var(--paper);background:var(--paper);color:var(--ink);font-family:var(--f-ui);font-weight:600;padding:5px 12px;border-radius:999px;cursor:pointer}
+</style></head>
 <body>
 
 <div class="app">
   <header>
     <div class="mast"><div class="mark">Paheli <small>Mini</small></div>
     <div class="timer"><span class="pill" id="autoPill" hidden>Autocheck</span><span id="time">0:00</span><button class="icon" id="pause" aria-label="Pause">&#10074;&#10074;</button><button class="icon" id="helpBtn" aria-label="Check and reveal options"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M5.6 5.6l3.6 3.6M14.8 14.8l3.6 3.6M18.4 5.6l-3.6 3.6M9.2 14.8l-3.6 3.6"/></svg></button></div></div>
-    <div class="dateline"><span id="dateline">Daily puzzle</span><span>Riddles · GK · Pop</span></div>
+    <div class="dateline"><span id="dateline">&nbsp;</span><span>Riddles · GK · Pop</span></div>
   </header>
-
-  <div class="switch" id="switch"></div>
 
   <div class="play">
     <div class="left">
@@ -156,10 +155,12 @@ header{display:grid;gap:4px;border-bottom:3px double var(--rule);padding-bottom:
         <div class="board veiled" id="board" role="grid" aria-label="Crossword grid"></div>
         <div class="veil" id="veil">
           <div class="veil-card">
-            <div class="eyebrow" id="veilEyebrow">Puzzle #1</div>
-            <h2 id="veilTitle">Spill the Tea</h2>
-            <p id="veilText">10 clues. Riddles, desi GK and a little nostalgia.</p>
-            <button class="btn go" id="start">Shuru karo</button>
+            <div class="eyebrow" id="veilEyebrow">Paheli Mini</div>
+            <h2 id="veilTitle">Loading…</h2>
+            <p class="by" id="veilBy" hidden></p>
+            <p id="veilText"></p>
+            <button class="btn go" id="start" hidden>Shuru karo</button>
+            <button class="btn go" id="retry" hidden>Retry</button>
           </div>
         </div>
       </div>
@@ -167,7 +168,7 @@ header{display:grid;gap:4px;border-bottom:3px double var(--rule);padding-bottom:
       <div class="cluebar">
         <button id="prev" aria-label="Previous clue">&lsaquo;</button>
         <button class="cluetext" id="clueText" aria-label="Current clue, tap to switch direction">
-          <span class="cluemeta"><span id="clueNum">1 Across</span><span class="chip" id="clueTag">Riddle</span></span>
+          <span class="cluemeta"><span id="clueNum">&nbsp;</span><span class="chip" id="clueTag"></span></span>
           <span class="q" id="clueQ"></span>
         </button>
         <button id="next" aria-label="Next clue">&rsaquo;</button>
@@ -192,26 +193,33 @@ header{display:grid;gap:4px;border-bottom:3px double var(--rule);padding-bottom:
     <span><span class="chip">GK</span> desi general knowledge</span>
     <span><span class="chip">Pop</span> nostalgia and internet</span>
   </div>
-  <p class="foot">Prototype with 2 sample puzzles. Progress is saved in this browser.</p>
+  <p class="foot">A new paheli every day at midnight IST. Streaks are saved on this browser.</p>
 </div>
 
 <div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="doneTitle">
   <div class="sheet">
     <div class="share" id="shareCard">
       <div class="t" id="doneTitle">Paheli Mini</div>
-      <div class="sub" id="shareSub">#1 · Spill the Tea</div>
-      <div class="time" id="shareTime">0:42</div>
-      <div class="tag" id="shareTag">Rajdhani Express</div>
-      <div class="stats" id="shareStats">No hints used</div>
+      <div class="sub" id="shareSub"></div>
+      <div class="time" id="shareTime"></div>
+      <div class="tag" id="shareTag"></div>
+      <div class="stats" id="shareStats"></div>
+      <div class="streak" id="streakLine"></div>
     </div>
+    <p class="note" id="storageNote">Saved on this browser</p>
     <div class="sheet-actions">
       <button class="btn" id="copy">Copy result</button>
       <a class="btn go" id="wa" href="#" target="_blank" rel="noopener">Send on WhatsApp</a>
     </div>
+    <p class="countdown" id="countdown"></p>
+    <button class="btn go" id="playToday" hidden>Play today's paheli</button>
+    <div class="report">
+      <a class="btn alt" id="reportClue" href="#">Report a clue</a>
+      <div class="addr"><span id="reportAddress">arv.experiments@gmail.com</span><button id="copyAddress">Copy</button></div>
+    </div>
     <div class="why"><h3>Why these answers</h3><ul id="whyList"></ul></div>
-    <div class="sheet-actions">
+    <div class="sheet-actions" style="grid-template-columns:1fr">
       <button class="btn alt" id="closeModal">Back to grid</button>
-      <button class="btn alt" id="nextPuzzle">Next puzzle</button>
     </div>
   </div>
 </div>
@@ -235,323 +243,453 @@ header{display:grid;gap:4px;border-bottom:3px double var(--rule);padding-bottom:
     <button class="cancel" id="mBack">Back</button>
   </div>
 </div>
+<div class="newtoast" id="newPuzzleToast" hidden role="status"><span>A new paheli is out</span><button id="newPuzzlePlay">Play</button></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script>
-const TAGS={R:"Riddle",GK:"GK",N:"Pop"};
-const PUZZLES=[
- {id:1,title:"Spill the Tea",level:"Gentle",grid:["##PCO","#BEAT","TOAST","EACH#","ATE##"],blurb:"Ten clues. Mostly riddles, with a phone booth and some Gen Z slang.",
-  clues:{
-   PCO:{t:"N",c:"Yellow booth where you watched the meter tick on an STD call",e:"Public Call Office, in three letters",w:"PCO meant Public Call Office. STD calls were cheaper late at night, so the queue started after 11."},
-   BEAT:{t:"R",c:"The dhol gives it, and your heart skips one when your crush says hi",e:"Rhythm of a song, or of your heart",w:"'Skip a beat': your heart does it, the baraat dhol never does."},
-   TOAST:{t:"R",c:"Bread that got a tan, or a glass raised at the sangeet",e:"Crisp bread from a toaster",w:"Breakfast and a speech, one word."},
-   EACH:{t:"R",c:"Har ek, in English",e:"Every single one",w:"Har ek = each. Small word, big glue in a grid."},
-   ATE:{t:"N",c:"What she did, and left no crumbs",e:"Past tense of eat",w:"Gen Z slang: if she 'ate and left no crumbs', she nailed it."},
-   PEACE:{t:"N",c:"Shanti, or the two-finger selfie pose",e:"Shanti, in English",w:"The V-sign went from 1960s protest posters to every group selfie."},
-   CASH:{t:"R",c:"What the sabziwala wants when UPI says \"server down\"",e:"Notes and coins",w:"UPI rules the market, until the server goes down."},
-   OTT:{t:"N",c:"Where Friday releases now land without a ticket queue",e:"Streaming platforms, three letters",w:"OTT stands for Over The Top: streamed straight to you, skipping cable."},
-   BOAT:{t:"N",c:"Floats on Dal Lake, or plugs into a Gen Z's ears",e:"It floats on water",w:"boAt, the Indian earphone brand, and the shikaras of Dal Lake share a name."},
-   TEA:{t:"R",c:"Chai in English, or gossip in Gen Z",e:"Chai",w:"'Spill the tea' means share the gossip."}
-  }},
- {id:2,title:"Aal Izz Well",level:"Tricky",grid:["#RAO#","SOUND","RADIO","IDIOT","#SON#"],blurb:"Ten clues with more GK. Bollywood, a radio countdown and a vegetable with political power.",
-  clues:{
-   RAO:{t:"GK",c:"Kiran ___, director of Laapataa Ladies",e:"Surname shared by Kiran and P V Narasimha",w:"Kiran Rao's Laapataa Ladies was India's official Oscar entry for the 2025 Academy Awards."},
-   SOUND:{t:"R",c:"You hear it in a theatre, and it's how you sleep after Sunday biryani",e:"Noise, or healthy, as in a ___ mind",w:"Two meanings in one word: noise, and solid, as in a sound sleep."},
-   RADIO:{t:"N",c:"Ameen Sayani's Binaca Geetmala came out of this box",e:"Vividh Bharati and FM play on it",w:"Binaca Geetmala, hosted by Ameen Sayani, was the country's favourite countdown show for decades."},
-   IDIOT:{t:"GK",c:"Rancho's gang had three of these",e:"3 ___, the Aamir Khan film",w:"3 Idiots (2009): Rancho, Farhan and Raju. Aal izz well."},
-   SON:{t:"R",c:"Beta in English, and the one asked \"shaadi kab karoge?\"",e:"Beta, in English",w:"Every Indian son's annual exam: the shaadi question at family functions."},
-   ROADS:{t:"R",c:"Where potholes live, and they multiply every monsoon",e:"Streets, plural",w:"Monsoon plus roads equals potholes, a national tradition."},
-   AUDIO:{t:"N",c:"___ note, sent when you're too lazy to type",e:"Sound, in tech speak",w:"Voice notes: loved by senders, feared by listeners."},
-   ONION:{t:"GK",c:"Makes you cry in the kitchen, and has made governments cry at the ballot box",e:"Pyaaz",w:"Soaring onion prices are widely blamed for the BJP's 1998 Delhi election loss."},
-   SRI:{t:"GK",c:"___ Lanka, across the Palk Strait",e:"___ Lanka",w:"The Palk Strait separates Tamil Nadu from Sri Lanka."},
-   DOT:{t:"R",c:"Shape of a bindi, and the end of every sentence",e:"A tiny round mark, like a full stop",w:"A bindi and a full stop share one shape."}
-  }},
- {id:3,title:"Summer Vacation",level:"Medium",grid:["##GAS","#HINT","VALID","HILL#","SRI##"],blurb:"Ten clues. Street games, summer holidays and a phone call from the past.",
-  clues:{
-   GAS:{t:"R",c:"Arrives in a red cylinder, carried up by a man who never takes the lift",e:"LPG is one",w:"The LPG cylinder was India's most awaited home delivery long before Swiggy."},
-   HINT:{t:"R",c:"Mummy drops one for weeks before her birthday, and nobody picks it up",e:"A small clue",w:"Indian mothers drop hints for weeks. The family still asks 'kya chahiye?' the night before."},
-   VALID:{t:"N",c:"What your train ticket must be, and Gen Z's way of saying 'fair point'",e:"Legally acceptable, like a ticket or an argument",w:"'That's valid' is Gen Z for 'fair enough'."},
-   HILL:{t:"GK",c:"___ station: where the British ran from the plains every summer",e:"Shimla and Ooty are ___ stations",w:"Shimla was the summer capital of British India."},
-   SRI:{t:"GK",c:"___devi, the leading lady of Chandni",e:"Respectful prefix, as in ___ Lanka",w:"Sridevi starred in Yash Chopra's Chandni (1989)."},
-   GILLI:{t:"N",c:"Danda's partner in the original gully sport",e:"___-danda, the stick-and-peg game",w:"Gilli-danda: one stick, one peg and at least one broken window."},
-   ANIL:{t:"GK",c:"Kapoor who has been saying 'jhakaas' for decades",e:"Mr India actor, ___ Kapoor",w:"'Jhakaas' has been Anil Kapoor's catchphrase for decades."},
-   STD:{t:"N",c:"Three letters on the yellow board, next to ISD and PCO",e:"Long-distance calling code, pre-mobile",w:"STD stood for Subscriber Trunk Dialling."},
-   HAIR:{t:"R",c:"What the barber cuts while explaining national politics",e:"Grows on your head",w:"Every Indian barber is also a political analyst."},
-   VHS:{t:"N",c:"Tape you rented on Sunday and rewound before returning",e:"Video cassette format, three letters",w:"Video parlours rented out VHS tapes, and you were expected to rewind them first."}
-  }}
-];
+<script type="module">
+import { todayIST, istHourStamp, numberFor, formatIST, formatShort, countdownText, appNow } from "./lib/dates.js?v=1.0.0";
+import { buildPuzzle, gridHash } from "./lib/grid.js?v=1.0.0";
+import { readPuzzleFile } from "./lib/codec.js?v=1.0.0";
+import { createState } from "./lib/state.js?v=1.0.0";
 
-const $=id=>document.getElementById(id);
-function track(name,data){try{window.umami&&window.umami.track(name,data)}catch(e){}}
-const store={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const APP_VERSION = "1.0.0";
+const SITE = "https://arvind13496.github.io/paheli-mini/";
+const REPORT_EMAIL = "arv.experiments@gmail.com";
+const TAGS = { R: "Riddle", GK: "GK", N: "Pop" };
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[m]));
 
-let P,cells,entries,cellEnt,S,sel=0,dir="A",timerId=null,runStart=0,AUTO=store.get("paheli-auto")===true;
+const state = createState();
+let ready = false, manifest = null, P = null, num = null, hash = "";
+let cells = [], entries = [], cellSlots = [], S = null, solved = false, solveStats = null;
+let sel = 0, dir = "A", timerId = null, runStart = 0;
+let AUTO = state.getSettings().autocheck === true;
 
-function build(p){
-  const g=p.grid.join("");cells=[];entries=[];cellEnt=Array.from({length:25},()=>({}));
-  const blk=i=>g[i]==="#";let n=0;
-  for(let i=0;i<25;i++){
-    const r=Math.floor(i/5),c=i%5;let num=null;
-    if(!blk(i)){
-      const sa=(c===0||blk(i-1))&&c<4&&!blk(i+1);
-      const sd=(r===0||blk(i-5))&&r<4&&!blk(i+5);
-      if(sa||sd){num=++n;
-        if(sa){const cs=[];for(let k=i;k<r*5+5&&!blk(k);k++)cs.push(k);entries.push({dir:"A",num,cells:cs})}
-        if(sd){const cs=[];for(let k=i;k<25&&!blk(k);k+=5)cs.push(k);entries.push({dir:"D",num,cells:cs})}
-      }
-    }
-    cells.push({block:blk(i),ans:g[i],num});
+// ---------- analytics ----------
+function track(name, data = {}) {
+  try { window.umami && window.umami.track(name, { ...data, puzzle: num, v: APP_VERSION }); } catch (e) { /* analytics never breaks the game */ }
+}
+function sendPageview() {
+  const saved = location.pathname + location.search;
+  const send = () => { try { window.umami && window.umami.track((p) => ({ ...p, url: saved })); } catch (e) {} };
+  if (window.umami) send(); else window.addEventListener("load", send, { once: true });
+  if (/[?&]utm_/.test(location.search)) {
+    const q = new URLSearchParams(location.search);
+    [...q.keys()].filter((k) => k.startsWith("utm_")).forEach((k) => q.delete(k));
+    const qs = q.toString();
+    const clean = () => history.replaceState(null, "", location.pathname + (qs ? "?" + qs : "") + location.hash);
+    if (window.umami) clean(); else window.addEventListener("load", () => setTimeout(clean, 0), { once: true });
   }
-  entries.forEach(e=>{e.ans=e.cells.map(k=>g[k]).join("");Object.assign(e,p.clues[e.ans]);e.cells.forEach(k=>cellEnt[k][e.dir]=e)});
-  entries.sort((a,b)=>a.dir===b.dir?a.num-b.num:(a.dir==="A"?-1:1));
 }
 
-function load(idx){
-  if(S&&P)save();
-  stopTimer();
-  P=PUZZLES[idx];build(P);
-  S=store.get("paheli-"+P.id)||{letters:Array(25).fill(""),elapsed:0,solved:false,hints:[],started:false,wrong:[]};
-  S.wrong=S.wrong||[];S.ok=S.ok||[];S.rev=S.rev||[];S.reveals=S.reveals||0;S.checks=S.checks||0;
-  store.set("paheli-last",idx);
-  dir="A";sel=entries[0].cells[0];
-  renderSwitch();renderBoard();renderClues();
-  $("veilEyebrow").textContent="Puzzle #"+P.id+" · "+P.level;
-  $("veilTitle").textContent=P.title;
-  $("veilText").textContent=S.elapsed&&!S.solved?"Paused at "+fmt(S.elapsed)+". Pick up where you left off.":P.blurb;
-  $("start").textContent=S.elapsed&&!S.solved?"Resume":"Shuru karo";
-  showVeil(!S.solved);
-  if(S.solved){$("board").classList.add("solved")}
-  updateTime();update();
+// ---------- screens ----------
+let screenTimer = null;
+function msUntilIST(date) { return Date.parse(date + "T00:00:00+05:30") - appNow(); }
+function showScreen({ eyebrow = "Paheli Mini", title, text = "", by = "", start = "", retry = "" }) {
+  $("veilEyebrow").textContent = eyebrow;
+  $("veilTitle").textContent = title;
+  $("veilBy").textContent = by; $("veilBy").hidden = !by;
+  $("veilText").textContent = text; $("veilText").hidden = !text;
+  $("start").textContent = start; $("start").hidden = !start;
+  $("retry").textContent = retry; $("retry").hidden = !retry;
+  showVeil(true);
 }
-function save(){store.set("paheli-"+P.id,S)}
+function countdownScreen(target, make) {
+  clearInterval(screenTimer);
+  const tick = () => {
+    const ms = msUntilIST(target);
+    if (ms <= 0) { clearInterval(screenTimer); location.reload(); return; }
+    showScreen(make(countdownText(ms)));
+  };
+  tick();
+  screenTimer = setInterval(tick, 30000);
+}
+function blankBoard() {
+  const b = $("board"); b.innerHTML = "";
+  for (let i = 0; i < 25; i++) { const d = document.createElement("div"); d.className = "cell"; b.appendChild(d); }
+}
 
-function renderSwitch(){
-  $("switch").innerHTML="";
-  PUZZLES.forEach((p,i)=>{
-    const s=store.get("paheli-"+p.id);const b=document.createElement("button");
-    b.setAttribute("aria-pressed",p===P);
-    b.innerHTML=`<span>#${p.id} · ${p.level}${s&&s.solved?` · <span class="done">Solved ${fmt(s.elapsed)}</span>`:""}</span><b>${p.title}</b>`;
-    b.onclick=()=>{if(p!==P)load(i)};$("switch").appendChild(b);
+// ---------- boot ----------
+async function boot() {
+  ready = false;
+  clearInterval(screenTimer);
+  const now = appNow();
+  const today = todayIST(now);
+  $("dateline").textContent = formatIST(today);
+  blankBoard();
+  showScreen({ title: "Loading…" });
+  const [mRes, pRes] = await Promise.allSettled([
+    fetch(`puzzles/manifest.json?h=${istHourStamp(now)}`),
+    fetch(`puzzles/${today}.json`),
+  ]);
+  if (mRes.status === "rejected") return showScreen({ title: "You're offline", text: "Check your connection and try again.", retry: "Retry" });
+  try {
+    if (!mRes.value.ok) throw new Error("manifest " + mRes.value.status);
+    manifest = await mRes.value.json();
+  } catch (e) { return errorScreen(e); }
+
+  if (today < manifest.launch) {
+    return countdownScreen(manifest.launch, (left) => ({ eyebrow: "Coming soon", title: "Paheli Mini", text: `Paheli Mini starts ${formatIST(manifest.launch).replace(/ \d{4}$/, "")}. First one in ${left}.` }));
+  }
+  num = numberFor(today, manifest.launch);
+  if (!manifest.dates.includes(today)) {
+    track("puzzle-missing");
+    const tomorrow = todayIST(now + 86400000);
+    return countdownScreen(tomorrow, (left) => ({ eyebrow: `Paheli Mini #${num}`, title: "Running late", text: `Today's paheli is running late. Next one in ${left}.` }));
+  }
+  if (pRes.status === "rejected") return showScreen({ title: "You're offline", text: "Check your connection and try again.", retry: "Retry" });
+  let rec;
+  try {
+    if (!pRes.value.ok) throw new Error("puzzle " + pRes.value.status);
+    rec = readPuzzleFile(await pRes.value.json());
+  } catch (e) { return errorScreen(e); }
+
+  if (!state.available) track("storage-unavailable");
+  P = { date: today, title: rec.title, constructor: rec.constructor, grid: rec.grid };
+  const built = buildPuzzle(rec.grid, rec.clues);
+  cells = built.cells; entries = built.slots; cellSlots = built.cellSlots;
+  hash = gridHash(rec.grid);
+  dir = "A"; sel = entries[0].cells[0];
+  renderBoard(); renderClues();
+
+  const done = state.getSolve(P.date);
+  if (done) { ready = true; return showSolved(done); }
+  const prog = state.getProgress(P.date, hash);
+  S = prog ? { ...prog } : { letters: Array(25).fill(""), elapsedMs: 0, started: false, hints: [], ok: [], wrong: [], rev: [], checks: 0, reveals: 0, usedAuto: false };
+  solved = false;
+  showStart();
+  updateTime(); update();
+  ready = true;
+}
+function errorScreen(e) {
+  track("puzzle-error", { reason: String(e && e.message || e).slice(0, 60) });
+  showScreen({ title: "Something went wrong", text: "Refresh the page to try again.", retry: "Refresh" });
+  $("retry").onclick = () => location.reload();
+}
+$("retry").onclick = () => boot();
+
+function showStart() {
+  const paused = S.elapsedMs > 0;
+  showScreen({
+    eyebrow: `Paheli Mini #${num}`,
+    title: P.title,
+    by: `By ${P.constructor}`,
+    text: paused ? `Paused at ${fmt(S.elapsedMs)}` : "",
+    start: paused ? "Resume" : "Shuru karo",
   });
 }
-function renderBoard(){
-  const b=$("board");b.innerHTML="";b.classList.remove("solved");
-  cells.forEach((c,i)=>{
-    const d=document.createElement("div");d.className="cell"+(c.block?" block":"");d.dataset.i=i;
-    if(!c.block){d.setAttribute("role","gridcell");d.tabIndex=-1;d.innerHTML=(c.num?`<span class="n">${c.num}</span>`:"")+`<span class="l"></span>`;d.onclick=()=>tapCell(i)}
+
+function persist() {
+  if (!P || solved || !S) return;
+  state.saveProgress({ date: P.date, hash, ...S });
+}
+
+// ---------- rendering ----------
+function renderBoard() {
+  const b = $("board"); b.innerHTML = ""; b.classList.remove("solved");
+  cells.forEach((c, i) => {
+    const d = document.createElement("div"); d.className = "cell" + (c.block ? " block" : ""); d.dataset.i = i;
+    if (!c.block) {
+      d.setAttribute("role", "gridcell"); d.tabIndex = -1;
+      d.innerHTML = (c.num ? `<span class="n">${c.num}</span>` : "") + `<span class="l"></span>`;
+      d.onclick = () => tapCell(i);
+    }
     b.appendChild(d);
   });
 }
-function renderClues(){
-  ["across","down"].forEach(id=>$(id).innerHTML="");
-  entries.forEach(e=>{
-    const li=document.createElement("li");const b=document.createElement("button");b.dataset.key=e.dir+e.num;
-    b.onclick=()=>{if(!S.started&&!S.solved)return;dir=e.dir;sel=firstEmpty(e);update()};
-    li.appendChild(b);$(e.dir==="A"?"across":"down").appendChild(li);
+function renderClues() {
+  ["across", "down"].forEach((id) => ($(id).innerHTML = ""));
+  entries.forEach((e) => {
+    const li = document.createElement("li"); const b = document.createElement("button"); b.dataset.key = e.id;
+    b.onclick = () => { if (!ready || !S || !S.started || solved) return; dir = e.dir; sel = firstEmpty(e); update(); };
+    li.appendChild(b); $(e.dir === "A" ? "across" : "down").appendChild(li);
   });
 }
-function clueHTML(e){const h=S.hints.includes(e.dir+e.num);return {q:h?e.e:e.c,h}}
+function clueFor(e) { const h = !!(S && S.hints.includes(e.id)); return { q: h ? e.easy : e.clue, h }; }
 
-function update(){
-  const e=cellEnt[sel][dir]||cellEnt[sel][dir==="A"?"D":"A"];if(!cellEnt[sel][dir])dir=e.dir;
-  document.querySelectorAll(".cell").forEach((d,i)=>{
-    if(cells[i].block)return;
-    d.querySelector(".l").textContent=S.letters[i];
-    d.classList.toggle("sel",i===sel&&!S.solved);
-    d.classList.toggle("word",e.cells.includes(i)&&!S.solved);
-    d.classList.toggle("wrong",S.wrong.includes(i)&&S.letters[i]!==""&&S.letters[i]!==cells[i].ans);
-    d.classList.toggle("ok",S.ok.includes(i)&&!S.rev.includes(i));
-    d.classList.toggle("rev",S.rev.includes(i));
+function update() {
+  if (!entries.length || !S) return;
+  const e = cellSlots[sel][dir] || cellSlots[sel][dir === "A" ? "D" : "A"]; if (!cellSlots[sel][dir]) dir = e.dir;
+  document.querySelectorAll("#board .cell").forEach((d, i) => {
+    if (cells[i].block) return;
+    d.querySelector(".l").textContent = S.letters[i];
+    d.classList.toggle("sel", i === sel && !solved);
+    d.classList.toggle("word", e.cells.includes(i) && !solved);
+    d.classList.toggle("wrong", S.wrong.includes(i) && S.letters[i] !== "" && S.letters[i] !== cells[i].answer);
+    d.classList.toggle("ok", S.ok.includes(i) && !S.rev.includes(i));
+    d.classList.toggle("rev", S.rev.includes(i));
   });
-  $("autoPill").hidden=!AUTO;
-  $("mAuto").textContent="Turn "+(AUTO?"OFF":"ON")+" Autocheck";
-  document.querySelectorAll("[data-check]").forEach(b=>b.disabled=AUTO);
-  const {q,h}=clueHTML(e);
-  $("clueNum").textContent=e.num+" "+(e.dir==="A"?"Across":"Down");
-  $("clueTag").textContent=h?"Aasaan clue":TAGS[e.t];$("clueTag").className="chip"+(h?" easy":"");
-  $("clueQ").textContent=q;
-  $("hint").disabled=h||S.solved;
-  document.querySelectorAll("#clues button").forEach(b=>{
-    const en=entries.find(x=>x.dir+x.num===b.dataset.key);const c=clueHTML(en);
-    b.classList.toggle("cur",en===e&&!S.solved);
-    b.classList.toggle("filled",en.cells.every(k=>S.letters[k]));
-    b.innerHTML=`<b>${en.num}</b><span>${esc(c.q)}<span class="tagline"><span class="chip${c.h?" easy":""}">${c.h?"Aasaan clue":TAGS[en.t]}</span></span></span>`;
+  $("autoPill").hidden = !AUTO;
+  $("mAuto").textContent = "Turn " + (AUTO ? "OFF" : "ON") + " Autocheck";
+  document.querySelectorAll("[data-check]").forEach((b) => (b.disabled = AUTO));
+  const { q, h } = clueFor(e);
+  $("clueNum").textContent = e.num + " " + (e.dir === "A" ? "Across" : "Down");
+  $("clueTag").textContent = h ? "Aasaan clue" : TAGS[e.tag]; $("clueTag").className = "chip" + (h ? " easy" : "");
+  $("clueQ").textContent = q;
+  $("hint").disabled = h || solved;
+  document.querySelectorAll("#clues button").forEach((b) => {
+    const en = entries.find((x) => x.id === b.dataset.key); const c = clueFor(en);
+    b.classList.toggle("cur", en === e && !solved);
+    b.classList.toggle("filled", en.cells.every((k) => S.letters[k]));
+    b.innerHTML = `<b>${en.num}</b><span>${esc(c.q)}<span class="tagline"><span class="chip${c.h ? " easy" : ""}">${c.h ? "Aasaan clue" : TAGS[en.tag]}</span></span></span>`;
   });
 }
-const esc=s=>s.replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
 
-function tapCell(i){
-  if(!S.started||S.solved)return;
-  if(i===sel){const o=dir==="A"?"D":"A";if(cellEnt[i][o])dir=o}
-  else{sel=i;if(!cellEnt[i][dir])dir=dir==="A"?"D":"A"}
+// ---------- input ----------
+const canPlay = () => ready && S && S.started && !solved;
+function tapCell(i) {
+  if (!canPlay()) return;
+  if (i === sel) { const o = dir === "A" ? "D" : "A"; if (cellSlots[i][o]) dir = o; }
+  else { sel = i; if (!cellSlots[i][dir]) dir = dir === "A" ? "D" : "A"; }
   update();
 }
-function curEntry(){return cellEnt[sel][dir]}
-function firstEmpty(e){return e.cells.find(k=>!S.letters[k])??e.cells[0]}
-function nextEntry(step){
-  const e=curEntry();let idx=entries.indexOf(e);
-  idx=(idx+step+entries.length)%entries.length;const n=entries[idx];dir=n.dir;sel=firstEmpty(n);update();
+function curEntry() { return cellSlots[sel][dir]; }
+function firstEmpty(e) { return e.cells.find((k) => !S.letters[k]) ?? e.cells[0]; }
+function nextEntry(step) {
+  const e = curEntry(); let idx = entries.indexOf(e);
+  idx = (idx + step + entries.length) % entries.length; const n = entries[idx]; dir = n.dir; sel = firstEmpty(n); update();
 }
-const locked=i=>S.ok.includes(i)||S.rev.includes(i);
-function markCells(list){
-  list.forEach(i=>{if(cells[i].block||!S.letters[i]||S.rev.includes(i))return;
-    if(S.letters[i]===cells[i].ans){if(!S.ok.includes(i))S.ok.push(i);S.wrong=S.wrong.filter(k=>k!==i)}
-    else if(!S.wrong.includes(i))S.wrong.push(i)});
+const locked = (i) => S.ok.includes(i) || S.rev.includes(i);
+function markCells(list) {
+  list.forEach((i) => {
+    if (cells[i].block || !S.letters[i] || S.rev.includes(i)) return;
+    if (S.letters[i] === cells[i].answer) { if (!S.ok.includes(i)) S.ok.push(i); S.wrong = S.wrong.filter((k) => k !== i); }
+    else if (!S.wrong.includes(i)) S.wrong.push(i);
+  });
 }
-function typeLetter(ch){
-  if(!S.started||S.solved)return;
-  if(!locked(sel)){S.letters[sel]=ch;S.wrong=S.wrong.filter(k=>k!==sel);if(AUTO){S.usedAuto=true;markCells([sel])}}
-  const e=curEntry();const pos=e.cells.indexOf(sel);
-  const after=e.cells.slice(pos+1).find(k=>!S.letters[k]);
-  if(after!==undefined)sel=after;
-  else if(pos<e.cells.length-1)sel=e.cells[pos+1];
-  else{
-    const full=S.letters.every((l,i)=>cells[i].block||l);
-    if(!full){let idx=entries.indexOf(e);for(let s=1;s<=entries.length;s++){const n=entries[(idx+s)%entries.length];const k=n.cells.find(k=>!S.letters[k]);if(k!==undefined){dir=n.dir;sel=k;break}}}
+function typeLetter(ch) {
+  if (!canPlay()) return;
+  if (!locked(sel)) { S.letters[sel] = ch; S.wrong = S.wrong.filter((k) => k !== sel); if (AUTO) { S.usedAuto = true; markCells([sel]); } }
+  const e = curEntry(); const pos = e.cells.indexOf(sel);
+  const after = e.cells.slice(pos + 1).find((k) => !S.letters[k]);
+  if (after !== undefined) sel = after;
+  else if (pos < e.cells.length - 1) sel = e.cells[pos + 1];
+  else {
+    const full = S.letters.every((l, i) => cells[i].block || l);
+    if (!full) {
+      const idx = entries.indexOf(e);
+      for (let s = 1; s <= entries.length; s++) { const n = entries[(idx + s) % entries.length]; const k = n.cells.find((k) => !S.letters[k]); if (k !== undefined) { dir = n.dir; sel = k; break; } }
+    }
   }
-  update();save();checkDone();
+  update(); persist(); checkDone();
 }
-function backspace(){
-  if(!S.started||S.solved)return;
-  if(S.letters[sel]&&!locked(sel)){S.letters[sel]="";S.wrong=S.wrong.filter(k=>k!==sel)}
-  else{const e=curEntry();const pos=e.cells.indexOf(sel);if(pos>0){sel=e.cells[pos-1];if(!locked(sel)){S.letters[sel]="";S.wrong=S.wrong.filter(k=>k!==sel)}}}
-  update();save();
+function backspace() {
+  if (!canPlay()) return;
+  if (S.letters[sel] && !locked(sel)) { S.letters[sel] = ""; S.wrong = S.wrong.filter((k) => k !== sel); }
+  else { const e = curEntry(); const pos = e.cells.indexOf(sel); if (pos > 0) { sel = e.cells[pos - 1]; if (!locked(sel)) { S.letters[sel] = ""; S.wrong = S.wrong.filter((k) => k !== sel); } } }
+  update(); persist();
 }
-function move(dr,dc){
-  if(!S.started||S.solved)return;
-  const want=(dc!==0)?"A":"D";
-  if(dir!==want&&cellEnt[sel][want]){dir=want;update();return}
-  let r=Math.floor(sel/5),c=sel%5;
-  for(let s=0;s<5;s++){r+=dr;c+=dc;if(r<0||r>4||c<0||c>4)break;const i=r*5+c;if(!cells[i].block){sel=i;if(!cellEnt[sel][dir])dir=dir==="A"?"D":"A";break}}
+function move(dr, dc) {
+  if (!canPlay()) return;
+  const want = dc !== 0 ? "A" : "D";
+  if (dir !== want && cellSlots[sel][want]) { dir = want; update(); return; }
+  let r = Math.floor(sel / 5), c = sel % 5;
+  for (let s = 0; s < 5; s++) { r += dr; c += dc; if (r < 0 || r > 4 || c < 0 || c > 4) break; const i = r * 5 + c; if (!cells[i].block) { sel = i; if (!cellSlots[sel][dir]) dir = dir === "A" ? "D" : "A"; break; } }
   update();
 }
-function checkDone(){
-  const full=S.letters.every((l,i)=>cells[i].block||l);if(!full)return;
-  const right=S.letters.every((l,i)=>cells[i].block||l===cells[i].ans);
-  if(right)solve();else toast("Almost there. Kuch letters galat hain.");
+function checkDone() {
+  const full = S.letters.every((l, i) => cells[i].block || l); if (!full) return;
+  const right = S.letters.every((l, i) => cells[i].block || l === cells[i].answer);
+  if (right) solve(); else toast("Almost there. Kuch letters galat hain.");
 }
 
-function startTimer(){if(timerId||S.solved)return;runStart=Date.now();timerId=setInterval(updateTime,250)}
-function stopTimer(){if(timerId){clearInterval(timerId);timerId=null;S.elapsed+=Date.now()-runStart;save()}}
-function elapsed(){return S.elapsed+(timerId?Date.now()-runStart:0)}
-function fmt(ms){const s=Math.floor(ms/1000);return Math.floor(s/60)+":"+String(s%60).padStart(2,"0")}
-function updateTime(){$("time").textContent=fmt(elapsed())}
+// ---------- timer ----------
+function startTimer() { if (timerId || solved) return; runStart = Date.now(); timerId = setInterval(updateTime, 250); }
+function stopTimer() { if (timerId) { clearInterval(timerId); timerId = null; S.elapsedMs += Date.now() - runStart; persist(); } }
+function elapsed() { return S ? S.elapsedMs + (timerId ? Date.now() - runStart : 0) : 0; }
+function fmt(ms) { const s = Math.floor(ms / 1000); return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); }
+function updateTime() { $("time").textContent = fmt(elapsed()); }
 
-function showVeil(on){$("veil").hidden=!on;$("board").classList.toggle("veiled",on)}
-$("start").onclick=()=>{if(!S.started)track("puzzle-start",{puzzle:P.id});S.started=true;showVeil(false);startTimer();update();save()};
-$("pause").onclick=()=>{
-  if(S.solved||!S.started)return;
-  stopTimer();$("veilEyebrow").textContent="Chai break";$("veilTitle").textContent=P.title;
-  $("veilText").textContent="Paused at "+fmt(S.elapsed)+". The grid is hidden so no peeking.";$("start").textContent="Resume";showVeil(true);
+function showVeil(on) { $("veil").hidden = !on; $("board").classList.toggle("veiled", on); }
+$("start").onclick = () => {
+  if (!ready || !S || solved) return;
+  if (!S.started) track("puzzle-start");
+  S.started = true; showVeil(false); startTimer(); update(); persist();
 };
-document.addEventListener("visibilitychange",()=>{if(document.hidden&&timerId){$("pause").click()}});
-
-$("prev").onclick=()=>{if(S.started&&!S.solved)nextEntry(-1)};
-$("next").onclick=()=>{if(S.started&&!S.solved)nextEntry(1)};
-$("clueText").onclick=()=>tapCell(sel);
-$("hint").onclick=()=>{
-  if(!S.started||S.solved)return;const e=curEntry();const k=e.dir+e.num;
-  if(!S.hints.includes(k)){S.hints.push(k);save();update();toast("Easier clue for "+e.num+" "+(e.dir==="A"?"Across":"Down"))}
+$("pause").onclick = () => {
+  if (!ready || !S || solved || !S.started || !timerId) return;
+  stopTimer();
+  showScreen({ eyebrow: "Chai break", title: P.title, by: `By ${P.constructor}`, text: `Paused at ${fmt(S.elapsedMs)}. The grid is hidden, so no peeking.`, start: "Resume" });
 };
-// Check & reveal menu (NYT-style)
-function scope(kind){return kind==="square"?[sel]:kind==="word"?curEntry().cells.slice():cells.map((c,i)=>c.block?-1:i).filter(i=>i>=0)}
-const scopeName={square:"square",word:"word",puzzle:"puzzle"};
-function openMenu(){if(!S.started||S.solved){toast(S.solved?"Already solved.":"Start the puzzle first.");return}
-  $("menuMain").hidden=false;$("menuMore").hidden=true;$("helpMenu").hidden=false;$("mAuto").focus()}
-function closeMenu(){$("helpMenu").hidden=true}
-$("helpBtn").onclick=openMenu;$("check").onclick=openMenu;
-$("helpMenu").addEventListener("click",e=>{if(e.target.id==="helpMenu"||e.target.closest("[data-close]"))closeMenu()});
-$("mMore").onclick=()=>{$("menuMain").hidden=true;$("menuMore").hidden=false};
-$("mBack").onclick=()=>{$("menuMore").hidden=true;$("menuMain").hidden=false};
-$("mAuto").onclick=()=>{
-  AUTO=!AUTO;store.set("paheli-auto",AUTO);
-  if(AUTO){S.usedAuto=true;markCells(scope("puzzle"))}
-  save();update();closeMenu();
-  toast(AUTO?"Autocheck on. Wrong letters get a red slash as you type.":"Autocheck off.");
-};
-document.querySelectorAll("[data-check]").forEach(b=>b.onclick=()=>{
-  const list=scope(b.dataset.check);const filled=list.filter(i=>S.letters[i]);
-  closeMenu();if(!filled.length){toast("Nothing to check in this "+scopeName[b.dataset.check]+" yet.");return}
-  markCells(list);S.checks++;save();update();
-  const bad=filled.filter(i=>S.wrong.includes(i)).length;
-  toast(bad?bad+" wrong letter"+(bad>1?"s":"")+" marked.":"Sab sahi. Correct letters are now locked in blue.");
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) { if (timerId) $("pause").click(); return; }
+  const t = todayIST(appNow());
+  if (!P) { if (manifest && ready === false && $("dateline").textContent !== formatIST(t)) location.reload(); return; }
+  if (t !== P.date) {
+    if (S && !S.started && !solved) location.reload();
+    else $("newPuzzleToast").hidden = false;
+  }
 });
-document.querySelectorAll("[data-reveal]").forEach(b=>b.onclick=()=>{
-  let n=0;scope(b.dataset.reveal).forEach(i=>{if(S.letters[i]===cells[i].ans&&locked(i))return;
-    if(S.letters[i]===cells[i].ans){S.ok.push(i)}
-    else{S.letters[i]=cells[i].ans;if(!S.rev.includes(i))S.rev.push(i);n++}
-    S.wrong=S.wrong.filter(k=>k!==i)});
-  S.reveals+=n;closeMenu();save();update();
-  if(n)toast("Revealed "+n+" letter"+(n>1?"s":"")+".");else toast("Already correct here.");
+$("newPuzzlePlay").onclick = () => location.reload();
+window.addEventListener("pagehide", () => { if (timerId) stopTimer(); });
+
+$("prev").onclick = () => { if (canPlay()) nextEntry(-1); };
+$("next").onclick = () => { if (canPlay()) nextEntry(1); };
+$("clueText").onclick = () => tapCell(sel);
+$("hint").onclick = () => {
+  if (!canPlay()) return; const e = curEntry();
+  if (!S.hints.includes(e.id)) { S.hints.push(e.id); persist(); update(); toast("Easier clue for " + e.num + " " + (e.dir === "A" ? "Across" : "Down")); }
+};
+
+// ---------- check & reveal ----------
+function scope(kind) { return kind === "square" ? [sel] : kind === "word" ? curEntry().cells.slice() : cells.map((c, i) => (c.block ? -1 : i)).filter((i) => i >= 0); }
+function openMenu() {
+  if (!ready || !S) return;
+  if (!S.started || solved) { toast(solved ? "Already solved." : "Start the puzzle first."); return; }
+  $("menuMain").hidden = false; $("menuMore").hidden = true; $("helpMenu").hidden = false; $("mAuto").focus();
+}
+function closeMenu() { $("helpMenu").hidden = true; }
+$("helpBtn").onclick = openMenu; $("check").onclick = openMenu;
+$("helpMenu").addEventListener("click", (e) => { if (e.target.id === "helpMenu" || e.target.closest("[data-close]")) closeMenu(); });
+$("mMore").onclick = () => { $("menuMain").hidden = true; $("menuMore").hidden = false; };
+$("mBack").onclick = () => { $("menuMore").hidden = true; $("menuMain").hidden = false; };
+$("mAuto").onclick = () => {
+  AUTO = !AUTO; state.setSettings({ autocheck: AUTO });
+  if (AUTO) { S.usedAuto = true; markCells(scope("puzzle")); }
+  persist(); update(); closeMenu();
+  toast(AUTO ? "Autocheck on. Wrong letters get a red slash as you type." : "Autocheck off.");
+};
+document.querySelectorAll("[data-check]").forEach((b) => (b.onclick = () => {
+  const list = scope(b.dataset.check); const filled = list.filter((i) => S.letters[i]);
+  closeMenu(); if (!filled.length) { toast("Nothing to check in this " + b.dataset.check + " yet."); return; }
+  markCells(list); S.checks++; persist(); update();
+  const bad = filled.filter((i) => S.wrong.includes(i)).length;
+  toast(bad ? bad + " wrong letter" + (bad > 1 ? "s" : "") + " marked." : "Sab sahi. Correct letters are now locked in blue.");
+}));
+document.querySelectorAll("[data-reveal]").forEach((b) => (b.onclick = () => {
+  let n = 0;
+  scope(b.dataset.reveal).forEach((i) => {
+    if (S.letters[i] === cells[i].answer && locked(i)) return;
+    if (S.letters[i] === cells[i].answer) S.ok.push(i);
+    else { S.letters[i] = cells[i].answer; if (!S.rev.includes(i)) S.rev.push(i); n++; }
+    S.wrong = S.wrong.filter((k) => k !== i);
+  });
+  S.reveals += n; closeMenu(); persist(); update();
+  toast(n ? "Revealed " + n + " letter" + (n > 1 ? "s" : "") + "." : "Already correct here.");
   checkDone();
-});
-document.querySelectorAll("[data-clear]").forEach(b=>b.onclick=()=>{
-  scope(b.dataset.clear).forEach(i=>{if(!locked(i)){S.letters[i]="";S.wrong=S.wrong.filter(k=>k!==i)}});
-  closeMenu();save();update();toast("Cleared. Checked and revealed letters stay.");
-});
+}));
+document.querySelectorAll("[data-clear]").forEach((b) => (b.onclick = () => {
+  scope(b.dataset.clear).forEach((i) => { if (!locked(i)) { S.letters[i] = ""; S.wrong = S.wrong.filter((k) => k !== i); } });
+  closeMenu(); persist(); update(); toast("Cleared. Checked and revealed letters stay.");
+}));
 
-function helpLine(){
-  const h=S.hints.length,c=S.checks,r=S.reveals,parts=[];
-  if(h)parts.push(h+" easy clue"+(h>1?"s":""));if(c)parts.push(c+" check"+(c>1?"s":""));
-  if(r)parts.push(r+" revealed"+(r>1?" letters":" letter"));if(S.usedAuto)parts.push("autocheck");
-  return parts.length?parts.join(", "):"Clean solve, no help";
+// ---------- solve & result ----------
+function helpLine(st) {
+  const parts = [];
+  if (st.hints) parts.push(st.hints + " easy clue" + (st.hints > 1 ? "s" : ""));
+  if (st.checks) parts.push(st.checks + " check" + (st.checks > 1 ? "s" : ""));
+  if (st.reveals) parts.push(st.reveals + " revealed " + (st.reveals > 1 ? "letters" : "letter"));
+  if (st.auto) parts.push("autocheck");
+  return parts.length ? parts.join(", ") : "Clean solve, no help";
 }
-function tagFor(ms){if(S.reveals)return"Solved with a little madad";const s=ms/1000;if(s<45)return"Rajdhani Express";if(s<90)return"Shatabdi pace";if(s<180)return"Local train, but reached";return"Passenger train, still counts"}
-function solve(){
-  stopTimer();S.solved=true;save();track("puzzle-solve",{puzzle:P.id,seconds:Math.round(S.elapsed/1000),hints:S.hints.length,checks:S.checks,reveals:S.reveals,autocheck:!!S.usedAuto});$("board").classList.add("solved");update();renderSwitch();
-  setTimeout(openModal,650);
+function tagFor(st) {
+  if (st.reveals) return "Solved with a little madad";
+  const s = st.sec;
+  if (s < 45) return "Rajdhani Express";
+  if (s < 90) return "Shatabdi pace";
+  if (s < 180) return "Local train, but reached";
+  return "Passenger train, still counts";
 }
-function shareText(){
-  return `Paheli Mini #${P.id} · ${P.title}\nSolved in ${fmt(S.elapsed)} · ${tagFor(S.elapsed)}\n${helpLine()}`;
+function solve() {
+  stopTimer(); solved = true;
+  solveStats = { sec: Math.round(S.elapsedMs / 1000), hints: S.hints.length, checks: S.checks, reveals: S.reveals, auto: !!S.usedAuto };
+  state.recordSolve(P.date, solveStats);
+  const st = state.streaks(manifest.dates, todayIST(appNow()));
+  track("puzzle-solve", { seconds: solveStats.sec, hints: solveStats.hints, checks: solveStats.checks, reveals: solveStats.reveals, autocheck: solveStats.auto, streak: state.available ? st.current : null });
+  $("board").classList.add("solved"); update();
+  setTimeout(() => openModal(solveStats), 650);
 }
-function openModal(){
-  $("shareSub").textContent="#"+P.id+" · "+P.title;$("shareTime").textContent=fmt(S.elapsed);$("shareTag").textContent=tagFor(S.elapsed);
-  $("shareStats").textContent=helpLine();
-  $("wa").href="https://wa.me/?text="+encodeURIComponent(shareText());
-  $("whyList").innerHTML=entries.map(e=>`<li><b>${e.ans}</b> (${e.num} ${e.dir==="A"?"Across":"Down"}): ${esc(e.w)}</li>`).join("");
-  $("nextPuzzle").textContent=PUZZLES.length>1?"Next puzzle":"Close";
-  $("modal").hidden=false;$("copy").focus();
+function showSolved(done) {
+  solved = true; solveStats = done;
+  S = { letters: cells.map((c) => c.answer), elapsedMs: done.sec * 1000, started: true, hints: [], ok: [], wrong: [], rev: [], checks: done.checks, reveals: done.reveals, usedAuto: done.auto };
+  showVeil(false); $("board").classList.add("solved"); $("time").textContent = fmt(done.sec * 1000); update();
+  openModal(done);
 }
-$("closeModal").onclick=()=>{$("modal").hidden=true};
-$("nextPuzzle").onclick=()=>{$("modal").hidden=true;load((PUZZLES.indexOf(P)+1)%PUZZLES.length)};
-$("copy").onclick=()=>{track("share-copy",{puzzle:P.id});
-  const t=shareText();
-  navigator.clipboard?.writeText(t).then(()=>toast("Copied. Paste it in the family group."),()=>toast("Couldn't copy here. Use the WhatsApp button.")) ?? toast("Couldn't copy here. Use the WhatsApp button.");
+function shareText(st, streak, source) {
+  const streakPart = state.available ? ` · Streak ${streak}` : "";
+  return `Paheli Mini #${num} · ${P.title}\nSolved in ${fmt(st.sec * 1000)} · ${tagFor(st)}\n${helpLine(st)}${streakPart}\n${SITE}?utm_source=${source}&utm_medium=share`;
+}
+let countdownTimer = null;
+function openModal(st) {
+  const sk = state.streaks(manifest.dates, todayIST(appNow()));
+  $("shareSub").textContent = `#${num} · ${P.title}`;
+  $("shareTime").textContent = fmt(st.sec * 1000);
+  $("shareTag").textContent = tagFor(st);
+  $("shareStats").textContent = helpLine(st);
+  $("streakLine").textContent = state.available ? `Streak ${sk.current} · Best ${sk.best}` : "Streaks can't be saved in this browser";
+  $("storageNote").hidden = !state.available;
+  $("wa").href = "https://wa.me/?text=" + encodeURIComponent(shareText(st, sk.current, "whatsapp"));
+  $("copy").dataset.text = shareText(st, sk.current, "copy");
+  const isToday = P.date === todayIST(appNow());
+  $("playToday").hidden = isToday; $("countdown").hidden = !isToday;
+  clearInterval(countdownTimer);
+  if (isToday) {
+    const tick = () => {
+      const ms = msUntilIST(todayIST(appNow() + 86400000));
+      $("countdown").innerHTML = `Next paheli in <b>${countdownText(ms)}</b>`;
+    };
+    tick(); countdownTimer = setInterval(tick, 30000);
+  }
+  const subject = `Paheli Mini #${num} (${formatShort(P.date)}): clue report`;
+  const body = "Which clue (e.g. 4 Across)?\n\nWhat's wrong?\n";
+  $("reportClue").href = `mailto:${REPORT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  const ul = $("whyList"); ul.innerHTML = "";
+  entries.forEach((e) => {
+    const li = document.createElement("li"); const b = document.createElement("b");
+    b.textContent = e.answer; li.appendChild(b);
+    li.appendChild(document.createTextNode(` (${e.num} ${e.dir === "A" ? "Across" : "Down"}): ${e.why}`));
+    ul.appendChild(li);
+  });
+  $("modal").hidden = false; $("copy").focus();
+}
+$("closeModal").onclick = () => { $("modal").hidden = true; };
+$("playToday").onclick = () => location.reload();
+$("copy").onclick = () => {
+  track("share-copy");
+  const t = $("copy").dataset.text || "";
+  navigator.clipboard?.writeText(t).then(() => toast("Copied. Paste it in the family group."), () => toast("Couldn't copy here. Use the WhatsApp button.")) ?? toast("Couldn't copy here. Use the WhatsApp button.");
 };
-$("wa").addEventListener("click",()=>track("share-whatsapp",{puzzle:P.id}));
-$("modal").addEventListener("click",e=>{if(e.target.id==="modal")$("modal").hidden=true});
+$("wa").addEventListener("click", () => track("share-whatsapp"));
+$("reportClue").addEventListener("click", () => track("report-clue"));
+$("copyAddress").onclick = () => {
+  navigator.clipboard?.writeText(REPORT_EMAIL).then(() => toast("Email address copied."), () => toast(REPORT_EMAIL)) ?? toast(REPORT_EMAIL);
+};
+$("modal").addEventListener("click", (e) => { if (e.target.id === "modal") $("modal").hidden = true; });
 
-let tt;function toast(m){const t=$("toast");t.textContent=m;t.classList.add("show");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("show"),2200)}
+let tt;
+function toast(m) { const t = $("toast"); t.textContent = m; t.classList.add("show"); clearTimeout(tt); tt = setTimeout(() => t.classList.remove("show"), 2200); }
 
-// keyboard
-["QWERTYUIOP","ASDFGHJKL","ZXCVBNM"].forEach((row,ri)=>{
-  const r=document.createElement("div");r.className="row";
-  if(ri===2){const b=document.createElement("button");b.className="wide";b.textContent="Next";b.dataset.k="NEXT";r.appendChild(b)}
-  [...row].forEach(ch=>{const b=document.createElement("button");b.textContent=ch;b.dataset.k=ch;r.appendChild(b)});
-  if(ri===2){const b=document.createElement("button");b.className="wide";b.innerHTML="&#9003;";b.setAttribute("aria-label","Delete");b.dataset.k="DEL";r.appendChild(b)}
+// ---------- keyboard ----------
+["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"].forEach((row, ri) => {
+  const r = document.createElement("div"); r.className = "row";
+  if (ri === 2) { const b = document.createElement("button"); b.className = "wide"; b.textContent = "Next"; b.dataset.k = "NEXT"; r.appendChild(b); }
+  [...row].forEach((ch) => { const b = document.createElement("button"); b.textContent = ch; b.dataset.k = ch; r.appendChild(b); });
+  if (ri === 2) { const b = document.createElement("button"); b.className = "wide"; b.innerHTML = "&#9003;"; b.setAttribute("aria-label", "Delete"); b.dataset.k = "DEL"; r.appendChild(b); }
   $("kb").appendChild(r);
 });
-$("kb").addEventListener("click",e=>{const k=e.target.closest("button")?.dataset.k;if(!k)return;
-  if(k==="DEL")backspace();else if(k==="NEXT"){if(S.started&&!S.solved)nextEntry(1)}else typeLetter(k)});
-document.addEventListener("keydown",e=>{
-  if(e.metaKey||e.ctrlKey||e.altKey)return;
-  if(!$("modal").hidden){if(e.key==="Escape")$("modal").hidden=true;return}
-  if(!$("helpMenu").hidden){if(e.key==="Escape")closeMenu();return}
-  if(!S.started&&!S.solved&&e.key==="Enter"){$("start").click();e.preventDefault();return}
-  if(/^[a-zA-Z]$/.test(e.key)){typeLetter(e.key.toUpperCase());e.preventDefault()}
-  else if(e.key==="Backspace"){backspace();e.preventDefault()}
-  else if(e.key==="ArrowLeft"){move(0,-1);e.preventDefault()}
-  else if(e.key==="ArrowRight"){move(0,1);e.preventDefault()}
-  else if(e.key==="ArrowUp"){move(-1,0);e.preventDefault()}
-  else if(e.key==="ArrowDown"){move(1,0);e.preventDefault()}
-  else if(e.key==="Tab"||e.key==="Enter"){if(S.started&&!S.solved){nextEntry(e.shiftKey?-1:1);e.preventDefault()}}
-  else if(e.key===" "){if(S.started&&!S.solved){tapCell(sel);e.preventDefault()}}
+$("kb").addEventListener("click", (e) => {
+  const k = e.target.closest("button")?.dataset.k; if (!k) return;
+  if (k === "DEL") backspace(); else if (k === "NEXT") { if (canPlay()) nextEntry(1); } else typeLetter(k);
+});
+document.addEventListener("keydown", (e) => {
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  if (!$("modal").hidden) { if (e.key === "Escape") $("modal").hidden = true; return; }
+  if (!$("helpMenu").hidden) { if (e.key === "Escape") closeMenu(); return; }
+  if (!ready || !S) return;
+  if (!S.started && !solved && e.key === "Enter") { $("start").click(); e.preventDefault(); return; }
+  if (/^[a-zA-Z]$/.test(e.key)) { typeLetter(e.key.toUpperCase()); e.preventDefault(); }
+  else if (e.key === "Backspace") { backspace(); e.preventDefault(); }
+  else if (e.key === "ArrowLeft") { move(0, -1); e.preventDefault(); }
+  else if (e.key === "ArrowRight") { move(0, 1); e.preventDefault(); }
+  else if (e.key === "ArrowUp") { move(-1, 0); e.preventDefault(); }
+  else if (e.key === "ArrowDown") { move(1, 0); e.preventDefault(); }
+  else if (e.key === "Tab" || e.key === "Enter") { if (canPlay()) { nextEntry(e.shiftKey ? -1 : 1); e.preventDefault(); } }
+  else if (e.key === " ") { if (canPlay()) { tapCell(sel); e.preventDefault(); } }
 });
 
-try{$("dateline").textContent=new Date().toLocaleDateString("en-IN",{weekday:"long",day:"numeric",month:"long",year:"numeric"})}catch(e){}
-const last=store.get("paheli-last");
-const fresh=[...PUZZLES.keys()].reverse().find(i=>!(store.get("paheli-"+PUZZLES[i].id)||{}).solved);
-load(fresh??(Number.isInteger(last)&&PUZZLES[last]?last:0));
+state.migrateLegacy();
+sendPageview();
+boot();
 </script>
 </body>
 </html>

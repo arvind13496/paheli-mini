@@ -1,0 +1,16 @@
+name: check
+on:
+  push:
+    branches: [main]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Unit tests
+        run: node --test tests/*.test.mjs
+      - name: Published puzzles
+        run: node tools/check.mjs puzzles/
