@@ -139,3 +139,15 @@ The Stage 8 zoom-out confirmed that most fixes are cheap. Its main warning: abou
 3. **Launch date:** which India date is puzzle #1?
 
 Every other action above can be applied directly to the design doc in one pass, using `egm-resolve`.
+
+---
+
+## Resolution (2026-10-27, revision 2 of the design)
+
+Arvind's decisions:
+* **Batches.** Weekly batches of 7. The buffer target is 7 to 14 days, with an alert at fewer than 3. Every text is reviewed, which fits about 30 minutes for a batch this size.
+* **Batch storage.** Unpublished batches live on Arvind's laptop, in `batches/` inside his clone, which git ignores.
+* **Launch.** Puzzle #1 is Thursday 29 October 2026, with the full build done first.
+* **Scope.** v1 runs for its first month, with targets reviewed at the end of week 4.
+
+All blockers B1 to B5 and majors M1 to M16 are applied in the design doc. "Rejected as over-build" is recorded as Alternative H.
