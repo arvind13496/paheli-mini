@@ -1,7 +1,7 @@
 # Paheli Mini: Daily Puzzle System (v1)
 
 *   **Author:** Arvind Lakhani
-*   **Status:** In Review (revision 2, after the Goldfish review)
+*   **Status:** Approved for build (revision 3, after the Goldfish review and the Stage 9 re-audit)
 *   **Date:** 2026-10-27
 *   **Review:** [consolidated review report](../reviews/consolidated_review_report.md)
 
@@ -271,9 +271,12 @@ tools/publish.mjs (approved only) -> puzzles/<date>.json   git push -+-> check.y
 | Situation | Screen | Umami event |
 |---|---|---|
 | Today in manifest, file loads and decodes | Start screen | (none until start) |
-| Today not in manifest | "Today's paheli is running late. Next one in Hh Mm." | `puzzle-missing` |
-| Network error on either fetch | "You're offline. Check your connection." + Retry | none |
-| File missing (404) though listed, or bad JSON, or unknown `schema` | "Something went wrong. Refresh the page." | `puzzle-error` |
+| Today is before `manifest.launch` | "Paheli Mini starts Thursday, 29 October. First one in Hh Mm." | none |
+| Today not in manifest (on or after launch) | "Today's paheli is running late. Next one in Hh Mm." | `puzzle-missing` |
+| A `fetch()` call rejects (no connection) | "You're offline. Check your connection." + Retry | none |
+| Any other failure: an HTTP error status (including 404 for a listed date), bad base64 or JSON, `PuzzleFormatError` | "Something went wrong. Refresh the page." | `puzzle-error` |
+
+The countdown screens reload the page when they reach zero.
 
 *   **Midnight in an open tab.**
     *   When the tab becomes visible again and the India date has changed:
@@ -293,6 +296,9 @@ Three localStorage keys, each re-read before every write so two tabs can't overw
 | `paheli:v1:progress` | One in-progress puzzle: `{ date, hash, letters[25], elapsedMs, started, hints[], ok[], wrong[], rev[], checks, reveals, usedAuto }` |
 
 *   `hash` is computed by the app with `gridHash(grid)`. Progress for a different grid is thrown away.
+*   **Progress belongs to one date.** These rules stop a stale tab from wiping or overwriting another tab's newer puzzle:
+    *   `saveProgress` writes only when the stored progress is empty, has the same date, or has an older date.
+    *   `recordSolve` and `clearProgress` clear progress only when the stored `progress.date` equals the solved date.
 *   **Solved puzzles.** A solve is written to `solves`, and `progress` is cleared. Reopening a solved date shows the result card and fills the grid from the answers.
 *   **Streaks.**
     *   Start at today if it's solved, otherwise yesterday.
@@ -348,7 +354,12 @@ https://arvind13496.github.io/paheli-mini/?utm_source=whatsapp&utm_medium=share
 
 *   The Copy version uses `utm_source=copy`.
 *   If storage is unavailable, " · Streak N" is left out.
-*   On load, the app removes `utm_*` from the address bar with `history.replaceState`, so reloads aren't counted twice.
+*   **Counting share visits exactly once:**
+    *   The Umami tag gets `data-auto-track="false"`.
+    *   At boot, the app saves `location.pathname + location.search`.
+    *   It calls `umami.track(p => ({ ...p, url: saved }))`, so the visit is recorded with its `utm_*` source.
+    *   Only then does it remove `utm_*` from the address bar with `history.replaceState`.
+    *   Reloads and the history change aren't counted twice.
 *   **Report a clue.** One entry point, on the result card. It is a `mailto:` link with:
     *   subject "Paheli Mini #N (DD Mon YYYY): clue report"
     *   body "Which clue (e.g. 4 Across)?\n\nWhat's wrong?\n"
@@ -547,7 +558,8 @@ Built in five phases. Each phase leaves the repo working and has an exit check. 
     *   `formatShort(date)` returns "29 Oct 2026".
     *   `countdownText(ms)` returns "7h 12m", or "12m" under an hour.
     *   **Test-date override.** `appNow()` returns `Date.now()`, or, only when `globalThis.location?.hostname` is `localhost` or `127.0.0.1` and the URL has `?date=YYYY-MM-DD`, 06:00 IST on that date.
-    *   **The app calls `appNow()` everywhere**, including the countdown. Tools and tests pass `now` explicitly.
+    *   **The override clock keeps running.** It returns the override start plus `Date.now() - pageLoadTime`, so countdowns still move during local testing.
+    *   **Where `appNow()` is used:** for the India date, the countdowns and the midnight check. The solve timer keeps using `Date.now()`. Tools and tests pass `now` explicitly.
 
 #### 2. `lib/grid.js` (Create)
 
@@ -582,12 +594,18 @@ Built in five phases. Each phase leaves the repo working and has an exit check. 
     *   `clearProgress()`.
     *   `getSolve(date)`.
     *   `recordSolve(date, stats)`: re-reads solves, merges by date, writes, then clears progress.
-    *   `streaks(manifestDates, today)` returns `{ current, best }`, following the Technical Plan §3 rules.
+    *   `streaks(manifestDates, today)` returns `{ current, best }`, following the Technical Plan §3 rules. Manifest dates are already sorted strings, so no date arithmetic is needed.
+    *   The progress ownership rules from Technical Plan §3 apply to `saveProgress`, `recordSolve` and `clearProgress`.
+    *   **No cross-imports.** No module in `lib/` imports another. This keeps cache-busting to the imports in `index.html`.
 
 #### 5. `tests/fixtures/samples.json` (Create)
 
 *   **Type / Scope**: Test data.
-*   **Proposed Changes**: The three prototype puzzles converted to the new record format (clues keyed by slot id), plus expected slot ids and numbers. These are used as fixtures only, never published.
+*   **Proposed Changes**: The three prototype puzzles converted to the new record format (clues keyed by slot id), plus expected slot ids and numbers. They are fixtures only, never published.
+    *   The conversion adds `constructor: "Arvind Lakhani"`.
+    *   It adds a reference URL as `source` for each GK clue (RAO, IDIOT, ONION, SRI, HILL, ANIL).
+    *   Dates are set 20 days apart (2026-01-01, 2026-01-21 and 2026-02-10), so SRI in samples 2 and 3 doesn't trigger the repeat rule.
+    *   Sample 1 keeps its title "Spill the Tea" as the **known title-leak fixture** (TEA is an answer). Samples 2 and 3 are the **clean fixtures**.
 
 #### 6. `tests/dates.test.mjs`, `grid.test.mjs`, `codec.test.mjs`, `state.test.mjs` (Create)
 
@@ -622,6 +640,15 @@ Built in five phases. Each phase leaves the repo working and has an exit check. 
         *   A progress hash mismatch returns null.
         *   `recordSolve` from a stale tab keeps the other tab's solve.
         *   A storage stand-in that throws on write gives `available === false`.
+        *   Progress ownership:
+            *   `saveProgress` for an older date doesn't overwrite a newer date's progress.
+            *   `recordSolve` for yesterday doesn't clear today's progress.
+        *   `getSettings` and `setSettings` round-trip correctly.
+        *   `getSolve` returns the recorded entry.
+    *   **dates extras:**
+        *   `istHourStamp(Date.UTC(2026,9,28,18,30,0))` returns `"2026102900"`.
+        *   `addDays("2026-10-31", 1)` returns `"2026-11-01"`.
+        *   `formatShort("2026-10-29")` returns `"29 Oct 2026"`.
 
 *   **Phase 1 exit check:** `npm test` passes.
 
@@ -629,24 +656,36 @@ Built in five phases. Each phase leaves the repo working and has an exit check. 
 
 #### 7. `tools/check.mjs` (Create)
 
-*   **Type / Scope**: Node CLI, using built-ins only. Exports `checkRecords(records, published)` for tests.
-*   **Proposed Changes**:
-    *   `node tools/check.mjs batches/<id>.json` checks a batch (plaintext, detected by a `records` array).
-    *   `node tools/check.mjs puzzles/` checks published files:
-        *   decodes every `<date>.json`
-        *   re-checks each one
-        *   checks the manifest and the files match exactly
-        *   checks `launch` equals the earliest manifest date
-    *   `--buffer 3` fails if today is missing or fewer than 3 dates after today are listed.
-    *   `--used` prints answers from the last 14 days and the next 14 days of published puzzles.
-    *   It applies every rule in Technical Plan §5 step 2. "Published" means all decoded `puzzles/*.json` files.
-    *   Exit codes: 1 on any error, 0 if there are only warnings.
-    *   Writes warnings into each record's `warnings` field when checking a batch.
+*   **Type / Scope**: Node CLI, using built-ins only.
+*   **Exports** (used by the tests):
+    *   `checkBatch(records, published, today)`
+    *   `checkPublished(dir, { today, buffer })`
+*   **Proposed Changes**: The CLI passes `todayIST()` as `today`. Tests pass a fixed date, so results never depend on the real clock.
+    *   **Batch mode:** `node tools/check.mjs batches/<id>.json`.
+        *   Records whose date is already in the manifest are skipped, with "already published, skipped".
+        *   The rest get every rule in Technical Plan §5 step 2.
+        *   Repeats are checked against published puzzles and the other records in the batch.
+        *   Dates must be after `today` and not yet published.
+        *   Warnings are written into each record's `warnings` field.
+    *   **Published mode:** `node tools/check.mjs puzzles/`.
+        *   Decodes every `<date>.json`.
+        *   Runs the shape, content and answer-leak rules on each file.
+        *   Runs the repeat rule between files with different dates only.
+        *   Does not run date rules.
+        *   Also checks:
+            *   The manifest and the files match exactly.
+            *   `launch` equals the earliest manifest date.
+            *   The date inside each file matches its file name.
+    *   **`--buffer 3`** (published mode): fails if fewer than 3 dates after `today` are listed, or if `today` is missing. Before `launch`, only the count after `today` is checked.
+    *   **`--used`**: prints answers within 14 days either side of `today`, from published files.
+    *   **Exit codes:** 1 on any error, 0 if only warnings.
 
 #### 8. `tools/make-sheet.mjs` (Create)
 
 *   **Type / Scope**: Node CLI, using `exceljs`.
 *   **Proposed Changes**: Writes `review/<id>.xlsx` with the column layout from Technical Plan §5 step 4.
+    *   **Already-published records are skipped**, so a follow-up sheet contains only the puzzles still in the fix loop.
+    *   **Overwriting is safe.** The sheet file is overwritten each run; approved puzzles are already published by then.
     *   Status is a dropdown with three values.
     *   The header row is frozen and long text wraps.
 
@@ -655,6 +694,7 @@ Built in five phases. Each phase leaves the repo working and has an exit check. 
 *   **Type / Scope**: Node CLI, using `exceljs`.
 *   **Proposed Changes**: Follows the rules in Technical Plan §5 step 7.
     *   It matches sheet rows to records by Date.
+    *   It skips records whose dates are already in the manifest, with a note rather than an error.
     *   It removes the production-only fields, encodes, writes the files and updates the manifest.
     *   It prints which dates were published, skipped (not approved) or refused.
     *   It never commits or pushes.
@@ -662,7 +702,7 @@ Built in five phases. Each phase leaves the repo working and has an exit check. 
 #### 10. `tests/check.test.mjs` (Create)
 
 *   **Type / Scope**: `node:test`.
-*   **Proposed Changes**: `checkRecords` fails on each of these:
+*   **Proposed Changes**: `checkBatch` (with `today = "2025-12-01"`) fails on each of these:
     *   an answer in its own clue ("TEA" in "Spill the tea", ignoring case)
     *   an answer in the title
     *   the same word twice in one grid
@@ -673,8 +713,12 @@ Built in five phases. Each phase leaves the repo working and has an exit check. 
 
     It also checks:
     *   the substring "ATE" inside "later" passes, because matching is whole-word only
-    *   a clean sample passes
-    *   a manifest/file mismatch fails
+    *   samples 2 and 3 pass
+    *   sample 1 fails only on its title
+    *   `checkPublished` on a temporary folder:
+        *   fails when the manifest and files don't match
+        *   passes with matching files dated in the past
+        *   with `buffer: 3`, fails when only 2 future dates exist
 
 #### 11. `data/misspellings.txt` (Create)
 
@@ -704,7 +748,8 @@ Built in five phases. Each phase leaves the repo working and has an exit check. 
         *   `"type": "module"`
         *   dev dependency `exceljs`
         *   scripts:
-            *   `"test": "node --test tests/"`
+            *   `"test": "node --test tests/*.test.mjs"`
+        *   `"engines": { "node": ">=22" }`
             *   `"check": "node tools/check.mjs puzzles/"`
             *   `"sheet": "node tools/make-sheet.mjs"`
             *   `"publish": "node tools/publish.mjs"`
@@ -728,17 +773,26 @@ Built in five phases. Each phase leaves the repo working and has an exit check. 
 
 *   **Type / Scope**: App shell.
 *   **Proposed Changes**:
-    *   Change the inline `<script>` to `<script type="module">`, importing the four `lib/` modules with `?v=APP_VERSION`.
-        *   Add the constant `APP_VERSION = "1.0.0"`.
+    *   Change the inline `<script>` to `<script type="module">`.
+        *   Import the four `lib/` modules with **literal** specifiers, such as `"./lib/grid.js?v=1.0.0"`, since import paths can't be built from a variable.
+        *   Add the constant `APP_VERSION = "1.0.0"`. Each release changes the constant and the four import strings together. The README states this.
         *   Rename the local `load` to `loadPuzzle` and `save` to `persist`, to avoid clashing with imports.
+        *   Add `data-auto-track="false"` to the Umami tag (see Technical Plan §4).
     *   **Removals:** everything in Technical Plan §4 "Removed".
     *   **Renames:**
-        *   slot fields `t/c/e/w` become `tag/clue/easy/why`, and `ans` becomes `answer`
+        *   slot fields `t/c/e/w` become `tag/clue/easy/why`
+        *   the slot's `ans` and the cell's `cells[i].ans` both become `answer`
         *   `cellEnt` becomes `cellSlots`
         *   hint keys use slot ids ("1A") instead of "A1"
-        *   `S.solved` and `S.usedAuto` move into the progress record
+        *   `S.elapsed` becomes `S.elapsedMs`
+        *   `AUTO` reads and writes `getSettings().autocheck` and `setSettings()` in place of `store`
+        *   `renderSwitch()` calls are removed from both `load()` and `solve()`
+    *   **Solved state:**
+        *   `S.solved` is derived as `getSolve(P.date) !== null`. It is never stored in progress.
+        *   For a reopened solved puzzle, the result card and the help line read the solve entry: `sec`, `hints` (a count), `checks`, `reveals` and `auto`.
+        *   `helpLine()` and `tagFor()` take a stats object `{ sec, hints, checks, reveals, auto }`. `solve()` builds that object from `S`.
     *   **Boot:**
-        1.  Set `ready = false`. Every input handler returns early while `ready` is false.
+        1.  Set `ready = false`. Grid, keyboard and help-menu input do nothing while `ready` is false. Result-card buttons (Copy, WhatsApp, Report, Back) are never blocked.
         2.  Run `migrateLegacy()`.
         3.  Remove `utm_*` from the address bar.
         4.  Compute `today`.
@@ -748,6 +802,13 @@ Built in five phases. Each phase leaves the repo working and has an exit check. 
         8.  Otherwise restore progress if the hash matches, show the start screen, and set `ready = true`.
     *   **Running late and offline screens.** Use the existing veil card with new text. The offline variant has a Retry button that re-runs the boot. The "running late" countdown reloads the page when it reaches zero.
     *   **Midnight.** Add a `!document.hidden` branch to the existing `visibilitychange` handler, as specified in Technical Plan §2.
+        *   When the India date has changed and the puzzle is unstarted, call `location.reload()`.
+        *   When it is started or solved, show the toast "A new paheli is out" with a **Play** button that calls `location.reload()`.
+    *   **CUJ 4 (finishing across midnight).** In `solve()`, and when a solved puzzle is reopened, check whether `P.date !== todayIST(appNow())`. If so:
+        *   Hide the "Next paheli in" countdown.
+        *   Show a **Play today's paheli** button (id `playToday`) that calls `location.reload()`.
+        *   `recordSolve` always uses `P.date`, never today.
+    *   **New element ids:** `streakLine`, `storageNote`, `countdown`, `playToday`, `reportClue`, `reportAddress`, `copyAddress`, `newPuzzleToast`.
     *   **Masthead and screens.** Masthead uses `formatIST(today)`. The start screen, result card, share text, report link and analytics events follow Technical Plan §4.
         *   `track()` adds `puzzle` and `v` to every event.
         *   `puzzle-solve` adds `streak`.
@@ -762,8 +823,8 @@ Built in five phases. Each phase leaves the repo working and has an exit check. 
 *   **Type / Scope**: GitHub Actions, triggered on `push` to `main`.
 *   **Proposed Changes**:
     *   `actions/checkout@v4`
-    *   `actions/setup-node@v4` with Node 20
-    *   `node --test tests/`
+    *   `actions/setup-node@v4` with Node 22
+    *   `node --test tests/*.test.mjs`
     *   `node tools/check.mjs puzzles/`
     *   No `npm install` is needed, because tests and the checker use built-ins only.
 
@@ -772,7 +833,7 @@ Built in five phases. Each phase leaves the repo working and has an exit check. 
 *   **Type / Scope**: GitHub Actions. Runs on `schedule: "40 18 * * *"` (00:10 IST), and can also be run by hand (`workflow_dispatch`).
 *   **Proposed Changes**:
     *   `actions/checkout@v4`
-    *   `actions/setup-node@v4` with Node 20
+    *   `actions/setup-node@v4` with Node 22
     *   `node tools/check.mjs puzzles/ --buffer 3`
 
 #### 18. `tests/manual-checklist.md` (Create)
@@ -787,6 +848,8 @@ Built in five phases. Each phase leaves the repo working and has an exit check. 
     *   that WhatsApp and Copy share text include the link
     *   that the report email opens with the right subject
     *   that events appear in Umami's Realtime view within 10 minutes of a live solve
+    *   opening `?utm_source=whatsapp&utm_medium=share` on the live site gives exactly one visit in Umami, with source "whatsapp"
+    *   the pre-launch screen on 28 October
 
 #### 19. `README.md` (Modify)
 
@@ -804,7 +867,8 @@ Built in five phases. Each phase leaves the repo working and has an exit check. 
 *   **Build**: No build step. Run `node --check` on every `.js` and `.mjs` file.
 *   **Unit Tests**: `npm test`. Every case in items 6 and 10 passes.
 *   **Content**: `npm run check` passes for all published dates.
-*   **Coverage**: Every function in `lib/dates.js`, `lib/grid.js`, `lib/codec.js` and `lib/state.js` that's listed in items 1-4 has a test in item 6. UI behaviour is covered by the manual checklist rather than automated tests.
+*   **Coverage**: Every case listed in items 6 and 10 passes. `appNow()` and the UI are covered by the manual checklist rather than automated tests.
+*   **Node**: version 22 or later, both locally and in CI.
 *   **Live check after launch**:
     *   Solve on a phone.
     *   Confirm `puzzle-start`, `puzzle-solve` and `share-whatsapp` appear in Umami within 10 minutes.

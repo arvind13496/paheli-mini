@@ -151,3 +151,25 @@ Arvind's decisions:
 * **Scope.** v1 runs for its first month, with targets reviewed at the end of week 4.
 
 All blockers B1 to B5 and majors M1 to M16 are applied in the design doc. "Rejected as over-build" is recorded as Alternative H.
+
+## Stage 9 re-audit (final, 1-audit cap reached)
+
+Both readiness reviewers re-ran on revision 2 and found 2 blockers and about 10 majors, all of them fixable in the doc. Revision 3 applies every one:
+
+* **Node and test runner.** `npm test` uses `node --test tests/*.test.mjs`, with Node 22 or later locally and in CI.
+* **Two checker modes:**
+  * **Published mode** skips the date rules and checks repeats only between different dates.
+  * **Batch mode** skips puzzles that are already published.
+  * Both take `today` explicitly, so results never depend on the real clock.
+* **Fix loop.** Puzzles already published are skipped in check, make-sheet and publish.
+* **Sample fixtures.** Converted with sources, a constructor and spaced-out dates. Sample 1 is kept as the known title-leak case.
+* **Cache-busting.** Literal `?v=1.0.0` imports, and no imports between `lib/` modules.
+* **Override clock.** `appNow()` keeps ticking during local tests. The solve timer keeps using `Date.now()`.
+* **Renamed and solved state.** Missing renames are listed (`cells.ans`, `elapsedMs`, `AUTO`), solved state is derived from `getSolve()`, and stats come from a single object.
+* **Input lock.** It covers grid, keyboard and help-menu input only. Result-card buttons always work.
+* **Progress ownership.** Rules stop a stale tab from wiping a newer puzzle's progress.
+* **Finishing after midnight (CUJ 4) and the new-puzzle toast.** Both are specified, each with a reload button.
+* **Share visits counted once.** Umami runs with auto-tracking off, the visit is sent manually with its saved `utm_*` source, and only then is the address bar cleaned.
+* **New screens.** A pre-launch screen, plus a precise split between "offline" and "error".
+
+**Verdict:** the review is concluded. Anything left is a small wording issue, accepted as is.
