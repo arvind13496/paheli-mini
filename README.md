@@ -19,9 +19,10 @@ Node 22 or later. Run `npm install` once (it installs `exceljs` for the review s
 1. **Generate.** Ask Claude for the next 7 dates, following `docs/clue-style.md`. Give it the output of `node tools/check.mjs --used`. It writes `batches/<id>.json`.
 2. **Check.** Run `node tools/check.mjs batches/<id>.json`. Errors go back to Claude.
 3. **Sheet.** Run `node tools/make-sheet.mjs batches/<id>.json`. This writes `review/<id>.xlsx`.
-4. **Review.** Set Status to *approved*, *fix clue* or *replace puzzle*, and add notes.
-5. **Publish.** Run `node tools/publish.mjs batches/<id>.json review/<id>.xlsx`. Only approved puzzles are published, and their content comes from the batch file.
-6. **Test and push.** Run `npm test`, then commit `puzzles/` and push.
+4. **Play-test (optional).** Run `node tools/preview.mjs batches/<id>.json` and open `review/<id>-preview.html` in a browser. Every puzzle in the batch is playable. Nothing is saved, and nothing is sent to analytics.
+5. **Review.** Set Status to *approved*, *fix clue* or *replace puzzle*, and add notes.
+6. **Publish.** Run `node tools/publish.mjs batches/<id>.json review/<id>.xlsx`. Only approved puzzles are published, and their content comes from the batch file.
+7. **Test and push.** Run `npm test`, then commit `puzzles/` and push.
 
 `batches/` and `review/` contain readable answers and are git-ignored. Keep them on your laptop.
 

@@ -56,7 +56,8 @@ header{display:grid;gap:4px;border-bottom:3px double var(--rule);padding-bottom:
 .cell.rev::before{content:"";position:absolute;top:0;right:0;width:0;height:0;border-style:solid;border-width:0 10px 10px 0;border-color:transparent var(--wrong) transparent transparent;z-index:2}
 .board.solved .cell:not(.block){background:var(--cell)}
 
-.veil{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:18px}
+.veil{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:18px;overflow:auto}
+.veil-card .pick{width:100%;font-size:13px;padding:7px 10px;border-radius:0;margin-top:2px}
 .veil-card{background:var(--paper);border:1px solid var(--rule);box-shadow:4px 4px 0 var(--rule);padding:18px;display:grid;gap:6px;max-width:290px;justify-items:center}
 .veil-card .eyebrow{font-family:var(--f-ui);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft)}
 .veil-card h2{font-family:var(--f-mast);font-weight:900;font-size:28px;margin:0;line-height:1.1;text-wrap:balance}
@@ -259,7 +260,11 @@ const TAGS = { R: "Riddle", GK: "GK", N: "Pop" };
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[m]));
 
-const state = createState();
+// Preview mode: a batch preview page sets window.PAHELI_PREVIEW = { launch, records }.
+// Nothing is saved and nothing is sent to analytics.
+const PREVIEW = window.PAHELI_PREVIEW || null;
+function memoryStorage() { const m = new Map(); return { getItem: (k) => (m.has(k) ? m.get(k) : null), setItem: (k, v) => m.set(k, String(v)), removeItem: (k) => m.delete(k) }; }
+const state = createState(PREVIEW ? memoryStorage() : undefined);
 let ready = false, manifest = null, P = null, num = null, hash = "";
 let cells = [], entries = [], cellSlots = [], S = null, solved = false, solveStats = null;
 let sel = 0, dir = "A", timerId = null, runStart = 0;
@@ -267,9 +272,11 @@ let AUTO = state.getSettings().autocheck === true;
 
 // ---------- analytics ----------
 function track(name, data = {}) {
+  if (PREVIEW) return;
   try { window.umami && window.umami.track(name, { ...data, puzzle: num, v: APP_VERSION }); } catch (e) { /* analytics never breaks the game */ }
 }
 function sendPageview() {
+  if (PREVIEW) return;
   const saved = location.pathname + location.search;
   const send = () => { try { window.umami && window.umami.track((p) => ({ ...p, url: saved })); } catch (e) {} };
   if (window.umami) send(); else window.addEventListener("load", send, { once: true });
@@ -311,6 +318,7 @@ function blankBoard() {
 
 // ---------- boot ----------
 async function boot() {
+  if (PREVIEW) return previewPicker();
   ready = false;
   clearInterval(screenTimer);
   const now = appNow();
@@ -343,7 +351,10 @@ async function boot() {
     if (!pRes.value.ok) throw new Error("puzzle " + pRes.value.status);
     rec = readPuzzleFile(await pRes.value.json());
   } catch (e) { return errorScreen(e); }
+  startRecord(rec, today);
+}
 
+function startRecord(rec, today) {
   try {
     if (!Array.isArray(rec.grid) || typeof rec.title !== "string" || !rec.clues) throw new Error("malformed puzzle");
     const built = buildPuzzle(rec.grid, rec.clues);
@@ -364,6 +375,26 @@ async function boot() {
   updateTime(); update();
   ready = true;
 }
+// ---------- preview ----------
+function previewPicker() {
+  ready = false; P = null; S = null; solved = false;
+  clearInterval(countdownTimer);
+  manifest = { launch: PREVIEW.launch, dates: PREVIEW.records.map((r) => r.date).sort() };
+  $("dateline").textContent = "Preview · nothing is saved";
+  $("modal").hidden = true;
+  blankBoard();
+  showScreen({ eyebrow: "Preview", title: "Pick a puzzle", text: "Play any day before it goes live." });
+  const card = document.querySelector(".veil-card");
+  card.querySelectorAll(".pick").forEach((b) => b.remove());
+  PREVIEW.records.slice().sort((a, b) => (a.date < b.date ? -1 : 1)).forEach((r) => {
+    const b = document.createElement("button");
+    b.className = "btn alt pick";
+    b.textContent = `#${numberFor(r.date, PREVIEW.launch)} · ${formatShort(r.date)} · ${r.title}`;
+    b.onclick = () => { card.querySelectorAll(".pick").forEach((x) => x.remove()); num = numberFor(r.date, PREVIEW.launch); startRecord(r, r.date); };
+    card.appendChild(b);
+  });
+}
+
 function errorScreen(e) {
   track("puzzle-error", { reason: String(e && e.message || e).slice(0, 60) });
   showScreen({ title: "Something went wrong", text: "Refresh the page to try again.", retry: "Refresh" });
@@ -516,6 +547,7 @@ $("pause").onclick = () => {
 };
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) { if (timerId) $("pause").click(); return; }
+  if (PREVIEW) return;
   const t = todayIST(appNow());
   if (!P) { if (manifest && ready === false && $("dateline").textContent !== formatIST(t)) location.reload(); return; }
   if (t !== P.date) {
@@ -621,10 +653,13 @@ function openModal(st) {
   $("shareStats").textContent = helpLine(st);
   $("streakLine").textContent = state.available ? `Streak ${sk.current} · Best ${sk.best}` : "Streaks can't be saved in this browser";
   $("storageNote").hidden = !state.available;
+  if (PREVIEW) { $("streakLine").textContent = "Preview · not saved"; $("storageNote").hidden = true; }
   $("wa").href = "https://wa.me/?text=" + encodeURIComponent(shareText(st, sk.current, "whatsapp"));
   $("copy").dataset.text = shareText(st, sk.current, "copy");
   clearInterval(countdownTimer);
+  if (PREVIEW) { $("countdown").hidden = true; $("playToday").hidden = false; $("playToday").textContent = "Back to puzzle list"; }
   const tick = () => {
+    if (PREVIEW) return;
     const isToday = P.date === todayIST(appNow());
     $("playToday").hidden = isToday; $("countdown").hidden = !isToday;
     if (!isToday) { clearInterval(countdownTimer); return; }
@@ -645,7 +680,7 @@ function openModal(st) {
   $("modal").hidden = false; $("copy").focus();
 }
 $("closeModal").onclick = () => { $("modal").hidden = true; };
-$("playToday").onclick = () => location.reload();
+$("playToday").onclick = () => (PREVIEW ? previewPicker() : location.reload());
 $("copy").onclick = () => {
   track("share-copy");
   const t = $("copy").dataset.text || "";
