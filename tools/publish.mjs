@@ -58,13 +58,11 @@ export async function publish(batchPath, sheetPath, { today = todayIST(), puzzle
     approved.push(rec);
   }
 
-  const { errors } = checkBatch(approved, published, today);
-  if (errors.length) {
-    for (const rec of approved) report.refused.push({ date: rec.date, reason: "checker failed" });
-    return { ...report, errors };
-  }
+  const { errors } = checkBatch(approved, published, today, undefined, manifest.dates);
+  const failed = new Set(approved.filter((r) => errors.some((e) => e.startsWith(`${r.date}:`))).map((r) => r.date));
+  for (const d of failed) report.refused.push({ date: d, reason: "checker failed" });
 
-  for (const rec of approved) {
+  for (const rec of approved.filter((r) => !failed.has(r.date))) {
     const clues = {};
     for (const [id, c] of Object.entries(rec.clues)) clues[id] = { tag: c.tag, clue: c.clue, easy: c.easy, why: c.why };
     const data = encode({ title: rec.title, constructor: rec.constructor, grid: rec.grid, clues });
@@ -76,7 +74,7 @@ export async function publish(batchPath, sheetPath, { today = todayIST(), puzzle
     const dates = [...publishedDates].sort();
     fs.writeFileSync(manifestPath, JSON.stringify({ launch: manifest.launch || dates[0], dates }, null, 2) + "\n");
   }
-  return { ...report, errors: [] };
+  return { ...report, errors };
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

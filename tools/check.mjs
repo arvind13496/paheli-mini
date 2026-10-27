@@ -106,9 +106,9 @@ export function loadPublished(dir) {
 }
 
 /** Batch mode. records: plaintext batch records; published: [{date, record}]; today: "YYYY-MM-DD". */
-export function checkBatch(records, published, today, misspellings = loadMisspellings()) {
+export function checkBatch(records, published, today, misspellings = loadMisspellings(), manifestDates = null) {
   const errors = [], warnings = {}, skipped = [];
-  const publishedDates = new Set(published.map((p) => p.date));
+  const publishedDates = new Set(manifestDates || published.map((p) => p.date));
   const pubEntries = published.map((p) => ({ date: p.date, answers: buildPuzzle(p.record.grid).slots.map((s) => s.answer) }));
   const batchDates = new Set();
   const checked = [];
@@ -183,8 +183,8 @@ function main(argv) {
   if (target.endsWith(".json")) {
     const batch = JSON.parse(fs.readFileSync(target, "utf8"));
     if (!Array.isArray(batch.records)) { console.error("Not a batch file: expected a \"records\" array"); return 1; }
-    const published = fs.existsSync(path.join(puzzlesDir, "manifest.json")) ? loadPublished(puzzlesDir).entries : [];
-    const { errors, warnings, skipped } = checkBatch(batch.records, published, today);
+    const loaded = fs.existsSync(path.join(puzzlesDir, "manifest.json")) ? loadPublished(puzzlesDir) : { entries: [], manifest: null };
+    const { errors, warnings, skipped } = checkBatch(batch.records, loaded.entries, today, loadMisspellings(), loaded.manifest && loaded.manifest.dates);
     for (const rec of batch.records) if (warnings[rec.date]) rec.warnings = warnings[rec.date];
     fs.writeFileSync(target, JSON.stringify(batch, null, 2) + "\n");
     skipped.forEach((d) => console.log(`${d}: already published, skipped`));

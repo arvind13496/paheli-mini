@@ -205,8 +205,8 @@ header{display:grid;gap:4px;border-bottom:3px double var(--rule);padding-bottom:
       <div class="tag" id="shareTag"></div>
       <div class="stats" id="shareStats"></div>
       <div class="streak" id="streakLine"></div>
+      <p class="note" id="storageNote" style="text-align:left">Saved on this browser</p>
     </div>
-    <p class="note" id="storageNote">Saved on this browser</p>
     <div class="sheet-actions">
       <button class="btn" id="copy">Copy result</button>
       <a class="btn go" id="wa" href="#" target="_blank" rel="noopener">Send on WhatsApp</a>
@@ -322,7 +322,7 @@ async function boot() {
     fetch(`puzzles/manifest.json?h=${istHourStamp(now)}`),
     fetch(`puzzles/${today}.json`),
   ]);
-  if (mRes.status === "rejected") return showScreen({ title: "You're offline", text: "Check your connection and try again.", retry: "Retry" });
+  if (mRes.status === "rejected") return showScreen({ title: "You're offline", text: "Check your connection and tap Retry.", retry: "Retry" });
   try {
     if (!mRes.value.ok) throw new Error("manifest " + mRes.value.status);
     manifest = await mRes.value.json();
@@ -337,18 +337,21 @@ async function boot() {
     const tomorrow = todayIST(now + 86400000);
     return countdownScreen(tomorrow, (left) => ({ eyebrow: `Paheli Mini #${num}`, title: "Running late", text: `Today's paheli is running late. Next one in ${left}.` }));
   }
-  if (pRes.status === "rejected") return showScreen({ title: "You're offline", text: "Check your connection and try again.", retry: "Retry" });
+  if (pRes.status === "rejected") return showScreen({ title: "You're offline", text: "Check your connection and tap Retry.", retry: "Retry" });
   let rec;
   try {
     if (!pRes.value.ok) throw new Error("puzzle " + pRes.value.status);
     rec = readPuzzleFile(await pRes.value.json());
   } catch (e) { return errorScreen(e); }
 
-  if (!state.available) track("storage-unavailable");
-  P = { date: today, title: rec.title, constructor: rec.constructor, grid: rec.grid };
-  const built = buildPuzzle(rec.grid, rec.clues);
-  cells = built.cells; entries = built.slots; cellSlots = built.cellSlots;
-  hash = gridHash(rec.grid);
+  try {
+    if (!Array.isArray(rec.grid) || typeof rec.title !== "string" || !rec.clues) throw new Error("malformed puzzle");
+    const built = buildPuzzle(rec.grid, rec.clues);
+    if (!built.slots.length || built.slots.some((x) => !x.clue)) throw new Error("malformed puzzle");
+    P = { date: today, title: rec.title, constructor: rec.constructor, grid: rec.grid };
+    cells = built.cells; entries = built.slots; cellSlots = built.cellSlots;
+    hash = gridHash(rec.grid);
+  } catch (e) { P = null; return errorScreen(e); }
   dir = "A"; sel = entries[0].cells[0];
   renderBoard(); renderClues();
 
@@ -509,7 +512,7 @@ $("start").onclick = () => {
 $("pause").onclick = () => {
   if (!ready || !S || solved || !S.started || !timerId) return;
   stopTimer();
-  showScreen({ eyebrow: "Chai break", title: P.title, by: `By ${P.constructor}`, text: `Paused at ${fmt(S.elapsedMs)}. The grid is hidden, so no peeking.`, start: "Resume" });
+  showScreen({ eyebrow: `Paheli Mini #${num}`, title: P.title, by: `By ${P.constructor}`, text: `Paused at ${fmt(S.elapsedMs)}`, start: "Resume" });
 };
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) { if (timerId) $("pause").click(); return; }
@@ -620,16 +623,15 @@ function openModal(st) {
   $("storageNote").hidden = !state.available;
   $("wa").href = "https://wa.me/?text=" + encodeURIComponent(shareText(st, sk.current, "whatsapp"));
   $("copy").dataset.text = shareText(st, sk.current, "copy");
-  const isToday = P.date === todayIST(appNow());
-  $("playToday").hidden = isToday; $("countdown").hidden = !isToday;
   clearInterval(countdownTimer);
-  if (isToday) {
-    const tick = () => {
-      const ms = msUntilIST(todayIST(appNow() + 86400000));
-      $("countdown").innerHTML = `Next paheli in <b>${countdownText(ms)}</b>`;
-    };
-    tick(); countdownTimer = setInterval(tick, 30000);
-  }
+  const tick = () => {
+    const isToday = P.date === todayIST(appNow());
+    $("playToday").hidden = isToday; $("countdown").hidden = !isToday;
+    if (!isToday) { clearInterval(countdownTimer); return; }
+    const ms = msUntilIST(todayIST(appNow() + 86400000));
+    $("countdown").innerHTML = `Next paheli in <b>${countdownText(ms)}</b>`;
+  };
+  tick(); countdownTimer = setInterval(tick, 30000);
   const subject = `Paheli Mini #${num} (${formatShort(P.date)}): clue report`;
   const body = "Which clue (e.g. 4 Across)?\n\nWhat's wrong?\n";
   $("reportClue").href = `mailto:${REPORT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
@@ -689,6 +691,7 @@ document.addEventListener("keydown", (e) => {
 
 state.migrateLegacy();
 sendPageview();
+if (!state.available) track("storage-unavailable");
 boot();
 </script>
 </body>

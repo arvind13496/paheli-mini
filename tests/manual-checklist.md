@@ -21,8 +21,14 @@ Run on a phone (390 px wide) and on desktop. For local checks, run `python3 -m h
 - [ ] A private window shows "Streaks can't be saved in this browser", and the share text has no streak.
 - [ ] With two tabs open, solving in one tab doesn't erase the other's solve.
 
+- [ ] CUJ 4: in a tab left open on the result card past midnight, the countdown is replaced by "Play today's paheli".
+- [ ] Midnight in an open tab: returning to an unstarted puzzle reloads it, and a started one shows the "A new paheli is out" toast.
+- [ ] CUJ 5: with the device time zone set to London, the India date and puzzle still show.
+- [ ] CUJ 6: the address Copy button copies arv.experiments@gmail.com.
+- [ ] CUJ 7: the weekly routine in the README produces a sheet, and publishing only approved rows works.
+
 ## Live site only
 - [ ] The WhatsApp and Copy share texts end with the site link.
-- [ ] "Report a clue" opens an email to arv.experiments@gmail.com with the subject "Paheli Mini #N (date): clue report".
+- [ ] "Report a clue" opens an email to arv.experiments@gmail.com with the subject "Paheli Mini #N (date): clue report", and `report-clue` appears in Umami.
 - [ ] Opening `?utm_source=whatsapp&utm_medium=share` gives exactly one visit in Umami with source "whatsapp", and the address bar is cleaned.
 - [ ] `puzzle-start`, `puzzle-solve` and `share-whatsapp` appear in Umami Realtime within 10 minutes.
