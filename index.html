@@ -8,15 +8,15 @@
 <title>Paheli Mini</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Libre+Franklin:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,700;1,8..60,400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Libre+Franklin:wght@400..700&family=Source+Serif+4:ital,wght@0,400;1,400&display=swap">
 <style>
 html,body{margin:0}
 :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-/* Newspaper crossword: black-and-white grid with thin rules, serif clues, a masthead with a dateline. Light only. Grid is a fixed size, no motion. */
+/* Newspaper crossword: black-and-white grid with thin rules, serif clues, a plain masthead. Light only. Grid is a fixed size, no motion. */
 :root{
-  --page:#F3F2ED; --paper:#FFFFFF; --ink:#111111; --ink-soft:#5A5A5A; --rule:#111111; --hair:#CFCCC3;
-  --block:#111111; --cell:#FFFFFF; --sel:#FFDA00; --word:#A7D8FF; --wrong:#D0021B; --checked:#2860D8; --key:#E6E5E0;
-  --f-mast:"Playfair Display",Georgia,"Times New Roman",serif;
+  --page:#F3F2ED; --paper:#FFFFFF; --ink:#111111; --ink-soft:#4A4A4A; --rule:#111111; --hair:#CFCCC3;
+  --block:#111111; --cell:#FFFFFF; --sel:#FFC83D; --word:#A7D8FF; --wrong:#C4001A; --checked:#1F4FBF; --marigold:#F2A20C; --key:#E6E5E0;
+  --f-mast:"Young Serif",Georgia,"Times New Roman",serif;
   --f-ui:"Libre Franklin","Franklin Gothic Medium","Arial Narrow",Arial,sans-serif;
   --f-clue:"Source Serif 4",Georgia,"Times New Roman",serif;
   color-scheme:light;
@@ -29,15 +29,14 @@ button{font:inherit;color:inherit}
 button:focus-visible{outline:2px solid var(--checked);outline-offset:2px}
 .app{max-width:900px;margin:0 auto;display:grid;gap:12px}
 
-header{display:grid;gap:4px;border-bottom:3px double var(--rule);padding-bottom:6px}
+header{display:grid;gap:4px}
 .mast{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.mark{font-family:var(--f-mast);font-weight:900;font-size:30px;line-height:1;letter-spacing:-.01em;display:flex;align-items:baseline;gap:8px}
+.mark{font-family:var(--f-mast);font-weight:400;font-size:30px;line-height:1;letter-spacing:-.01em;display:flex;align-items:baseline;gap:8px}
 .mark small{font-family:var(--f-ui);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase}
-.dateline{display:flex;justify-content:space-between;gap:8px;border-top:1px solid var(--rule);padding-top:4px;font-family:var(--f-ui);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft)}
 .timer{font-family:var(--f-ui);font-weight:600;font-size:18px;font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:6px}
-.icon{border:0;background:none;width:34px;height:34px;cursor:pointer;display:grid;place-items:center;padding:0;font-size:14px}
+.icon{border:0;background:none;width:44px;height:44px;cursor:pointer;display:grid;place-items:center;padding:0;font-size:14px}
 .icon svg{width:20px;height:20px}
-.pill{font-family:var(--f-ui);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--checked);color:var(--checked);padding:2px 6px}
+.pill{font-family:var(--f-ui);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--checked);color:var(--checked);padding:2px 6px}
 
 
 .play{display:grid;gap:12px;grid-template-columns:minmax(0,1fr)}
@@ -45,6 +44,7 @@ header{display:grid;gap:4px;border-bottom:3px double var(--rule);padding-bottom:
 .board-wrap{position:relative;width:min(100%,380px,var(--board-fit,380px));margin:0 auto}
 .board{display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(5,1fr);gap:1px;background:var(--rule);border:2px solid var(--rule);aspect-ratio:1;width:100%;container-type:inline-size}
 .board.veiled{filter:blur(6px)}
+.board.veiled .cell:not(.block){background:var(--cell)}
 .cell{position:relative;background:var(--cell);display:grid;place-items:center;font-family:var(--f-ui);font-weight:500;font-size:11.5cqw;line-height:1;text-transform:uppercase;cursor:pointer;user-select:none;overflow:hidden;min-width:0;min-height:0}
 .cell .l{position:relative;z-index:1;transform:translateY(6%)}
 .cell.block{background:var(--block);cursor:default}
@@ -53,25 +53,42 @@ header{display:grid;gap:4px;border-bottom:3px double var(--rule);padding-bottom:
 .cell.sel{background:var(--sel)}
 .cell.ok,.cell.rev{color:var(--checked)}
 .cell.wrong::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;background:linear-gradient(to bottom right,transparent calc(50% - 1px),var(--wrong) calc(50% - 1px),var(--wrong) calc(50% + 1px),transparent calc(50% + 1px))}
-.cell.rev::before{content:"";position:absolute;top:0;right:0;width:0;height:0;border-style:solid;border-width:0 10px 10px 0;border-color:transparent var(--wrong) transparent transparent;z-index:2}
+.cell.rev::before{content:"";position:absolute;top:0;right:0;width:0;height:0;border-style:solid;border-width:0 4.5cqw 4.5cqw 0;border-color:transparent var(--wrong) transparent transparent;z-index:2}
 .board.solved .cell:not(.block){background:var(--cell)}
+/* Solve reveal: black squares bloom into Athangudi red-oxide tiles (weekdays) or Goan azulejos (weekends) */
+.cell.block::before{content:"";position:absolute;inset:0;opacity:0;transform:scale(.7);transition:opacity .45s ease,transform .6s cubic-bezier(.2,.8,.2,1);
+  background:#8B2E1F url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cg fill='%23D99A3A'%3E%3Cpath d='M0 0h9a9 9 0 0 1-9 9zM40 0v9a9 9 0 0 1-9-9zM40 40h-9a9 9 0 0 1 9-9zM0 40v-9a9 9 0 0 1 9 9z'/%3E%3Cpath transform='rotate(45 20 20)' d='M20 9c2.5 3 2.5 6 0 8c-2.5-2-2.5-5 0-8zM20 31c2.5-3 2.5-6 0-8c-2.5 2-2.5 5 0 8zM9 20c3-2.5 6-2.5 8 0c-2 2.5-5 2.5-8 0zM31 20c-3-2.5-6-2.5-8 0c2 2.5 5 2.5 8 0z'/%3E%3C/g%3E%3Cpath fill='%23F1E4CB' d='M20 6.5c5 5 5 9 0 13.5c-5-4.5-5-8.5 0-13.5zM20 33.5c5-5 5-9 0-13.5c-5 4.5-5 8.5 0 13.5zM6.5 20c5-5 9-5 13.5 0c-4.5 5-8.5 5-13.5 0zM33.5 20c-5-5-9-5-13.5 0c4.5 5 8.5 5 13.5 0z'/%3E%3Ccircle cx='20' cy='20' r='3' fill='%23D99A3A'/%3E%3Ccircle cx='20' cy='20' r='1.3' fill='%238B2E1F'/%3E%3C/svg%3E") center/100% 100% no-repeat}
+.board.solved .cell.block::before{opacity:1;transform:none}
+.board.solved .cell.block:nth-child(even)::before{transition-delay:.1s}
+.board.solved .cell.block:nth-child(3n)::before{transition-delay:.2s}
+@media (prefers-reduced-motion:reduce){.cell.block::before{transition:none;transform:none}}
+.board.tile-weekend .cell.block::before{background:#F4F1E8 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cg fill='%23233E8B'%3E%3Cpath d='M0 0h8a8 8 0 0 1-8 8zM40 0v8a8 8 0 0 1-8-8zM40 40h-8a8 8 0 0 1 8-8zM0 40v-8a8 8 0 0 1 8 8z'/%3E%3Cpath d='M20 6c5 6 5 9 0 14c-5-5-5-8 0-14zM20 34c5-6 5-9 0-14c-5 5-5 8 0 14zM6 20c6-5 9-5 14 0c-5 5-8 5-14 0zM34 20c-6-5-9-5-14 0c5 5 8 5 14 0z'/%3E%3C/g%3E%3Cg fill='none' stroke='%23233E8B' stroke-width='1.1'%3E%3Cpath d='M20 0v3M20 37v3M0 20h3M37 20h3'/%3E%3Ccircle cx='20' cy='20' r='15.5' stroke-dasharray='2 2.6'/%3E%3C/g%3E%3Ccircle cx='20' cy='20' r='2.4' fill='%23F2A20C'/%3E%3C/svg%3E") center/100% 100% no-repeat}
 
 .veil{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:18px;overflow:auto}
-.veil-card .pick{width:100%;font-size:13px;padding:7px 10px;border-radius:0;margin-top:2px}
+/* Preview picker: one row per puzzle, title left and number/date right */
+.veil-card.picker{max-width:340px;width:100%;gap:8px;padding:22px 18px 18px}
+.veil-card.picker h2{margin-bottom:8px}
+.veil-card .pick{width:100%;display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:12px 14px;border-radius:0;font-size:15px;letter-spacing:0;text-align:left}
+.veil-card .pick:hover{background:var(--page)}
+.pick-t{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pick-m{flex:none;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft)}
+@media (max-width:380px){.veil-card.picker{padding:18px 14px 14px}.veil-card .pick{flex-direction:column;align-items:flex-start;gap:2px;padding:9px 12px}.pick-m{order:-1}.pick-t{white-space:normal}}
 .veil-card{background:var(--paper);border:1px solid var(--rule);box-shadow:4px 4px 0 var(--rule);padding:18px;display:grid;gap:6px;max-width:290px;justify-items:center}
-.veil-card .eyebrow{font-family:var(--f-ui);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft)}
-.veil-card h2{font-family:var(--f-mast);font-weight:900;font-size:28px;margin:0;line-height:1.1;text-wrap:balance}
+.veil-card .eyebrow{font-family:var(--f-ui);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
+.veil-card h2{font-family:var(--f-mast);font-weight:400;font-size:28px;margin:0;line-height:1.1;text-wrap:balance}
 .veil-card p{margin:0 0 6px;color:var(--ink-soft);font-size:15px;font-style:italic}
 .btn{border:1px solid var(--ink);padding:10px 20px;font-family:var(--f-ui);font-weight:600;font-size:15px;letter-spacing:.02em;cursor:pointer;background:var(--ink);color:var(--paper);border-radius:999px}
 .btn.alt{background:var(--paper);color:var(--ink)}
 .btn.go{background:var(--ink);color:var(--paper)}
 
-.cluebar{display:grid;grid-template-columns:40px minmax(0,1fr) 40px;align-items:stretch;background:var(--word);min-height:62px;width:min(100%,380px);margin:0 auto}
+.cluebar{display:grid;grid-template-columns:44px minmax(0,1fr) 44px;align-items:stretch;background:var(--word);min-height:62px;width:min(100%,380px);margin:0 auto}
 .cluebar > button{border:0;background:none;cursor:pointer;font-size:24px;color:var(--ink)}
 .cluetext{border:0;background:none;text-align:left;padding:8px 2px;cursor:pointer;display:grid;gap:1px;align-content:center;min-width:0}
-.cluemeta{display:flex;gap:8px;align-items:baseline;font-family:var(--f-ui);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
-.chip{font-family:var(--f-ui);font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);white-space:nowrap}
+.cluemeta{display:flex;gap:8px;align-items:baseline;font-family:var(--f-ui);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.chip{font-family:var(--f-ui);font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);white-space:nowrap}
 .chip::before{content:"· "}
+.chip:empty::before{content:none}
+.app.nopuzzle .cluebar,.app.nopuzzle .actions,.app.nopuzzle .clues{display:none}
 .cluetext .q{font-family:var(--f-clue);font-size:16.5px;line-height:1.3}
 
 .actions{display:flex;gap:8px;width:min(100%,380px);margin:0 auto}
@@ -83,13 +100,13 @@ header{display:grid;gap:4px;border-bottom:3px double var(--rule);padding-bottom:
 .typer{position:absolute;top:0;left:0;width:1px;height:1px;padding:0;border:0;opacity:0;font-size:16px;caret-color:transparent;pointer-events:none}
 
 .clues{display:grid;gap:16px;grid-template-columns:1fr 1fr;align-content:start}
-.clues h3{margin:0 0 6px;padding-bottom:4px;border-bottom:1px solid var(--rule);font-family:var(--f-ui);font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+.clues h3{margin:0 0 6px;padding-bottom:4px;border-bottom:1px solid var(--rule);font-family:var(--f-ui);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
 .clues ol{list-style:none;margin:0;padding:0;display:grid;gap:0}
 .clues li button{width:100%;border:0;background:none;text-align:left;padding:6px 6px;cursor:pointer;display:grid;grid-template-columns:22px minmax(0,1fr);gap:4px;font-size:15px;line-height:1.35;font-family:var(--f-clue)}
 .clues li button b{font-family:var(--f-ui);font-weight:700;font-size:13.5px;padding-top:1px}
 .clues li button.cur{background:var(--word)}
 .clues li button.filled{color:var(--ink-soft)}
-.clues .tagline{display:block;margin-top:1px}
+.clues .tagline{display:inline;margin-left:6px}
 .clues .tagline .chip::before{content:""}
 @media (max-width:700px){.clues{grid-template-columns:1fr}.mark{font-size:26px}.actions button span{display:none}.actions button{padding:10px 6px}}
 @media (min-width:860px){.play{grid-template-columns:380px minmax(0,1fr);column-gap:36px;align-items:start}}
@@ -101,38 +118,45 @@ header{display:grid;gap:4px;border-bottom:3px double var(--rule);padding-bottom:
 .toast.show{opacity:1}
 
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:grid;place-items:center;z-index:20;padding:calc(16px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));overflow:auto}
-.sheet{background:var(--paper);border:1px solid var(--rule);max-width:420px;width:100%;padding:18px;display:grid;gap:14px}
-.share{border:1px solid var(--rule);border-top:4px double var(--rule);padding:14px 16px;display:grid;gap:4px;background:var(--paper);color:var(--ink)}
-.share .t{font-family:var(--f-mast);font-weight:900;font-size:22px;line-height:1}
+.sheet{background:var(--paper);border:0;max-width:420px;width:100%;padding:18px;display:grid;gap:14px}
+.share{position:relative;border:1px solid var(--rule);padding:20px 16px 14px;display:grid;gap:4px;background:var(--paper);color:var(--ink)}
+.share .t{font-family:var(--f-mast);font-weight:400;font-size:24px;line-height:1.1;text-wrap:balance}
 .share .sub{font-family:var(--f-ui);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);border-bottom:1px solid var(--hair);padding-bottom:8px}
 .share .time{font-family:var(--f-ui);font-weight:700;font-size:52px;line-height:1.05;font-variant-numeric:tabular-nums;margin-top:6px}
 .share .tag{font-family:var(--f-clue);font-style:italic;font-size:17px}
 .share .stats{font-family:var(--f-ui);font-size:12.5px;color:var(--ink-soft)}
 .sheet-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.sheet-actions .btn{text-align:center;text-decoration:none;font-size:14.5px;padding:10px 8px}
-.why h3{margin:0 0 6px;padding-bottom:4px;border-bottom:1px solid var(--rule);font-family:var(--f-ui);font-size:12px;letter-spacing:.16em;text-transform:uppercase}
+.sheet-actions .btn{text-align:center;text-decoration:none;font-size:14.5px;padding:10px 8px;white-space:nowrap}
+@media (max-width:380px){.sheet-actions .btn{font-size:13.5px;padding:10px 4px}}
+.why h3{margin:0 0 6px;padding-bottom:4px;border-bottom:1px solid var(--rule);font-family:var(--f-ui);font-size:12px;letter-spacing:.14em;text-transform:uppercase}
 .why ul{list-style:none;padding:0;margin:0;display:grid;gap:8px}
 .why li{font-size:14.5px;line-height:1.4}
-.why li b{font-family:var(--f-ui);letter-spacing:.06em}
+.why li b{font-family:var(--f-ui);letter-spacing:.08em}
 .foot{font-family:var(--f-ui);font-size:12px;color:var(--ink-soft);text-align:center}
 
-.menu{background:var(--paper);border-radius:22px;max-width:360px;width:100%;padding:14px;display:grid;gap:8px}
-.menu button{border:0;border-radius:999px;background:var(--key);color:var(--ink);padding:13px 12px;font-family:var(--f-ui);font-weight:600;font-size:16px;cursor:pointer}
+.menu{background:var(--paper);border:1px solid var(--rule);box-shadow:4px 4px 0 var(--rule);max-width:360px;width:100%;padding:14px;display:grid;gap:8px}
+.menu button{border:1px solid var(--rule);border-radius:0;background:var(--paper);color:var(--ink);padding:13px 12px;font-family:var(--f-ui);font-weight:600;font-size:16px;cursor:pointer}
 .menu button:disabled{color:var(--ink-soft);opacity:.5;cursor:default}
-.menu button.cancel{background:var(--paper);border:1px solid var(--rule)}
+.menu button.cancel{border:0;text-decoration:underline;text-underline-offset:3px;font-weight:500}
 .menu button.danger{color:var(--wrong)}
-.menu-note{margin:2px 6px 4px;font-size:14px;color:var(--ink-soft);line-height:1.4;text-align:center;font-style:italic}
-.menu-head{margin:4px 6px 0;font-family:var(--f-ui);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft)}
+.menu-note{margin:2px 0 4px;font-size:14px;color:var(--ink-soft);line-height:1.4;text-align:center;font-style:italic}
+.menu-head{margin:4px 0 0;font-family:var(--f-ui);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
 .menu .two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 
-.veil-card .by{font-family:var(--f-ui);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);margin:0}
+.veil-card .by{font-family:var(--f-ui);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);margin:0;font-style:normal}
 .share .streak{font-family:var(--f-ui);font-size:13px;font-weight:600;margin-top:4px}
+/* Marigold band across the top of the result card */
+.share::before{content:"";position:absolute;left:-1px;right:-1px;top:-1px;height:6px;background:var(--marigold);pointer-events:none}
+/* Highlighter swipe behind the streak */
+.share .streak{justify-self:start;padding:0 6px;margin-left:-4px;
+  background:linear-gradient(100deg,transparent 1%,rgba(255,200,61,.85) 2% 97%,transparent 98%) 0 60%/100% 64% no-repeat}
 .note{font-family:var(--f-ui);font-size:12px;color:var(--ink-soft);text-align:center;margin:0}
-.countdown{font-family:var(--f-ui);font-size:14px;text-align:center;margin:0}
+.countdown{font-family:var(--f-ui);font-size:14px;text-align:left;margin:0}
 .countdown b{font-variant-numeric:tabular-nums}
-.report{display:grid;gap:6px;justify-items:center;border-top:1px solid var(--hair);padding-top:10px}
-.report .addr{font-family:var(--f-ui);font-size:12.5px;color:var(--ink-soft);display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center}
-.report .addr button{border:1px solid var(--rule);background:var(--paper);font-family:var(--f-ui);font-size:12px;padding:3px 8px;cursor:pointer}
+.report{display:flex;gap:4px 10px;align-items:center;flex-wrap:wrap;font-family:var(--f-ui);font-size:12.5px;color:var(--ink-soft)}
+.report a{color:var(--ink-soft);text-underline-offset:3px;min-height:44px;display:inline-flex;align-items:center}
+.report .addr{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.report .addr button{border:0;background:none;font-family:var(--f-ui);font-size:12.5px;color:var(--ink);text-decoration:underline;text-underline-offset:3px;min-height:44px;padding:0 6px;cursor:pointer}
 .newtoast{position:fixed;left:50%;top:calc(12px + env(safe-area-inset-top,0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 14px;font-family:var(--f-ui);font-size:14px;z-index:40;display:flex;gap:12px;align-items:center;max-width:calc(100% - 32px)}
 .newtoast button{border:1px solid var(--paper);background:var(--paper);color:var(--ink);font-family:var(--f-ui);font-weight:600;padding:5px 12px;border-radius:999px;cursor:pointer}
 </style></head>
@@ -141,8 +165,7 @@ header{display:grid;gap:4px;border-bottom:3px double var(--rule);padding-bottom:
 <div class="app">
   <header>
     <div class="mast"><div class="mark">Paheli <small>Mini</small></div>
-    <div class="timer"><span class="pill" id="autoPill" hidden>Autocheck</span><span id="time">0:00</span><button class="icon" id="pause" aria-label="Pause">&#10074;&#10074;</button><button class="icon" id="helpBtn" aria-label="Check and reveal options"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M5.6 5.6l3.6 3.6M14.8 14.8l3.6 3.6M18.4 5.6l-3.6 3.6M9.2 14.8l-3.6 3.6"/></svg></button></div></div>
-    <div class="dateline"><span id="dateline">&nbsp;</span><span>Riddles · GK · Pop</span></div>
+    <div class="timer"><span class="pill" id="autoPill" hidden>Autocheck</span><span id="time">0:00</span><button class="icon" id="pause" aria-label="Pause"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg></button><button class="icon" id="helpBtn" aria-label="Check and reveal options"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M5.6 5.6l3.6 3.6M14.8 14.8l3.6 3.6M18.4 5.6l-3.6 3.6M9.2 14.8l-3.6 3.6"/></svg></button></div></div>
   </header>
 
   <div class="play">
@@ -152,7 +175,7 @@ header{display:grid;gap:4px;border-bottom:3px double var(--rule);padding-bottom:
         <div class="board veiled" id="board" role="grid" aria-label="Crossword grid"></div>
         <div class="veil" id="veil">
           <div class="veil-card">
-            <div class="eyebrow" id="veilEyebrow">Paheli Mini</div>
+            <div class="eyebrow" id="veilEyebrow"></div>
             <h2 id="veilTitle">Loading…</h2>
             <p class="by" id="veilBy" hidden></p>
             <p id="veilText"></p>
@@ -194,7 +217,7 @@ header{display:grid;gap:4px;border-bottom:3px double var(--rule);padding-bottom:
 <div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="doneTitle">
   <div class="sheet">
     <div class="share" id="shareCard">
-      <div class="t" id="doneTitle">Paheli Mini</div>
+      <div class="t" id="doneTitle"></div>
       <div class="sub" id="shareSub"></div>
       <div class="time" id="shareTime"></div>
       <div class="tag" id="shareTag"></div>
@@ -203,18 +226,18 @@ header{display:grid;gap:4px;border-bottom:3px double var(--rule);padding-bottom:
       <p class="note" id="storageNote" style="text-align:left">Saved on this browser</p>
     </div>
     <div class="sheet-actions">
-      <button class="btn" id="copy">Copy result</button>
+      <button class="btn alt" id="copy">Copy result</button>
       <a class="btn go" id="wa" href="#" target="_blank" rel="noopener">Send on WhatsApp</a>
     </div>
     <p class="countdown" id="countdown"></p>
     <button class="btn go" id="playToday" hidden>Play today's paheli</button>
-    <div class="report">
-      <a class="btn alt" id="reportClue" href="#">Report a clue</a>
-      <div class="addr"><span id="reportAddress">arv.experiments@gmail.com</span><button id="copyAddress">Copy</button></div>
-    </div>
-    <div class="why"><h3>Why these answers</h3><ul id="whyList"></ul></div>
     <div class="sheet-actions" style="grid-template-columns:1fr">
       <button class="btn alt" id="closeModal">Back to grid</button>
+    </div>
+    <div class="why"><h3>Why these answers</h3><ul id="whyList"></ul></div>
+    <div class="report">
+      <a id="reportClue" href="#">Wrong clue? Report it</a>
+      <span class="addr">or write to <span id="reportAddress">arv.experiments@gmail.com</span><button id="copyAddress">Copy</button></span>
     </div>
   </div>
 </div>
@@ -242,12 +265,12 @@ header{display:grid;gap:4px;border-bottom:3px double var(--rule);padding-bottom:
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script type="module">
-import { todayIST, istHourStamp, numberFor, formatIST, formatShort, countdownText, appNow } from "./lib/dates.js?v=1.2.0";
-import { buildPuzzle, gridHash } from "./lib/grid.js?v=1.2.0";
-import { readPuzzleFile } from "./lib/codec.js?v=1.2.0";
-import { createState } from "./lib/state.js?v=1.2.0";
+import { todayIST, istHourStamp, numberFor, formatIST, formatShort, countdownText, appNow } from "./lib/dates.js?v=1.3.0";
+import { buildPuzzle, gridHash } from "./lib/grid.js?v=1.3.0";
+import { readPuzzleFile } from "./lib/codec.js?v=1.3.0";
+import { createState } from "./lib/state.js?v=1.3.0";
 
-const APP_VERSION = "1.2.0";
+const APP_VERSION = "1.3.0";
 const SITE = "https://arvind13496.github.io/paheli-mini/";
 const REPORT_EMAIL = "arv.experiments@gmail.com";
 const TAGS = { R: "Riddle", GK: "GK", N: "Pop" };
@@ -259,7 +282,7 @@ const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (m) => ({ "&": "&amp;", "<
 const PREVIEW = window.PAHELI_PREVIEW || null;
 function memoryStorage() { const m = new Map(); return { getItem: (k) => (m.has(k) ? m.get(k) : null), setItem: (k, v) => m.set(k, String(v)), removeItem: (k) => m.delete(k) }; }
 const state = createState(PREVIEW ? memoryStorage() : undefined);
-let ready = false, manifest = null, P = null, num = null, hash = "";
+let bootDate = "", ready = false, manifest = null, P = null, num = null, hash = "";
 let cells = [], entries = [], cellSlots = [], S = null, solved = false, solveStats = null;
 let sel = 0, dir = "A", timerId = null, runStart = 0;
 let AUTO = state.getSettings().autocheck === true;
@@ -286,8 +309,10 @@ function sendPageview() {
 // ---------- screens ----------
 let screenTimer = null;
 function msUntilIST(date) { return Date.parse(date + "T00:00:00+05:30") - appNow(); }
-function showScreen({ eyebrow = "Paheli Mini", title, text = "", by = "", start = "", retry = "" }) {
-  $("veilEyebrow").textContent = eyebrow;
+function showScreen({ eyebrow = "", title, text = "", by = "", start = "", retry = "" }) {
+  document.querySelector(".veil-card").classList.remove("picker");
+  $("veilEyebrow").textContent = eyebrow; $("veilEyebrow").hidden = !eyebrow;
+  document.querySelector(".app").classList.toggle("nopuzzle", !P);
   $("veilTitle").textContent = title;
   $("veilBy").textContent = by; $("veilBy").hidden = !by;
   $("veilText").textContent = text; $("veilText").hidden = !text;
@@ -317,7 +342,7 @@ async function boot() {
   clearInterval(screenTimer);
   const now = appNow();
   const today = todayIST(now);
-  $("dateline").textContent = formatIST(today);
+  bootDate = today;
   blankBoard();
   showScreen({ title: "Loading…" });
   const [mRes, pRes] = await Promise.allSettled([
@@ -337,7 +362,7 @@ async function boot() {
   if (!manifest.dates.includes(today)) {
     track("puzzle-missing");
     const tomorrow = todayIST(now + 86400000);
-    return countdownScreen(tomorrow, (left) => ({ eyebrow: `Paheli Mini #${num}`, title: "Running late", text: `Today's paheli is running late. Next one in ${left}.` }));
+    return countdownScreen(tomorrow, (left) => ({ eyebrow: `No. ${num}`, title: "Running late", text: `Today's paheli is running late. Next one in ${left}.` }));
   }
   if (pRes.status === "rejected") return showScreen({ title: "You're offline", text: "Check your connection and tap Retry.", retry: "Retry" });
   let rec;
@@ -359,6 +384,8 @@ function startRecord(rec, today) {
   } catch (e) { P = null; return errorScreen(e); }
   dir = "A"; sel = entries[0].cells[0];
   renderBoard(); renderClues();
+  const wd = new Date(Date.parse(P.date)).getUTCDay();
+  $("board").classList.toggle("tile-weekend", wd === 0 || wd === 6);
 
   const done = state.getSolve(P.date);
   if (done) { ready = true; return showSolved(done); }
@@ -374,16 +401,18 @@ function previewPicker() {
   ready = false; P = null; S = null; solved = false;
   clearInterval(countdownTimer);
   manifest = { launch: PREVIEW.launch, dates: PREVIEW.records.map((r) => r.date).sort() };
-  $("dateline").textContent = "Preview · nothing is saved";
   $("modal").hidden = true;
   blankBoard();
-  showScreen({ eyebrow: "Preview", title: "Pick a puzzle", text: "Play any day before it goes live." });
+  showScreen({ title: "Pick a puzzle" });
   const card = document.querySelector(".veil-card");
+  card.classList.add("picker");
   card.querySelectorAll(".pick").forEach((b) => b.remove());
   PREVIEW.records.slice().sort((a, b) => (a.date < b.date ? -1 : 1)).forEach((r) => {
     const b = document.createElement("button");
     b.className = "btn alt pick";
-    b.textContent = `#${numberFor(r.date, PREVIEW.launch)} · ${formatShort(r.date)} · ${r.title}`;
+    const t = document.createElement("span"); t.className = "pick-t"; t.textContent = r.title;
+    const m = document.createElement("span"); m.className = "pick-m"; m.textContent = `No. ${numberFor(r.date, PREVIEW.launch)} · ${formatShort(r.date).replace(/ \d{4}$/, "")}`;
+    b.append(t, m);
     b.onclick = () => { card.querySelectorAll(".pick").forEach((x) => x.remove()); num = numberFor(r.date, PREVIEW.launch); startRecord(r, r.date); };
     card.appendChild(b);
   });
@@ -399,10 +428,8 @@ $("retry").onclick = () => boot();
 function showStart() {
   const paused = S.elapsedMs > 0;
   showScreen({
-    eyebrow: `Paheli Mini #${num}`,
     title: P.title,
-    by: `By ${P.constructor}`,
-    text: paused ? `Paused at ${fmt(S.elapsedMs)}` : "",
+    by: `No. ${num} · By ${P.constructor}`,
     start: paused ? "Resume" : "Shuru karo",
   });
 }
@@ -540,13 +567,13 @@ $("start").onclick = () => {
 $("pause").onclick = () => {
   if (!ready || !S || solved || !S.started || !timerId) return;
   stopTimer(); closeKeyboard();
-  showScreen({ eyebrow: `Paheli Mini #${num}`, title: P.title, by: `By ${P.constructor}`, text: `Paused at ${fmt(S.elapsedMs)}`, start: "Resume" });
+  showScreen({ title: P.title, by: `No. ${num} · By ${P.constructor}`, start: "Resume" });
 };
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) { if (timerId) $("pause").click(); return; }
   if (PREVIEW) return;
   const t = todayIST(appNow());
-  if (!P) { if (manifest && ready === false && $("dateline").textContent !== formatIST(t)) location.reload(); return; }
+  if (!P) { if (manifest && ready === false && bootDate !== t) location.reload(); return; }
   if (t !== P.date) {
     if (S && !S.started && !solved) location.reload();
     else $("newPuzzleToast").hidden = false;
@@ -640,7 +667,8 @@ function shareText(st, streak, source) {
 let countdownTimer = null;
 function openModal(st) {
   const sk = state.streaks(manifest.dates, todayIST(appNow()));
-  $("shareSub").textContent = `#${num} · ${P.title}`;
+  $("doneTitle").textContent = P.title;
+  $("shareSub").textContent = `No. ${num} · ${formatShort(P.date)}`;
   $("shareTime").textContent = fmt(st.sec * 1000);
   $("shareTag").textContent = tagFor(st);
   $("shareStats").textContent = helpLine(st);
