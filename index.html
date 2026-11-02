@@ -12,7 +12,7 @@
 <style>
 html,body{margin:0}
 :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-/* Newspaper crossword: black-and-white grid with thin rules, serif clues, a masthead with a dateline. Light only. Grid is a fixed size, no motion. */
+/* Newspaper crossword: black-and-white grid with thin rules, serif clues, a masthead over a double rule. Light only. Grid is a fixed size, no motion. */
 :root{
   --page:#F3F2ED; --paper:#FFFFFF; --ink:#111111; --ink-soft:#4A4A4A; --rule:#111111; --hair:#CFCCC3;
   --block:#111111; --cell:#FFFFFF; --sel:#FFC83D; --word:#A7D8FF; --wrong:#C4001A; --checked:#1F4FBF; --marigold:#F2A20C; --key:#E6E5E0;
@@ -33,9 +33,6 @@ header{display:grid;gap:4px;border-bottom:3px double var(--rule);padding-bottom:
 .mast{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .mark{font-family:var(--f-mast);font-weight:400;font-size:30px;line-height:1;letter-spacing:-.01em;display:flex;align-items:baseline;gap:8px}
 .mark small{font-family:var(--f-ui);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase}
-.dateline{display:flex;justify-content:space-between;gap:8px;border-top:1px solid var(--rule);padding-top:4px;font-family:var(--f-ui);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
-.dateline span{white-space:nowrap}
-@media (max-width:380px){.dateline span:last-child{display:none}}
 .timer{font-family:var(--f-ui);font-weight:600;font-size:18px;font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:6px}
 .icon{border:0;background:none;width:44px;height:44px;cursor:pointer;display:grid;place-items:center;padding:0;font-size:14px}
 .icon svg{width:20px;height:20px}
@@ -162,7 +159,6 @@ header{display:grid;gap:4px;border-bottom:3px double var(--rule);padding-bottom:
   <header>
     <div class="mast"><div class="mark">Paheli <small>Mini</small></div>
     <div class="timer"><span class="pill" id="autoPill" hidden>Autocheck</span><span id="time">0:00</span><button class="icon" id="pause" aria-label="Pause"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg></button><button class="icon" id="helpBtn" aria-label="Check and reveal options"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M5.6 5.6l3.6 3.6M14.8 14.8l3.6 3.6M18.4 5.6l-3.6 3.6M9.2 14.8l-3.6 3.6"/></svg></button></div></div>
-    <div class="dateline"><span id="dateline">&nbsp;</span><span>Riddles · GK · Pop</span></div>
   </header>
 
   <div class="play">
@@ -279,7 +275,7 @@ const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (m) => ({ "&": "&amp;", "<
 const PREVIEW = window.PAHELI_PREVIEW || null;
 function memoryStorage() { const m = new Map(); return { getItem: (k) => (m.has(k) ? m.get(k) : null), setItem: (k, v) => m.set(k, String(v)), removeItem: (k) => m.delete(k) }; }
 const state = createState(PREVIEW ? memoryStorage() : undefined);
-let ready = false, manifest = null, P = null, num = null, hash = "";
+let bootDate = "", ready = false, manifest = null, P = null, num = null, hash = "";
 let cells = [], entries = [], cellSlots = [], S = null, solved = false, solveStats = null;
 let sel = 0, dir = "A", timerId = null, runStart = 0;
 let AUTO = state.getSettings().autocheck === true;
@@ -338,7 +334,7 @@ async function boot() {
   clearInterval(screenTimer);
   const now = appNow();
   const today = todayIST(now);
-  $("dateline").textContent = formatIST(today);
+  bootDate = today;
   blankBoard();
   showScreen({ title: "Loading…" });
   const [mRes, pRes] = await Promise.allSettled([
@@ -397,7 +393,6 @@ function previewPicker() {
   ready = false; P = null; S = null; solved = false;
   clearInterval(countdownTimer);
   manifest = { launch: PREVIEW.launch, dates: PREVIEW.records.map((r) => r.date).sort() };
-  $("dateline").textContent = "Preview · nothing is saved";
   $("modal").hidden = true;
   blankBoard();
   showScreen({ eyebrow: "Preview", title: "Pick a puzzle", text: "Play any day before it goes live." });
@@ -567,7 +562,7 @@ document.addEventListener("visibilitychange", () => {
   if (document.hidden) { if (timerId) $("pause").click(); return; }
   if (PREVIEW) return;
   const t = todayIST(appNow());
-  if (!P) { if (manifest && ready === false && $("dateline").textContent !== formatIST(t)) location.reload(); return; }
+  if (!P) { if (manifest && ready === false && bootDate !== t) location.reload(); return; }
   if (t !== P.date) {
     if (S && !S.started && !solved) location.reload();
     else $("newPuzzleToast").hidden = false;
