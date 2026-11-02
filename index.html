@@ -422,10 +422,8 @@ $("retry").onclick = () => boot();
 function showStart() {
   const paused = S.elapsedMs > 0;
   showScreen({
-    eyebrow: `No. ${num}`,
     title: P.title,
-    by: `By ${P.constructor}`,
-    text: paused ? `Paused at ${fmt(S.elapsedMs)}` : "",
+    by: `No. ${num} · By ${P.constructor}`,
     start: paused ? "Resume" : "Shuru karo",
   });
 }
@@ -563,7 +561,7 @@ $("start").onclick = () => {
 $("pause").onclick = () => {
   if (!ready || !S || solved || !S.started || !timerId) return;
   stopTimer(); closeKeyboard();
-  showScreen({ eyebrow: `No. ${num}`, title: P.title, by: `By ${P.constructor}`, text: `Paused at ${fmt(S.elapsedMs)}`, start: "Resume" });
+  showScreen({ title: P.title, by: `No. ${num} · By ${P.constructor}`, start: "Resume" });
 };
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) { if (timerId) $("pause").click(); return; }
