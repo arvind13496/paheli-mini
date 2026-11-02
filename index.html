@@ -115,7 +115,7 @@ header{display:grid;gap:4px;border-bottom:3px double var(--rule);padding-bottom:
 
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:grid;place-items:center;z-index:20;padding:calc(16px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));overflow:auto}
 .sheet{background:var(--paper);border:0;max-width:420px;width:100%;padding:18px;display:grid;gap:14px}
-.share{position:relative;border:1px solid var(--rule);padding:32px 16px 14px;display:grid;gap:4px;background:var(--paper);color:var(--ink)}
+.share{position:relative;border:1px solid var(--rule);padding:20px 16px 14px;display:grid;gap:4px;background:var(--paper);color:var(--ink)}
 .share .t{font-family:var(--f-mast);font-weight:400;font-size:24px;line-height:1.1;text-wrap:balance}
 .share .sub{font-family:var(--f-ui);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);border-bottom:1px solid var(--hair);padding-bottom:8px}
 .share .time{font-family:var(--f-ui);font-weight:700;font-size:52px;line-height:1.05;font-variant-numeric:tabular-nums;margin-top:6px}
@@ -141,10 +141,8 @@ header{display:grid;gap:4px;border-bottom:3px double var(--rule);padding-bottom:
 
 .veil-card .by{font-family:var(--f-ui);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);margin:0;font-style:normal}
 .share .streak{font-family:var(--f-ui);font-size:13px;font-weight:600;margin-top:4px}
-/* Marigold band with a toran of marigolds and mango leaves */
-.share::before{content:"";position:absolute;left:-1px;right:-1px;top:-1px;height:24px;pointer-events:none;
-  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='18'%3E%3Cpath d='M21 0v2' stroke='%232F5B3A' stroke-width='.8'/%3E%3Cpath d='M21 1.5c3.6 4 3.6 9.5 0 15c-3.6-5.5-3.6-11 0-15z' fill='%232F5B3A'/%3E%3Cpath d='M21 4v10' stroke='%235E8A62' stroke-width='.6'/%3E%3Ccircle cx='7' cy='7' r='4.6' fill='%23F2A20C'/%3E%3Ccircle cx='7' cy='7' r='4.6' fill='none' stroke='%23D9840A' stroke-width='.8' stroke-dasharray='1.4 1.2'/%3E%3Ccircle cx='7' cy='7' r='1.6' fill='%23B5650A'/%3E%3C/svg%3E") 0 6px/28px 18px space no-repeat,
-  linear-gradient(var(--marigold),var(--marigold)) 0 0/100% 6px no-repeat}
+/* Marigold band across the top of the result card */
+.share::before{content:"";position:absolute;left:-1px;right:-1px;top:-1px;height:6px;background:var(--marigold);pointer-events:none}
 /* Highlighter swipe behind the streak */
 .share .streak{justify-self:start;padding:0 6px;margin-left:-4px;
   background:linear-gradient(100deg,transparent 1%,rgba(255,200,61,.85) 2% 97%,transparent 98%) 0 60%/100% 64% no-repeat}
