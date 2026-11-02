@@ -72,7 +72,6 @@ header{display:grid;gap:4px;border-bottom:3px double var(--rule);padding-bottom:
 .cluemeta{display:flex;gap:8px;align-items:baseline;font-family:var(--f-ui);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
 .chip{font-family:var(--f-ui);font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);white-space:nowrap}
 .chip::before{content:"· "}
-.chip.easy{color:var(--wrong)}
 .cluetext .q{font-family:var(--f-clue);font-size:16.5px;line-height:1.3}
 
 .actions{display:flex;gap:8px;width:min(100%,380px);margin:0 auto}
@@ -176,7 +175,6 @@ header{display:grid;gap:4px;border-bottom:3px double var(--rule);padding-bottom:
       </div>
 
       <div class="actions">
-        <button id="hint">Aasaan clue <span>Easier version</span></button>
         <button id="check">Check &amp; reveal <span>Autocheck, check, reveal, clear</span></button>
       </div>
 
@@ -248,12 +246,12 @@ header{display:grid;gap:4px;border-bottom:3px double var(--rule);padding-bottom:
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script type="module">
-import { todayIST, istHourStamp, numberFor, formatIST, formatShort, countdownText, appNow } from "./lib/dates.js?v=1.0.0";
-import { buildPuzzle, gridHash } from "./lib/grid.js?v=1.0.0";
-import { readPuzzleFile } from "./lib/codec.js?v=1.0.0";
-import { createState } from "./lib/state.js?v=1.0.0";
+import { todayIST, istHourStamp, numberFor, formatIST, formatShort, countdownText, appNow } from "./lib/dates.js?v=1.1.0";
+import { buildPuzzle, gridHash } from "./lib/grid.js?v=1.1.0";
+import { readPuzzleFile } from "./lib/codec.js?v=1.1.0";
+import { createState } from "./lib/state.js?v=1.1.0";
 
-const APP_VERSION = "1.0.0";
+const APP_VERSION = "1.1.0";
 const SITE = "https://arvind13496.github.io/paheli-mini/";
 const REPORT_EMAIL = "arv.experiments@gmail.com";
 const TAGS = { R: "Riddle", GK: "GK", N: "Pop" };
@@ -439,7 +437,6 @@ function renderClues() {
     li.appendChild(b); $(e.dir === "A" ? "across" : "down").appendChild(li);
   });
 }
-function clueFor(e) { const h = !!(S && S.hints.includes(e.id)); return { q: h ? e.easy : e.clue, h }; }
 
 function update() {
   if (!entries.length || !S) return;
@@ -456,16 +453,14 @@ function update() {
   $("autoPill").hidden = !AUTO;
   $("mAuto").textContent = "Turn " + (AUTO ? "OFF" : "ON") + " Autocheck";
   document.querySelectorAll("[data-check]").forEach((b) => (b.disabled = AUTO));
-  const { q, h } = clueFor(e);
   $("clueNum").textContent = e.num + " " + (e.dir === "A" ? "Across" : "Down");
-  $("clueTag").textContent = h ? "Aasaan clue" : TAGS[e.tag]; $("clueTag").className = "chip" + (h ? " easy" : "");
-  $("clueQ").textContent = q;
-  $("hint").disabled = h || solved;
+  $("clueTag").textContent = TAGS[e.tag];
+  $("clueQ").textContent = e.clue;
   document.querySelectorAll("#clues button").forEach((b) => {
-    const en = entries.find((x) => x.id === b.dataset.key); const c = clueFor(en);
+    const en = entries.find((x) => x.id === b.dataset.key);
     b.classList.toggle("cur", en === e && !solved);
     b.classList.toggle("filled", en.cells.every((k) => S.letters[k]));
-    b.innerHTML = `<b>${en.num}</b><span>${esc(c.q)}<span class="tagline"><span class="chip${c.h ? " easy" : ""}">${c.h ? "Aasaan clue" : TAGS[en.tag]}</span></span></span>`;
+    b.innerHTML = `<b>${en.num}</b><span>${esc(en.clue)}<span class="tagline"><span class="chip">${TAGS[en.tag]}</span></span></span>`;
   });
 }
 
@@ -561,10 +556,6 @@ window.addEventListener("pagehide", () => { if (timerId) stopTimer(); });
 $("prev").onclick = () => { if (canPlay()) nextEntry(-1); };
 $("next").onclick = () => { if (canPlay()) nextEntry(1); };
 $("clueText").onclick = () => tapCell(sel);
-$("hint").onclick = () => {
-  if (!canPlay()) return; const e = curEntry();
-  if (!S.hints.includes(e.id)) { S.hints.push(e.id); persist(); update(); toast("Easier clue for " + e.num + " " + (e.dir === "A" ? "Across" : "Down")); }
-};
 
 // ---------- check & reveal ----------
 function scope(kind) { return kind === "square" ? [sel] : kind === "word" ? curEntry().cells.slice() : cells.map((c, i) => (c.block ? -1 : i)).filter((i) => i >= 0); }
