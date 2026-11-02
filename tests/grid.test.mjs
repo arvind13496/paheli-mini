@@ -9,7 +9,7 @@ test("sample puzzles number like the prototype", () => {
   samples.records.forEach((rec, i) => {
     const { slots } = buildPuzzle(rec.grid, rec.clues);
     assert.deepEqual(slots.map((s) => `${s.id}:${s.answer}`), samples.expectedSlots[i]);
-    for (const s of slots) assert.ok(s.clue && s.easy && s.why, `clue fields attached for ${s.id}`);
+    for (const s of slots) assert.ok(s.clue && s.why, `clue fields attached for ${s.id}`);
   });
 });
 

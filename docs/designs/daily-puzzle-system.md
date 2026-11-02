@@ -165,7 +165,7 @@ These are known and accepted for v1 by Arvind:
 *   **Given**: Claude has written 7 puzzles, and the checker has passed them.
 *   **When**: Arvind opens the review sheet on his laptop.
 *   **Then**:
-    *   He sees each puzzle's grid and every clue, easier clue, "why" line, GK source and checker warning.
+    *   He sees each puzzle's grid and every clue, "why" line, GK source and checker warning.
     *   He marks each puzzle approved, fix clue (with a note) or replace puzzle.
     *   Only approved puzzles are published.
     *   Flagged ones come back in a follow-up sheet.
@@ -221,8 +221,8 @@ tools/publish.mjs (approved only) -> puzzles/<date>.json   git push -+-> check.y
       "constructor": "Arvind Lakhani",
       "grid": ["##PCO", "#BEAT", "TOAST", "EACH#", "ATE##"],
       "clues": {
-        "1A": { "tag": "N",  "clue": "...", "easy": "...", "why": "...", "source": "" },
-        "1D": { "tag": "GK", "clue": "...", "easy": "...", "why": "...", "source": "https://..." }
+        "1A": { "tag": "N",  "clue": "...", "why": "...", "source": "" },
+        "1D": { "tag": "GK", "clue": "...", "why": "...", "source": "https://..." }
       },
       "warnings": [],
       "selfsolve": []
@@ -241,7 +241,7 @@ tools/publish.mjs (approved only) -> puzzles/<date>.json   git push -+-> check.y
 { "schema": 1, "date": "2026-10-29", "data": "<scrambled>" }
 ```
 
-*   `data` is the record with only the fields players need: `title`, `constructor`, `grid`, and `clues` with `tag`, `clue`, `easy` and `why`.
+*   `data` is the record with only the fields players need: `title`, `constructor`, `grid`, and `clues` with `tag`, `clue` and `why`. (Puzzles published before 2 Nov 2026 also carry an `easy` field, which the app ignores.)
 *   `source`, `warnings`, `selfsolve` and `batch` are removed before scrambling.
 *   Scrambling (`x1`) works like this: JSON is converted to UTF-8 bytes, XORed with a fixed key and base64-encoded. A future change of method means bumping `schema`.
 
@@ -340,9 +340,7 @@ Three localStorage keys, each re-read before every write so two tabs can't overw
     *   "Report a clue"
     *   "Why these answers"
 *   **Terms used throughout:**
-    *   **Easier clue:** the `easy` field, shown when the player taps "Aasaan clue" ("easy clue").
-    *   **Hint:** one use of the easier clue.
-    *   **Help:** hints plus checks plus reveals.
+    *   **Help:** checks plus reveals. (The "Aasaan clue" easier clue was removed in v1.1.0; `hints` is kept in saved data and is always 0 for new solves.)
 *   **Share text:**
 
 ```text
@@ -374,7 +372,6 @@ https://arvind13496.github.io/paheli-mini/?utm_source=whatsapp&utm_medium=share
 *   **Unchanged:**
     *   the newspaper look
     *   the timer and pause
-    *   the easier clue
     *   check, reveal and autocheck
     *   the on-screen keyboard and the legend
 
@@ -391,10 +388,10 @@ https://arvind13496.github.io/paheli-mini/?utm_source=whatsapp&utm_medium=share
         *   Every slot is at least 3 letters.
         *   No word appears twice in the same grid.
     *   **Content:**
-        *   Every slot has `tag` (R, GK or N), `clue`, `easy` and `why`.
+        *   Every slot has `tag` (R, GK or N), `clue` and `why`.
         *   GK clues have a `source`.
         *   `title` and `constructor` are present and are strings.
-    *   **Answer leaks.** No answer appears as a whole word, ignoring case, in its own clue, its easier clue or the puzzle title.
+    *   **Answer leaks.** No answer appears as a whole word, ignoring case, in its own clue or the puzzle title.
     *   **Repeats.** No answer appears within 14 days either side, across published puzzles and the whole batch.
     *   **Dates.** Dates are unique, after today, and not already published.
     *   **Warnings only (never block publishing):**
@@ -402,7 +399,7 @@ https://arvind13496.github.io/paheli-mini/?utm_source=whatsapp&utm_medium=share
         *   The clue mix is lopsided: more than half of the clues share one tag.
 3.  **Self-solve (optional).** A separate Claude session solves each puzzle from the clues alone. Any clue it can't get is listed in that record's `selfsolve`.
 4.  **Sheet.** Run `node tools/make-sheet.mjs batches/<id>.json` to write `review/<id>.xlsx`.
-    *   One row per clue: Date, #, Title, Grid (first row of each puzzle, five lines in Courier), Slot, Answer, Tag, Clue, Easier clue, Why, Source, Warnings, Self-solve.
+    *   One row per clue: Date, #, Title, Grid (first row of each puzzle, five lines in Courier), Slot, Answer, Tag, Clue, Why, Source, Warnings, Self-solve.
     *   Status (a dropdown) and Notes sit on each puzzle's first row.
 5.  **Review.** Arvind marks each puzzle approved, fix clue or replace puzzle, adds notes, and saves the sheet.
 6.  **Fix loop.**
@@ -567,7 +564,7 @@ Built in five phases. Each phase leaves the repo working and has an exit check. 
 *   **Proposed Changes**:
     *   `buildPuzzle(grid, clues)` returns `{ cells, slots, cellSlots }`. It carries over the prototype's `build()` numbering and Across-first sort.
         *   `cells[i]`: `{ block, answer, num }`.
-        *   `slots[]`: `{ id: "1A", dir: "A", num, cells[], answer, tag, clue, easy, why }`.
+        *   `slots[]`: `{ id: "1A", dir: "A", num, cells[], answer, tag, clue, why }`.
         *   `cellSlots[i]`: `{ A: slot, D: slot }`. This replaces the prototype's `cellEnt`.
     *   `validateShape(grid)` returns `errors[]`.
     *   `gridHash(grid)` returns an FNV-1a 32-bit hash of `grid.join("")`, as 8 lowercase hex characters.
@@ -707,7 +704,7 @@ Built in five phases. Each phase leaves the repo working and has an exit check. 
     *   an answer in the title
     *   the same word twice in one grid
     *   a repeat 10 days apart
-    *   a missing `easy` field
+    *   a missing `why` field
     *   a GK clue with no source
     *   a 2-letter slot
 
@@ -732,7 +729,7 @@ Built in five phases. Each phase leaves the repo working and has an exit check. 
     *   The audience: Indian millennials, with Gen Z welcome.
     *   About 4 R, 3 GK and 3 N clues per 10-clue puzzle, keeping those proportions for other counts.
     *   Tone examples from the samples.
-    *   Rules for easier clues and "why" lines.
+    *   Rules for "why" lines.
     *   Whole-word answer leaks are banned.
     *   Every GK clue needs a source.
     *   Avoid party politics, religion and caste.

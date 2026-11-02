@@ -47,10 +47,16 @@ test("a repeat 10 days apart fails", () => {
   assert.ok(errs([a, b]).some((x) => /SRI was also used/.test(x)));
 });
 
-test("a missing easier clue fails", () => {
+test("a missing why line fails", () => {
   const r = clone(samples[1]);
-  delete r.clues["4A"].easy;
-  assert.ok(errs([r]).some((x) => /4A \(SOUND\) is missing "easy"/.test(x)));
+  delete r.clues["4A"].why;
+  assert.ok(errs([r]).some((x) => /4A \(SOUND\) is missing "why"/.test(x)));
+});
+
+test("an easier clue is no longer needed, and a leftover one is ignored", () => {
+  const r = clone(samples[1]);
+  r.clues["4A"].easy = "Rhymes with SOUND";
+  assert.deepEqual(errs([r]).filter((x) => /easy|easier/i.test(x)), []);
 });
 
 test("a GK clue with no source fails", () => {
@@ -80,7 +86,7 @@ test("already-published records are skipped in batch mode", () => {
 function publishTo(dir, recs, manifestDates = recs.map((r) => r.date)) {
   for (const r of recs) {
     const { title, constructor, grid } = r;
-    const clues = Object.fromEntries(Object.entries(r.clues).map(([id, c]) => [id, { tag: c.tag, clue: c.clue, easy: c.easy, why: c.why }]));
+    const clues = Object.fromEntries(Object.entries(r.clues).map(([id, c]) => [id, { tag: c.tag, clue: c.clue, why: c.why }]));
     fs.writeFileSync(path.join(dir, `${r.date}.json`), JSON.stringify({ schema: 1, date: r.date, data: encode({ title, constructor, grid, clues }) }));
   }
   fs.writeFileSync(path.join(dir, "manifest.json"), JSON.stringify({ launch: [...manifestDates].sort()[0], dates: manifestDates }));
