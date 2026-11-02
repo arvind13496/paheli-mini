@@ -42,7 +42,7 @@ header{display:grid;gap:4px;border-bottom:3px double var(--rule);padding-bottom:
 
 .play{display:grid;gap:12px;grid-template-columns:minmax(0,1fr)}
 .left{display:grid;gap:10px;min-width:0}
-.board-wrap{position:relative;width:min(100%,380px);margin:0 auto}
+.board-wrap{position:relative;width:min(100%,380px,var(--board-fit,380px));margin:0 auto}
 .board{display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(5,1fr);gap:1px;background:var(--rule);border:2px solid var(--rule);aspect-ratio:1;width:100%;container-type:inline-size}
 .board.veiled{filter:blur(6px)}
 .cell{position:relative;background:var(--cell);display:grid;place-items:center;font-family:var(--f-ui);font-weight:500;font-size:11.5cqw;line-height:1;text-transform:uppercase;cursor:pointer;user-select:none;overflow:hidden;min-width:0;min-height:0}
@@ -79,12 +79,8 @@ header{display:grid;gap:4px;border-bottom:3px double var(--rule);padding-bottom:
 .actions button span{font-weight:400;font-size:11px;color:var(--ink-soft)}
 .actions button:disabled{opacity:.4;cursor:default}
 
-.kb{display:none;gap:6px;width:min(100%,520px);margin:0 auto;user-select:none}
-.kb .row{display:flex;gap:5px;justify-content:center}
-.kb button{flex:1 1 0;min-width:0;height:48px;border:0;border-radius:5px;background:var(--key);color:var(--ink);font-family:var(--f-ui);font-weight:500;font-size:19px;cursor:pointer;touch-action:manipulation}
-.kb button:active{background:#C9C8C2}
-.kb button.wide{flex:1.6 1 0;font-size:13px;font-weight:600}
-@media (pointer:coarse),(max-width:700px){.kb{display:grid}}
+/* Hidden field that receives the phone's own keyboard. 16px stops iOS from zooming in on focus. */
+.typer{position:absolute;top:0;left:0;width:1px;height:1px;padding:0;border:0;opacity:0;font-size:16px;caret-color:transparent;pointer-events:none}
 
 .clues{display:grid;gap:16px;grid-template-columns:1fr 1fr;align-content:start}
 .clues h3{margin:0 0 6px;padding-bottom:4px;border-bottom:1px solid var(--rule);font-family:var(--f-ui);font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
@@ -151,7 +147,8 @@ header{display:grid;gap:4px;border-bottom:3px double var(--rule);padding-bottom:
 
   <div class="play">
     <div class="left">
-      <div class="board-wrap">
+      <div class="board-wrap" id="boardWrap">
+        <input class="typer" id="typer" type="text" value=" " autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" enterkeyhint="next" aria-label="Type letters into the grid" tabindex="-1">
         <div class="board veiled" id="board" role="grid" aria-label="Crossword grid"></div>
         <div class="veil" id="veil">
           <div class="veil-card">
@@ -178,7 +175,6 @@ header{display:grid;gap:4px;border-bottom:3px double var(--rule);padding-bottom:
         <button id="check">Check &amp; reveal <span>Autocheck, check, reveal, clear</span></button>
       </div>
 
-      <div class="kb" id="kb"></div>
     </div>
 
     <div class="clues" id="clues">
@@ -246,12 +242,12 @@ header{display:grid;gap:4px;border-bottom:3px double var(--rule);padding-bottom:
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script type="module">
-import { todayIST, istHourStamp, numberFor, formatIST, formatShort, countdownText, appNow } from "./lib/dates.js?v=1.1.0";
-import { buildPuzzle, gridHash } from "./lib/grid.js?v=1.1.0";
-import { readPuzzleFile } from "./lib/codec.js?v=1.1.0";
-import { createState } from "./lib/state.js?v=1.1.0";
+import { todayIST, istHourStamp, numberFor, formatIST, formatShort, countdownText, appNow } from "./lib/dates.js?v=1.2.0";
+import { buildPuzzle, gridHash } from "./lib/grid.js?v=1.2.0";
+import { readPuzzleFile } from "./lib/codec.js?v=1.2.0";
+import { createState } from "./lib/state.js?v=1.2.0";
 
-const APP_VERSION = "1.1.0";
+const APP_VERSION = "1.2.0";
 const SITE = "https://arvind13496.github.io/paheli-mini/";
 const REPORT_EMAIL = "arv.experiments@gmail.com";
 const TAGS = { R: "Riddle", GK: "GK", N: "Pop" };
@@ -433,7 +429,7 @@ function renderClues() {
   ["across", "down"].forEach((id) => ($(id).innerHTML = ""));
   entries.forEach((e) => {
     const li = document.createElement("li"); const b = document.createElement("button"); b.dataset.key = e.id;
-    b.onclick = () => { if (!ready || !S || !S.started || solved) return; dir = e.dir; sel = firstEmpty(e); update(); };
+    b.onclick = () => { if (!ready || !S || !S.started || solved) return; openKeyboard(); dir = e.dir; sel = firstEmpty(e); update(); };
     li.appendChild(b); $(e.dir === "A" ? "across" : "down").appendChild(li);
   });
 }
@@ -466,8 +462,13 @@ function update() {
 
 // ---------- input ----------
 const canPlay = () => ready && S && S.started && !solved;
+// The phone's own keyboard types into a hidden field. Focus must happen inside the tap, or iOS won't open it.
+const COARSE = matchMedia("(pointer:coarse)").matches;
+function openKeyboard() { if (canPlay()) { const t = $("typer"); t.value = " "; t.focus({ preventScroll: true }); } }
+function closeKeyboard() { $("typer").blur(); }
 function tapCell(i) {
   if (!canPlay()) return;
+  openKeyboard();
   if (i === sel) { const o = dir === "A" ? "D" : "A"; if (cellSlots[i][o]) dir = o; }
   else { sel = i; if (!cellSlots[i][dir]) dir = dir === "A" ? "D" : "A"; }
   update();
@@ -534,10 +535,11 @@ $("start").onclick = () => {
   if (!ready || !S || solved) return;
   if (!S.started) track("puzzle-start");
   S.started = true; showVeil(false); startTimer(); update(); persist();
+  openKeyboard();
 };
 $("pause").onclick = () => {
   if (!ready || !S || solved || !S.started || !timerId) return;
-  stopTimer();
+  stopTimer(); closeKeyboard();
   showScreen({ eyebrow: `Paheli Mini #${num}`, title: P.title, by: `By ${P.constructor}`, text: `Paused at ${fmt(S.elapsedMs)}`, start: "Resume" });
 };
 document.addEventListener("visibilitychange", () => {
@@ -553,8 +555,8 @@ document.addEventListener("visibilitychange", () => {
 $("newPuzzlePlay").onclick = () => location.reload();
 window.addEventListener("pagehide", () => { if (timerId) stopTimer(); });
 
-$("prev").onclick = () => { if (canPlay()) nextEntry(-1); };
-$("next").onclick = () => { if (canPlay()) nextEntry(1); };
+$("prev").onclick = () => { if (canPlay()) { openKeyboard(); nextEntry(-1); } };
+$("next").onclick = () => { if (canPlay()) { openKeyboard(); nextEntry(1); } };
 $("clueText").onclick = () => tapCell(sel);
 
 // ---------- check & reveal ----------
@@ -617,7 +619,7 @@ function tagFor(st) {
   return "Passenger train, still counts";
 }
 function solve() {
-  stopTimer(); solved = true;
+  stopTimer(); solved = true; closeKeyboard();
   solveStats = { sec: Math.round(S.elapsedMs / 1000), hints: S.hints.length, checks: S.checks, reveals: S.reveals, auto: !!S.usedAuto };
   state.recordSolve(P.date, solveStats);
   const st = state.streaks(manifest.dates, todayIST(appNow()));
@@ -688,16 +690,33 @@ let tt;
 function toast(m) { const t = $("toast"); t.textContent = m; t.classList.add("show"); clearTimeout(tt); tt = setTimeout(() => t.classList.remove("show"), 2200); }
 
 // ---------- keyboard ----------
-["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"].forEach((row, ri) => {
-  const r = document.createElement("div"); r.className = "row";
-  if (ri === 2) { const b = document.createElement("button"); b.className = "wide"; b.textContent = "Next"; b.dataset.k = "NEXT"; r.appendChild(b); }
-  [...row].forEach((ch) => { const b = document.createElement("button"); b.textContent = ch; b.dataset.k = ch; r.appendChild(b); });
-  if (ri === 2) { const b = document.createElement("button"); b.className = "wide"; b.innerHTML = "&#9003;"; b.setAttribute("aria-label", "Delete"); b.dataset.k = "DEL"; r.appendChild(b); }
-  $("kb").appendChild(r);
+// Physical keys arrive as keydown (handled below, with preventDefault so nothing reaches the field).
+// Many phone keyboards send no usable keydown, so their typing arrives here as an input event instead.
+// The field always holds one space, so Backspace on an "empty" field still has something to delete.
+$("typer").addEventListener("input", () => {
+  const t = $("typer"), v = t.value;
+  t.value = " ";
+  if (!canPlay()) return;
+  if (v === "") { backspace(); return; }
+  const added = v.startsWith(" ") ? v.slice(1) : v;
+  for (const ch of added) {
+    if (/[a-zA-Z]/.test(ch)) typeLetter(ch.toUpperCase());
+    else if (ch === " ") tapCell(sel);
+  }
 });
-$("kb").addEventListener("click", (e) => {
-  const k = e.target.closest("button")?.dataset.k; if (!k) return;
-  if (k === "DEL") backspace(); else if (k === "NEXT") { if (canPlay()) nextEntry(1); } else typeLetter(k);
+// While the keyboard is open, shrink the grid so it and the clue bar fit in the space above it.
+function fitBoard() {
+  const vv = window.visualViewport, root = document.documentElement.style;
+  if (!vv || !COARSE || document.activeElement !== $("typer")) { root.removeProperty("--board-fit"); return; }
+  root.setProperty("--board-fit", Math.max(220, Math.floor(vv.height - $("clueText").offsetHeight - 28)) + "px");
+}
+window.visualViewport?.addEventListener("resize", fitBoard);
+$("typer").addEventListener("blur", () => setTimeout(fitBoard, 50));
+$("typer").addEventListener("focus", () => {
+  if (!COARSE) return;
+  fitBoard();
+  // Keep the grid and clue bar above the keyboard once it has slid up.
+  setTimeout(() => { const top = $("boardWrap").getBoundingClientRect().top + scrollY - 8; if (Math.abs(scrollY - top) > 4) scrollTo({ top, behavior: "smooth" }); }, 300);
 });
 document.addEventListener("keydown", (e) => {
   if (e.metaKey || e.ctrlKey || e.altKey) return;
