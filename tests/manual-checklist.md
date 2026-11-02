@@ -18,6 +18,7 @@ Run on a phone (390 px wide) and on desktop. For local checks, run `python3 -m h
 - [ ] In offline mode (devtools), Retry appears.
 - [ ] Autocheck, check, reveal and clear all work. A revealed square shows the red corner.
 - [ ] There is no "Aasaan clue" button; Check & reveal fills the row under the clue bar.
+- [ ] On a phone (iOS Safari, Android Chrome, and WhatsApp's in-app browser): tapping Shuru karo or a square opens the phone's own keyboard. Letters fill the grid, Backspace deletes (also on an empty square), the keyboard's Next key moves to the next clue, and no autocorrect suggestions change letters. The grid and clue bar stay visible above the keyboard. Solving or pausing closes the keyboard.
 - [ ] A private window shows "Streaks can't be saved in this browser", and the share text has no streak.
 - [ ] With two tabs open, solving in one tab doesn't erase the other's solve.
 

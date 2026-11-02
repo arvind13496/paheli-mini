@@ -373,7 +373,7 @@ https://arvind13496.github.io/paheli-mini/?utm_source=whatsapp&utm_medium=share
     *   the newspaper look
     *   the timer and pause
     *   check, reveal and autocheck
-    *   the on-screen keyboard and the legend
+    *   the legend (the on-screen keyboard was replaced by the phone's own keyboard in v1.2.0)
 
 ### 5. Weekly batch routine (Claude plus Arvind)
 
