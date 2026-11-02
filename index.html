@@ -395,7 +395,7 @@ function previewPicker() {
   manifest = { launch: PREVIEW.launch, dates: PREVIEW.records.map((r) => r.date).sort() };
   $("modal").hidden = true;
   blankBoard();
-  showScreen({ eyebrow: "Preview", title: "Pick a puzzle", text: "Play any day before it goes live." });
+  showScreen({ title: "Pick a puzzle" });
   const card = document.querySelector(".veil-card");
   card.querySelectorAll(".pick").forEach((b) => b.remove());
   PREVIEW.records.slice().sort((a, b) => (a.date < b.date ? -1 : 1)).forEach((r) => {
