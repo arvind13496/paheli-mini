@@ -65,7 +65,14 @@ header{display:grid;gap:4px}
 .board.tile-weekend .cell.block::before{background:#F4F1E8 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cg fill='%23233E8B'%3E%3Cpath d='M0 0h8a8 8 0 0 1-8 8zM40 0v8a8 8 0 0 1-8-8zM40 40h-8a8 8 0 0 1 8-8zM0 40v-8a8 8 0 0 1 8 8z'/%3E%3Cpath d='M20 6c5 6 5 9 0 14c-5-5-5-8 0-14zM20 34c5-6 5-9 0-14c-5 5-5 8 0 14zM6 20c6-5 9-5 14 0c-5 5-8 5-14 0zM34 20c-6-5-9-5-14 0c5 5 8 5 14 0z'/%3E%3C/g%3E%3Cg fill='none' stroke='%23233E8B' stroke-width='1.1'%3E%3Cpath d='M20 0v3M20 37v3M0 20h3M37 20h3'/%3E%3Ccircle cx='20' cy='20' r='15.5' stroke-dasharray='2 2.6'/%3E%3C/g%3E%3Ccircle cx='20' cy='20' r='2.4' fill='%23F2A20C'/%3E%3C/svg%3E") center/100% 100% no-repeat}
 
 .veil{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:18px;overflow:auto}
-.veil-card .pick{width:100%;font-size:13px;padding:7px 10px;border-radius:0;margin-top:2px}
+/* Preview picker: one row per puzzle, title left and number/date right */
+.veil-card.picker{max-width:340px;width:100%;gap:8px;padding:22px 18px 18px}
+.veil-card.picker h2{margin-bottom:8px}
+.veil-card .pick{width:100%;display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:12px 14px;border-radius:0;font-size:15px;letter-spacing:0;text-align:left}
+.veil-card .pick:hover{background:var(--page)}
+.pick-t{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pick-m{flex:none;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft)}
+@media (max-width:380px){.veil-card.picker{padding:18px 14px 14px}.veil-card .pick{flex-direction:column;align-items:flex-start;gap:2px;padding:9px 12px}.pick-m{order:-1}.pick-t{white-space:normal}}
 .veil-card{background:var(--paper);border:1px solid var(--rule);box-shadow:4px 4px 0 var(--rule);padding:18px;display:grid;gap:6px;max-width:290px;justify-items:center}
 .veil-card .eyebrow{font-family:var(--f-ui);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
 .veil-card h2{font-family:var(--f-mast);font-weight:400;font-size:28px;margin:0;line-height:1.1;text-wrap:balance}
@@ -303,6 +310,7 @@ function sendPageview() {
 let screenTimer = null;
 function msUntilIST(date) { return Date.parse(date + "T00:00:00+05:30") - appNow(); }
 function showScreen({ eyebrow = "", title, text = "", by = "", start = "", retry = "" }) {
+  document.querySelector(".veil-card").classList.remove("picker");
   $("veilEyebrow").textContent = eyebrow; $("veilEyebrow").hidden = !eyebrow;
   document.querySelector(".app").classList.toggle("nopuzzle", !P);
   $("veilTitle").textContent = title;
@@ -397,11 +405,14 @@ function previewPicker() {
   blankBoard();
   showScreen({ title: "Pick a puzzle" });
   const card = document.querySelector(".veil-card");
+  card.classList.add("picker");
   card.querySelectorAll(".pick").forEach((b) => b.remove());
   PREVIEW.records.slice().sort((a, b) => (a.date < b.date ? -1 : 1)).forEach((r) => {
     const b = document.createElement("button");
     b.className = "btn alt pick";
-    b.textContent = `No. ${numberFor(r.date, PREVIEW.launch)} · ${formatShort(r.date)} · ${r.title}`;
+    const t = document.createElement("span"); t.className = "pick-t"; t.textContent = r.title;
+    const m = document.createElement("span"); m.className = "pick-m"; m.textContent = `No. ${numberFor(r.date, PREVIEW.launch)} · ${formatShort(r.date).replace(/ \d{4}$/, "")}`;
+    b.append(t, m);
     b.onclick = () => { card.querySelectorAll(".pick").forEach((x) => x.remove()); num = numberFor(r.date, PREVIEW.launch); startRecord(r, r.date); };
     card.appendChild(b);
   });
