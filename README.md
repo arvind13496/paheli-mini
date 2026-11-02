@@ -20,6 +20,8 @@ Node 22 or later. Run `npm install` once (it installs `exceljs` for the review s
 2. **Check.** Run `node tools/check.mjs batches/<id>.json`. Errors go back to Claude.
 3. **Sheet.** Run `node tools/make-sheet.mjs batches/<id>.json`. This writes `review/<id>.xlsx`.
 4. **Play-test (optional).** Run `node tools/preview.mjs batches/<id>.json` and open `review/<id>-preview.html` in a browser. Every puzzle in the batch is playable. Nothing is saved, and nothing is sent to analytics.
+
+To let friends play every published puzzle, past and upcoming, run `node tools/preview.mjs puzzles/`. It writes `review/all-preview.html` with all of them unlocked. It contains readable answers, so share it only with testers.
 5. **Review.** Set Status to *approved*, *fix clue* or *replace puzzle*, and add notes.
 6. **Publish.** Run `node tools/publish.mjs batches/<id>.json review/<id>.xlsx`. Only approved puzzles are published, and their content comes from the batch file.
 7. **Test and push.** Run `npm test`, then commit `puzzles/` and push.
