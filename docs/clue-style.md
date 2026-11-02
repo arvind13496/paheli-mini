@@ -16,15 +16,14 @@ About 4 riddles (R), 3 desi GK (GK) and 3 nostalgia or internet clues (N) for a 
 * **GK (Desi GK):** Indian facts with a hook. Every GK clue needs a `source` link that Arvind can check. *"Kiran ___, director of Laapataa Ladies"* = RAO.
 * **N (Nostalgia or internet):** millennial childhood, or current online life. *"Yellow booth where you watched the meter tick on an STD call"* = PCO.
 
-## Every clue needs three texts
+## Every clue needs two texts
 
 * `clue`: the main clue.
-* `easy`: the easier clue, shown when the player taps "Aasaan clue". Make it plainer and more direct, but never the answer itself.
 * `why`: one line shown after solving that explains the answer. This is where trivia lives, and it may use the answer.
 
 ## Hard rules (the checker enforces these)
 
-* An answer never appears as a whole word in its own clue, its easier clue or the puzzle title.
+* An answer never appears as a whole word in its own clue or the puzzle title.
 * Titles never contain any answer from the grid.
 * No answer repeats within 14 days either side of its date, and no word appears twice in one grid.
 * Grids are 5x5. Every white square belongs to both an Across and a Down answer, and every answer has at least 3 letters.

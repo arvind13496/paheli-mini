@@ -64,7 +64,7 @@ export async function publish(batchPath, sheetPath, { today = todayIST(), puzzle
 
   for (const rec of approved.filter((r) => !failed.has(r.date))) {
     const clues = {};
-    for (const [id, c] of Object.entries(rec.clues)) clues[id] = { tag: c.tag, clue: c.clue, easy: c.easy, why: c.why };
+    for (const [id, c] of Object.entries(rec.clues)) clues[id] = { tag: c.tag, clue: c.clue, why: c.why };
     const data = encode({ title: rec.title, constructor: rec.constructor, grid: rec.grid, clues });
     fs.writeFileSync(path.join(puzzlesDir, `${rec.date}.json`), JSON.stringify({ schema: 1, date: rec.date, data }) + "\n");
     publishedDates.add(rec.date);

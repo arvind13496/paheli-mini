@@ -53,11 +53,9 @@ function checkRecord(rec, misspellings = new Map(), { published = false } = {}) 
     const c = clues[s.id];
     if (!c) { errors.push(`${s.id} (${s.answer}) has no clue`); continue; }
     if (!TAGS.has(c.tag)) errors.push(`${s.id} has an invalid tag "${c.tag}" (use R, GK or N)`);
-    for (const f of ["clue", "easy", "why"]) if (!isStr(c, f)) errors.push(`${s.id} (${s.answer}) is missing "${f}"`);
+    for (const f of ["clue", "why"]) if (!isStr(c, f)) errors.push(`${s.id} (${s.answer}) is missing "${f}"`);
     if (!published && c.tag === "GK" && !isStr(c, "source")) errors.push(`${s.id} (${s.answer}) is a GK clue with no source`);
-    for (const f of ["clue", "easy"]) {
-      if (isStr(c, f) && wordRe(s.answer).test(c[f])) errors.push(`${s.id}: answer ${s.answer} appears in its own ${f === "easy" ? "easier clue" : "clue"}`);
-    }
+    if (isStr(c, "clue") && wordRe(s.answer).test(c.clue)) errors.push(`${s.id}: answer ${s.answer} appears in its own clue`);
     if (isStr(rec, "title") && wordRe(s.answer).test(rec.title)) errors.push(`Title "${rec.title}" contains the answer ${s.answer}`);
     if (misspellings.has(s.answer)) warnings.push(`${s.answer} looks like a misspelling of ${misspellings.get(s.answer)}`);
     tagCount[c.tag] = (tagCount[c.tag] || 0) + 1;

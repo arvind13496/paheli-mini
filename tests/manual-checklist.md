@@ -17,7 +17,7 @@ Run on a phone (390 px wide) and on desktop. For local checks, run `python3 -m h
 - [ ] A date that isn't published shows "running late". Typing on that screen does nothing and logs no console errors.
 - [ ] In offline mode (devtools), Retry appears.
 - [ ] Autocheck, check, reveal and clear all work. A revealed square shows the red corner.
-- [ ] "Aasaan clue" swaps in the easier clue.
+- [ ] There is no "Aasaan clue" button; Check & reveal fills the row under the clue bar.
 - [ ] A private window shows "Streaks can't be saved in this browser", and the share text has no streak.
 - [ ] With two tabs open, solving in one tab doesn't erase the other's solve.
 

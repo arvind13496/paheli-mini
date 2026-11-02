@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { encode, decode, readPuzzleFile } from "../lib/codec.js";
 
 test("round trip keeps unicode", () => {
-  const rec = { title: "Chai pe charcha", clues: { "1A": { clue: "Pāni ₹10 😄", easy: "x", why: "y" } } };
+  const rec = { title: "Chai pe charcha", clues: { "1A": { clue: "Pāni ₹10 😄", why: "y" } } };
   assert.deepEqual(decode(encode(rec)), rec);
 });
 
