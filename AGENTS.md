@@ -1,5 +1,7 @@
 # Paheli web: instructions for coding agents
 
+> **Before any work, read `docs/STATUS.md` in arvind13496/paheli-mini (main branch). It is the source of truth for decisions, what's live and work in flight. Don't redo listed work; ask Arvind if a task conflicts with it. When you finish, update the iOS rows of that file through a pull request to paheli-mini, or give Arvind the update to pass on.**
+
 Several Claude chats and Claude Code sessions work on Paheli at the same time, without seeing each other's conversations. To avoid duplicate or conflicting work:
 
 1. **Read `docs/STATUS.md` before doing anything.** It lists what's live, who owns which part, work in flight, decisions and open questions. Also check open pull requests and `git log` since its "Last updated" date.
