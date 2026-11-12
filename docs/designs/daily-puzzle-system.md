@@ -241,7 +241,7 @@ tools/publish.mjs (approved only) -> puzzles/<date>.json   git push -+-> check.y
 { "schema": 1, "date": "2026-10-29", "data": "<scrambled>" }
 ```
 
-*   `data` is the record with only the fields players need: `title`, `constructor`, `grid`, and `clues` with `tag`, `clue` and `why`. (Puzzles published before 2 Nov 2026 also carry an `easy` field, which the app ignores.)
+*   `data` is the record with only the fields players need: `title`, `constructor`, `grid`, and `clues` with `tag`, `clue`, `easy` and `why`. (`easy` was dropped on 2 Nov and is back from v1.6.0. Only the 12 Nov 2026 puzzle has no `easy`, and the app hides the Aasaan clue button on clues without one.)
 *   `source`, `warnings`, `selfsolve` and `batch` are removed before scrambling.
 *   Scrambling (`x1`) works like this: JSON is converted to UTF-8 bytes, XORed with a fixed key and base64-encoded. A future change of method means bumping `schema`.
 
@@ -340,7 +340,7 @@ Three localStorage keys, each re-read before every write so two tabs can't overw
     *   "Report a clue"
     *   "Why these answers"
 *   **Terms used throughout:**
-    *   **Help:** checks plus reveals. (The "Aasaan clue" easier clue was removed in v1.1.0; `hints` is kept in saved data and is always 0 for new solves.)
+    *   **Help:** checks plus reveals. (The "Aasaan clue" easier clue was removed in v1.1.0 and is back in v1.6.0, as a button on the clue bar; each clue it is used on counts in `hints`.)
 *   **Share text:**
 
 ```text

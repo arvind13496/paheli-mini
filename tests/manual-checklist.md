@@ -17,7 +17,7 @@ Run on a phone (390 px wide) and on desktop. For local checks, run `python3 -m h
 - [ ] A date that isn't published shows "running late". Typing on that screen does nothing and logs no console errors.
 - [ ] In offline mode (devtools), Retry appears.
 - [ ] Autocheck, check, reveal and clear all work. A revealed square shows the red corner.
-- [ ] There is no "Aasaan clue" button; Check & reveal fills the row under the clue bar.
+- [ ] On a clue with an easier version, an "Aasaan clue" button sits at the top right of the clue bar. Tapping it swaps in the easier clue (marked "Aasaan clue" in red, in the bar and the clue list), hides the button for that clue, and the result card counts it as "1 easy clue". On the 12 Nov 2026 puzzle (no easier clues) the button never shows.
 - [ ] On a phone (iOS Safari, Android Chrome, and WhatsApp's in-app browser): the on-screen keyboard sits under the clue bar, the phone's own keyboard never opens, and the grid stays full size. Keys flash marigold, quick double letters (WOOD) both register, Next moves to the next clue and Delete works (also on an empty square).
 - [ ] A private window shows "Streaks can't be saved in this browser", and the share text has no streak.
 - [ ] With two tabs open, solving in one tab doesn't erase the other's solve.

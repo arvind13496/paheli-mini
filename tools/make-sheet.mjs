@@ -11,7 +11,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 export const STATUSES = ["approved", "fix clue", "replace puzzle"];
 export const COLUMNS = [
   ["Date", 12], ["#", 5], ["Title", 18], ["Grid", 10], ["Slot", 6], ["Answer", 10], ["Tag", 5],
-  ["Clue", 42], ["Why", 42], ["Source", 28], ["Warnings", 28], ["Self-solve", 18],
+  ["Clue", 42], ["Easier clue", 32], ["Why", 42], ["Source", 28], ["Warnings", 28], ["Self-solve", 18],
   ["Status", 15], ["Notes", 32],
 ];
 const TAG_NAMES = { R: "Riddle", GK: "GK", N: "Pop" };
@@ -44,7 +44,7 @@ export async function makeSheet(batchPath, outPath) {
         i === 0 ? rec.title : null,
         i === 0 ? rec.grid.map((r) => r.replace(/#/g, "■").split("").join(" ")).join("\n") : null,
         s.id, s.answer, TAG_NAMES[c.tag] || c.tag || "",
-        c.clue || "", c.why || "", c.source || "",
+        c.clue || "", c.easy || "", c.why || "", c.source || "",
         i === 0 ? (rec.warnings || []).join("\n") : null,
         i === 0 ? (rec.selfsolve || []).join(", ") : null,
         i === 0 ? "" : null,

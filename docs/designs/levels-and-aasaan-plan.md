@@ -31,13 +31,13 @@ Both documents (this repo's design doc and the iOS repo's `AGENTS.md`) get updat
 
 Pipeline
 - Batch format: every clue has `easy` again (required).
-- `tools/check.mjs`: `easy` is required for batches and for published puzzles dated from 13 Nov onward. Puzzles from 5 to 12 Nov stay valid without it, because they are already live or past. The rules that an easier clue can't contain the answer word, and that clues and answers are whole-word checked, still apply.
+- `tools/check.mjs`: `easy` is required for batches and for published puzzles dated from 13 Nov onward. Only the 12 Nov puzzle has no easier clues (the 5 to 11 Nov batch was published before the removal and kept them), and it stays valid without them because it is already live. The rules that an easier clue can't contain the answer word, and that clues and answers are whole-word checked, still apply.
 - `tools/make-sheet.mjs`: the "Easier clue" column comes back.
 - `tools/publish.mjs`: publishes `easy`.
 
 Backfill
 - Claude writes easier clues for the 6 puzzles from 13 to 18 Nov and sends you a sheet to approve. The files are edited in place and re-checked. Today's live puzzle (12 Nov) is not touched.
-- The batch files for b002 and b003 aren't in this workspace, so the backfill works from the published files (decode, add `easy`, re-encode).
+- The batch file for b003 isn't in this workspace, so the backfill works from the published files (decode, add `easy`, re-encode).
 - Safe for iOS: the app keeps published files forever once it has downloaded them, but so far it's only on Arvind's phone. A stale copy just means the button stays hidden on those days.
 
 App (web)

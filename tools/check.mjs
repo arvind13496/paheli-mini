@@ -12,6 +12,8 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const REPEAT_WINDOW_DAYS = 14;
 const TAGS = new Set(["R", "GK", "N"]);
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+// The easier ("Aasaan") clue is required for every puzzle dated from this day on. (The 12 Nov 2026 puzzle went out without one.)
+export const EASY_FROM = "2026-11-13";
 
 const isStr = (o, k) => Object.prototype.hasOwnProperty.call(o, k) && typeof o[k] === "string" && o[k].trim() !== "";
 const wordRe = (w) => new RegExp(`(^|[^A-Za-z])${w}([^A-Za-z]|$)`, "i");
@@ -28,7 +30,7 @@ function loadMisspellings() {
 }
 
 /** Shape, content and answer-leak rules for one record. Returns { errors, warnings, answers }. */
-function checkRecord(rec, misspellings = new Map(), { published = false } = {}) {
+function checkRecord(rec, misspellings = new Map(), { published = false, date = rec && rec.date } = {}) {
   const errors = [], warnings = [];
   if (!rec || typeof rec !== "object") return { errors: ["Record is not an object"], warnings, answers: [] };
   if (!isStr(rec, "title")) errors.push("Missing title");
@@ -53,9 +55,12 @@ function checkRecord(rec, misspellings = new Map(), { published = false } = {}) 
     const c = clues[s.id];
     if (!c) { errors.push(`${s.id} (${s.answer}) has no clue`); continue; }
     if (!TAGS.has(c.tag)) errors.push(`${s.id} has an invalid tag "${c.tag}" (use R, GK or N)`);
-    for (const f of ["clue", "why"]) if (!isStr(c, f)) errors.push(`${s.id} (${s.answer}) is missing "${f}"`);
+    const needEasy = !published || !(typeof date === "string" && date < EASY_FROM);
+    for (const f of needEasy ? ["clue", "easy", "why"] : ["clue", "why"]) if (!isStr(c, f)) errors.push(`${s.id} (${s.answer}) is missing "${f}"`);
     if (!published && c.tag === "GK" && !isStr(c, "source")) errors.push(`${s.id} (${s.answer}) is a GK clue with no source`);
-    if (isStr(c, "clue") && wordRe(s.answer).test(c.clue)) errors.push(`${s.id}: answer ${s.answer} appears in its own clue`);
+    for (const f of ["clue", "easy"]) {
+      if (isStr(c, f) && wordRe(s.answer).test(c[f])) errors.push(`${s.id}: answer ${s.answer} appears in its own ${f === "easy" ? "easier clue" : "clue"}`);
+    }
     if (isStr(rec, "title") && wordRe(s.answer).test(rec.title)) errors.push(`Title "${rec.title}" contains the answer ${s.answer}`);
     if (misspellings.has(s.answer)) warnings.push(`${s.answer} looks like a misspelling of ${misspellings.get(s.answer)}`);
     tagCount[c.tag] = (tagCount[c.tag] || 0) + 1;
@@ -143,7 +148,7 @@ export function checkPublished(dir, { today = todayIST(), buffer = 0 } = {}) {
   const misspellings = loadMisspellings();
   const checked = [];
   for (const e of entries) {
-    const r = checkRecord(e.record, misspellings, { published: true });
+    const r = checkRecord(e.record, misspellings, { published: true, date: e.date });
     r.errors.forEach((x) => errors.push(`${e.date}: ${x}`));
     checked.push({ date: e.date, answers: r.answers });
   }

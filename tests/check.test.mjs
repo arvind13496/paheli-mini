@@ -53,10 +53,16 @@ test("a missing why line fails", () => {
   assert.ok(errs([r]).some((x) => /4A \(SOUND\) is missing "why"/.test(x)));
 });
 
-test("an easier clue is no longer needed, and a leftover one is ignored", () => {
+test("a missing easier clue fails", () => {
   const r = clone(samples[1]);
-  r.clues["4A"].easy = "Rhymes with SOUND";
-  assert.deepEqual(errs([r]).filter((x) => /easy|easier/i.test(x)), []);
+  delete r.clues["4A"].easy;
+  assert.ok(errs([r]).some((x) => /4A \(SOUND\) is missing "easy"/.test(x)));
+});
+
+test("answer in its own easier clue fails", () => {
+  const r = clone(samples[1]);
+  r.clues["4A"].easy = "Rhymes with sound";
+  assert.ok(errs([r]).some((x) => /SOUND appears in its own easier clue/.test(x)));
 });
 
 test("a GK clue with no source fails", () => {
@@ -83,10 +89,10 @@ test("already-published records are skipped in batch mode", () => {
   assert.deepEqual(res.errors, []);
 });
 
-function publishTo(dir, recs, manifestDates = recs.map((r) => r.date)) {
+function publishTo(dir, recs, manifestDates = recs.map((r) => r.date), { dropEasy = false } = {}) {
   for (const r of recs) {
     const { title, constructor, grid } = r;
-    const clues = Object.fromEntries(Object.entries(r.clues).map(([id, c]) => [id, { tag: c.tag, clue: c.clue, why: c.why }]));
+    const clues = Object.fromEntries(Object.entries(r.clues).map(([id, c]) => [id, dropEasy ? { tag: c.tag, clue: c.clue, why: c.why } : { tag: c.tag, clue: c.clue, easy: c.easy, why: c.why }]));
     fs.writeFileSync(path.join(dir, `${r.date}.json`), JSON.stringify({ schema: 1, date: r.date, data: encode({ title, constructor, grid, clues }) }));
   }
   fs.writeFileSync(path.join(dir, "manifest.json"), JSON.stringify({ launch: [...manifestDates].sort()[0], dates: manifestDates }));
@@ -110,4 +116,16 @@ test("buffer check fails with only 2 future dates", () => {
   const res = checkPublished(dir, { today: "2025-12-31", buffer: 3 });
   assert.ok(res.errors.some((x) => /Only 2 future day/.test(x)));
   assert.ok(!res.errors.some((x) => /No puzzle published for today/.test(x)), "before launch, today may be missing");
+});
+
+test("published puzzles need an easier clue only from EASY_FROM on", () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "paheli-easy-"));
+  const before = { ...clone(samples[1]), date: "2026-10-20" };
+  const after = { ...clone(samples[2]), date: "2026-11-13" };
+  publishTo(dir, [before, after], undefined, { dropEasy: true });
+  const e = checkPublished(dir, { today: "2026-11-12" }).errors;
+  assert.ok(e.some((x) => /^2026-11-13: .* is missing "easy"/.test(x)), "13 Nov without easier clues fails");
+  assert.ok(!e.some((x) => /^2026-10-20: /.test(x)), "a puzzle from before the cutoff is fine without easier clues");
+  publishTo(dir, [before, after]);
+  assert.deepEqual(checkPublished(dir, { today: "2026-11-12" }).errors, []);
 });
