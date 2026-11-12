@@ -44,18 +44,18 @@ header{display:grid;gap:4px}
 .play{display:grid;gap:12px;grid-template-columns:minmax(0,1fr)}
 .left{display:grid;gap:var(--s2);min-width:0}
 .board-wrap{position:relative;width:min(100%,380px);margin:0 auto}
-.board{display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(5,1fr);gap:1px;background:var(--rule);border:2px solid var(--rule);aspect-ratio:1;width:100%;container-type:inline-size}
+.board{--n:5;display:grid;grid-template-columns:repeat(var(--n),1fr);grid-template-rows:repeat(var(--n),1fr);gap:1px;background:var(--rule);border:2px solid var(--rule);aspect-ratio:1;width:100%;container-type:inline-size}
 .board.veiled{filter:blur(6px)}
 .board.veiled .cell:not(.block){background:var(--cell)}
-.cell{position:relative;background:var(--cell);display:grid;place-items:center;font-family:var(--f-ui);font-weight:500;font-size:11.5cqw;line-height:1;text-transform:uppercase;cursor:pointer;user-select:none;overflow:hidden;min-width:0;min-height:0}
+.cell{position:relative;background:var(--cell);display:grid;place-items:center;font-family:var(--f-ui);font-weight:500;font-size:calc(57.5cqw / var(--n));line-height:1;text-transform:uppercase;cursor:pointer;user-select:none;overflow:hidden;min-width:0;min-height:0}
 .cell .l{position:relative;z-index:1;transform:translateY(6%)}
 .cell.block{background:var(--block);cursor:default}
-.cell .n{position:absolute;top:2px;left:3px;font-size:3.6cqw;font-weight:500;line-height:1;color:var(--ink)}
+.cell .n{position:absolute;top:2px;left:3px;font-size:max(8px,calc(18cqw / var(--n)));font-weight:500;line-height:1;color:var(--ink)}
 .cell.word{background:var(--word)}
 .cell.sel{background:var(--sel)}
 .cell.ok,.cell.rev{color:var(--checked)}
 .cell.wrong::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;background:linear-gradient(to bottom right,transparent calc(50% - 1px),var(--wrong) calc(50% - 1px),var(--wrong) calc(50% + 1px),transparent calc(50% + 1px))}
-.cell.rev::before{content:"";position:absolute;top:0;right:0;width:0;height:0;border-style:solid;border-width:0 4.5cqw 4.5cqw 0;border-color:transparent var(--wrong) transparent transparent;z-index:2}
+.cell.rev::before{content:"";position:absolute;top:0;right:0;width:0;height:0;border-style:solid;border-width:0 calc(22.5cqw / var(--n)) calc(22.5cqw / var(--n)) 0;border-color:transparent var(--wrong) transparent transparent;z-index:2}
 .board.solved .cell:not(.block){background:var(--cell)}
 /* Solve reveal: black squares bloom into Athangudi red-oxide tiles (weekdays) or Goan azulejos (weekends) */
 .cell.block::before{content:"";position:absolute;inset:0;opacity:0;transform:scale(.7);transition:opacity .45s ease,transform .6s cubic-bezier(.2,.8,.2,1);
@@ -197,7 +197,7 @@ header{display:grid;gap:4px}
 
 <div class="app">
   <header>
-    <div class="mast"><div class="mark">Paheli <small>Mini</small></div>
+    <div class="mast"><div class="mark">Paheli <small id="level">Mini</small></div>
     <div class="timer"><span class="pill" id="autoPill" hidden>Autocheck</span><span id="time">0:00</span><button class="icon" id="pause" aria-label="Pause"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg></button><button class="icon" id="helpBtn" aria-label="Check and reveal options"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M5.6 5.6l3.6 3.6M14.8 14.8l3.6 3.6M18.4 5.6l-3.6 3.6M9.2 14.8l-3.6 3.6"/></svg></button></div></div>
   </header>
 
@@ -245,6 +245,7 @@ header{display:grid;gap:4px}
     <span><span class="chip">Riddle</span> twist clue</span>
     <span><span class="chip">GK</span> desi general knowledge</span>
     <span><span class="chip">Pop</span> nostalgia and internet</span>
+    <span id="legendC" hidden><span class="chip">Cryptic</span> wordplay plus a definition</span>
   </div>
   <p class="foot">A new paheli every day at midnight IST. Streaks are saved on this browser.</p>
 </div>
@@ -308,7 +309,7 @@ import { createState } from "./lib/state.js?v=1.6.0";
 const APP_VERSION = "1.6.0";
 const SITE = "https://arvind13496.github.io/paheli-mini/";
 const REPORT_EMAIL = "arv.experiments@gmail.com";
-const TAGS = { R: "Riddle", GK: "GK", N: "Pop" };
+const TAGS = { R: "Riddle", GK: "GK", N: "Pop", C: "Cryptic" };
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[m]));
 
@@ -319,7 +320,8 @@ function memoryStorage() { const m = new Map(); return { getItem: (k) => (m.has(
 const state = createState(PREVIEW ? memoryStorage() : undefined);
 let bootDate = "", ready = false, manifest = null, P = null, num = null, hash = "";
 let cells = [], entries = [], cellSlots = [], S = null, solved = false, solveStats = null;
-let sel = 0, dir = "A", timerId = null, runStart = 0;
+let sel = 0, dir = "A", timerId = null, runStart = 0, N = 5;
+const LEVELS = { mini: "Mini", midi: "Midi", complex: "Complex" };
 let AUTO = state.getSettings().autocheck === true;
 
 // ---------- analytics ----------
@@ -366,7 +368,7 @@ function countdownScreen(target, make) {
   screenTimer = setInterval(tick, 30000);
 }
 function blankBoard() {
-  const b = $("board"); b.innerHTML = "";
+  const b = $("board"); b.innerHTML = ""; b.style.setProperty("--n", 5);
   for (let i = 0; i < 25; i++) { const d = document.createElement("div"); d.className = "cell"; b.appendChild(d); }
 }
 
@@ -414,7 +416,9 @@ function startRecord(rec, today) {
     const built = buildPuzzle(rec.grid, rec.clues);
     if (!built.slots.length || built.slots.some((x) => !x.clue)) throw new Error("malformed puzzle");
     P = { date: today, title: rec.title, constructor: rec.constructor, grid: rec.grid };
-    cells = built.cells; entries = built.slots; cellSlots = built.cellSlots;
+    cells = built.cells; entries = built.slots; cellSlots = built.cellSlots; N = rec.grid.length;
+    $("level").textContent = LEVELS[rec.level] || "Mini";
+    $("legendC").hidden = !built.slots.some((x) => x.tag === "C");
     hash = gridHash(rec.grid);
   } catch (e) { P = null; return errorScreen(e); }
   dir = "A"; sel = entries[0].cells[0];
@@ -425,7 +429,7 @@ function startRecord(rec, today) {
   const done = state.getSolve(P.date);
   if (done) { ready = true; return showSolved(done); }
   const prog = state.getProgress(P.date, hash);
-  S = prog ? { ...prog } : { letters: Array(25).fill(""), elapsedMs: 0, started: false, hints: [], ok: [], wrong: [], rev: [], checks: 0, reveals: 0, usedAuto: false };
+  S = prog ? { ...prog } : { letters: Array(cells.length).fill(""), elapsedMs: 0, started: false, hints: [], ok: [], wrong: [], rev: [], checks: 0, reveals: 0, usedAuto: false };
   if (!Array.isArray(S.hints)) S.hints = [];
   solved = false;
   showStart();
@@ -447,7 +451,7 @@ function previewPicker() {
     const b = document.createElement("button");
     b.className = "btn alt pick";
     const t = document.createElement("span"); t.className = "pick-t"; t.textContent = r.title;
-    const m = document.createElement("span"); m.className = "pick-m"; m.textContent = `No. ${numberFor(r.date, PREVIEW.launch)} · ${formatShort(r.date).replace(/ \d{4}$/, "")}`;
+    const m = document.createElement("span"); m.className = "pick-m"; m.textContent = r.level ? `${LEVELS[r.level]} · ${r.grid.length}x${r.grid.length}` : `No. ${numberFor(r.date, PREVIEW.launch)} · ${formatShort(r.date).replace(/ \d{4}$/, "")}`;
     b.append(t, m);
     b.onclick = () => { card.querySelectorAll(".pick").forEach((x) => x.remove()); num = numberFor(r.date, PREVIEW.launch); startRecord(r, r.date); };
     card.appendChild(b);
@@ -478,6 +482,7 @@ function persist() {
 // ---------- rendering ----------
 function renderBoard() {
   const b = $("board"); b.innerHTML = ""; b.classList.remove("solved");
+  b.style.setProperty("--n", N);
   cells.forEach((c, i) => {
     const d = document.createElement("div"); d.className = "cell" + (c.block ? " block" : ""); d.dataset.i = i;
     if (!c.block) {
@@ -577,8 +582,8 @@ function move(dr, dc) {
   if (!canPlay()) return;
   const want = dc !== 0 ? "A" : "D";
   if (dir !== want && cellSlots[sel][want]) { dir = want; update(); return; }
-  let r = Math.floor(sel / 5), c = sel % 5;
-  for (let s = 0; s < 5; s++) { r += dr; c += dc; if (r < 0 || r > 4 || c < 0 || c > 4) break; const i = r * 5 + c; if (!cells[i].block) { sel = i; if (!cellSlots[sel][dir]) dir = dir === "A" ? "D" : "A"; break; } }
+  let r = Math.floor(sel / N), c = sel % N;
+  for (let s = 0; s < N; s++) { r += dr; c += dc; if (r < 0 || r > N - 1 || c < 0 || c > N - 1) break; const i = r * N + c; if (!cells[i].block) { sel = i; if (!cellSlots[sel][dir]) dir = dir === "A" ? "D" : "A"; break; } }
   update();
 }
 function checkDone() {

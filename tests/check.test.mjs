@@ -129,3 +129,34 @@ test("published puzzles need an easier clue only from EASY_FROM on", () => {
   publishTo(dir, [before, after]);
   assert.deepEqual(checkPublished(dir, { today: "2026-11-12" }).errors, []);
 });
+
+// ---------- levels (Midi 7x7, Complex 9x9) ----------
+const levels = JSON.parse(fs.readFileSync(new URL("./fixtures/levels.json", import.meta.url))).records;
+
+test("a 7x7 Midi and a 9x9 Complex with cryptic clues pass", () => {
+  assert.deepEqual(errs(levels.map(clone)), []);
+});
+
+test("a Mini must be 5x5, and a Midi 7x7", () => {
+  const mini = clone(levels[0]); delete mini.level;
+  assert.ok(errs([mini]).some((x) => /Grid must have 5 rows/.test(x)));
+  const wrong = { ...clone(levels[1]), level: "midi" };
+  assert.ok(errs([wrong]).some((x) => /Grid must have 7 rows/.test(x)));
+});
+
+test("the cryptic tag is only allowed in a Complex", () => {
+  const r = clone(levels[0]); r.clues["1A"].tag = "C";
+  assert.ok(errs([r]).some((x) => /1A has an invalid tag "C"/.test(x)));
+});
+
+test("across levels on the same day, 4+ letter answers can't repeat but short ones can", () => {
+  const midi = clone(levels[0]), complex = { ...clone(levels[1]), date: levels[0].date };
+  assert.deepEqual(errs([midi, complex]), [], "THE and TEN (3 letters) may appear in both");
+  complex.grid[6] = "ACHAR#SON"; // 20A becomes ACHAR, which the Midi also has
+  assert.ok(errs([midi, complex]).some((x) => /ACHAR is also in the midi puzzle on the same day/.test(x)));
+});
+
+test("a Mini and a Midi may share a date", () => {
+  const mini = { ...clone(samples[1]), date: levels[0].date };
+  assert.ok(!errs([mini, clone(levels[0])]).some((x) => /appears twice/.test(x)));
+});

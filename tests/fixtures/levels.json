@@ -1,0 +1,324 @@
+{
+  "records": [
+    {
+      "date": "2026-12-01",
+      "level": "midi",
+      "title": "Thala for a Reason",
+      "constructor": "Arvind Lakhani",
+      "grid": [
+        "FACT###",
+        "ACHAR##",
+        "SCENES#",
+        "THE#TEN",
+        "#ARRIVE",
+        "##SAREE",
+        "###TEND"
+      ],
+      "clues": {
+        "1A": {
+          "tag": "R",
+          "clue": "It's stranger than fiction, they say",
+          "easy": "Something true",
+          "why": "Truth is stranger than fiction, and a fact is a truth you can check."
+        },
+        "5A": {
+          "tag": "N",
+          "clue": "Mango or lime, sunned on the terrace in a ceramic barni all summer",
+          "easy": "Indian pickle",
+          "why": "Achar jars spend whole summers in the sun so the oil and spices can cure."
+        },
+        "7A": {
+          "tag": "N",
+          "clue": "Deleted ___, the DVD extra that was always the best part",
+          "easy": "Parts of a film",
+          "why": "DVD special features promised deleted scenes, and most were deleted for a reason."
+        },
+        "9A": {
+          "tag": "N",
+          "clue": "___ Family Man, Manoj Bajpayee's spy-with-a-day-job series",
+          "easy": "Definite article",
+          "why": "The Family Man made Srikant Tiwari India's most stressed spy dad."
+        },
+        "10A": {
+          "tag": "GK",
+          "clue": "Raavan's head count, at every Dussehra effigy",
+          "easy": "Number after nine",
+          "why": "Raavan is shown with ten heads, which is why Dussehra effigies are so wide.",
+          "source": "https://en.wikipedia.org/wiki/Ravana"
+        },
+        "12A": {
+          "tag": "N",
+          "clue": "What apna time will do, in English, per Gully Boy",
+          "easy": "Get there, reach",
+          "why": "'Apna Time Aayega' from Gully Boy (2019): my time will come."
+        },
+        "14A": {
+          "tag": "GK",
+          "clue": "Six yards that made Sabyasachi Bollywood's go-to wedding designer",
+          "easy": "Indian drape, six yards",
+          "why": "Sabyasachi's bridal saris and lehengas have dressed many Bollywood weddings.",
+          "source": "https://en.wikipedia.org/wiki/Sabyasachi_Mukherjee"
+        },
+        "15A": {
+          "tag": "R",
+          "clue": "Look after, like a garden or a bar",
+          "easy": "Take care of",
+          "why": "You tend a garden, and a bartender tends the bar."
+        },
+        "1D": {
+          "tag": "R",
+          "clue": "Like a Rajdhani, or a friendship that sticks",
+          "easy": "Quick",
+          "why": "Fast means quick, and fast friends are firmly stuck together."
+        },
+        "2D": {
+          "tag": "N",
+          "clue": "Hindi's all-purpose 'okay', 'really?' and 'I see'",
+          "easy": "Good, in Hindi",
+          "why": "Accha can mean good, okay, really? or I see, depending on the tone."
+        },
+        "3D": {
+          "tag": "R",
+          "clue": "What the stands do when Thala finishes it off with a six",
+          "easy": "Glass-clinking toast, or shouts of joy",
+          "why": "Cheers: the toast, and the roar."
+        },
+        "4D": {
+          "tag": "R",
+          "clue": "Sun-kissed shade, or a trig ratio for short",
+          "easy": "Sunburnt colour",
+          "why": "A tan is sun-browned skin, and tan is short for tangent."
+        },
+        "6D": {
+          "tag": "GK",
+          "clue": "What Thala chose to do from Tests in 2014, and is rumoured to do after every IPL",
+          "easy": "Stop working for good",
+          "why": "Dhoni quit Test cricket in 2014 and international cricket in 2020. Every IPL brings fresh retirement rumours.",
+          "source": "https://en.wikipedia.org/wiki/MS_Dhoni"
+        },
+        "8D": {
+          "tag": "GK",
+          "clue": "Thala's shirt number, retired by the BCCI in 2023",
+          "easy": "Number after six",
+          "why": "The BCCI retired the No. 7 shirt in Dhoni's honour in December 2023. Hence 'Thala for a reason'.",
+          "source": "https://www.espn.com/wireless/story/_/id/39117531"
+        },
+        "11D": {
+          "tag": "R",
+          "clue": "A friend in it is a friend indeed",
+          "easy": "Require",
+          "why": "A friend in need is a friend indeed."
+        },
+        "13D": {
+          "tag": "R",
+          "clue": "Race every Bengaluru techie is stuck in",
+          "easy": "Chuha, in English",
+          "why": "The rat race: run faster, stay in the same place."
+        }
+      },
+      "warnings": []
+    },
+    {
+      "date": "2026-12-02",
+      "level": "complex",
+      "title": "Summer Afternoons",
+      "constructor": "Arvind Lakhani",
+      "grid": [
+        "THE#LATTU",
+        "RON#IDEAS",
+        "AND#BINGE",
+        "SEEDED###",
+        "HYDERABAD",
+        "###MASALA",
+        "DEBIT#SON",
+        "ARISE#END",
+        "DATED#SEA"
+      ],
+      "clues": {
+        "1A": {
+          "tag": "C",
+          "clue": "Article found inside mother",
+          "easy": "Definite article",
+          "why": "Hidden word: mo-THE-r. Definition: article."
+        },
+        "4A": {
+          "tag": "N",
+          "clue": "Top you wound with string and flung at the floor",
+          "easy": "Wooden spinning top",
+          "why": "A lattu is wound with a cord and thrown so it spins on its iron tip."
+        },
+        "9A": {
+          "tag": "N",
+          "clue": "Harry's ginger best friend at Hogwarts",
+          "easy": "Weasley, Harry Potter's friend",
+          "why": "Ron Weasley: chess champion, terrible at spells."
+        },
+        "10A": {
+          "tag": "C",
+          "clue": "Brainstorm output from aside, reshuffled",
+          "easy": "Thoughts or plans",
+          "why": "Anagram ('reshuffled') of ASIDE. Definition: brainstorm output."
+        },
+        "11A": {
+          "tag": "R",
+          "clue": "Ampersand, spelt out",
+          "easy": "Plus, as a word",
+          "why": "& is short for 'and'."
+        },
+        "12A": {
+          "tag": "N",
+          "clue": "Finish all of Panchayat in one sitting",
+          "easy": "Overdo it, like a whole series in a night",
+          "why": "Phulera's office has seen many 3 a.m. viewers."
+        },
+        "13A": {
+          "tag": "R",
+          "clue": "Ranked before the draw, like a top player at Wimbledon",
+          "easy": "Ranked in a tournament",
+          "why": "Seeded players are kept apart in the draw so they can't meet early."
+        },
+        "15A": {
+          "tag": "GK",
+          "clue": "City of the Charminar, dum biryani and Cyberabad",
+          "easy": "Telangana's capital",
+          "why": "Hyderabad's HITEC City area earned it the nickname Cyberabad.",
+          "source": "https://en.wikipedia.org/wiki/Hyderabad"
+        },
+        "19A": {
+          "tag": "C",
+          "clue": "Spice mix, or a film with songs, fights and a lost twin",
+          "easy": "Mix of ground spices",
+          "why": "Double definition: the spice blend, and the all-in-one masala movie."
+        },
+        "20A": {
+          "tag": "C",
+          "clue": "Bed returned with it: money out of your account",
+          "easy": "Card payment that takes money out",
+          "why": "BED reversed ('returned') gives DEB, plus IT. Definition: money out of your account."
+        },
+        "23A": {
+          "tag": "R",
+          "clue": "Beta, in English",
+          "easy": "Male child",
+          "why": "Beta means son, though desi parents call their daughters beta too."
+        },
+        "24A": {
+          "tag": "C",
+          "clue": "Raise wildly, then get up",
+          "easy": "Get up, stand",
+          "why": "Anagram ('wildly') of RAISE. Definition: get up."
+        },
+        "25A": {
+          "tag": "R",
+          "clue": "What the last card says when the credits roll",
+          "easy": "Finish",
+          "why": "'The End' used to close every Bollywood film."
+        },
+        "26A": {
+          "tag": "R",
+          "clue": "Old-fashioned like a Nokia ringtone, or went out for coffee together",
+          "easy": "Out of fashion",
+          "why": "Two meanings: out of date, and went on dates."
+        },
+        "27A": {
+          "tag": "C",
+          "clue": "Arabian expanse? Look, we hear",
+          "easy": "Large body of salt water",
+          "why": "Sounds like SEE ('look, we hear'). Definition: Arabian expanse, as in the Arabian Sea."
+        },
+        "1D": {
+          "tag": "C",
+          "clue": "Rubbish time, with a skin outbreak",
+          "easy": "Rubbish, kachra",
+          "why": "T (time) + RASH (skin outbreak). Definition: rubbish."
+        },
+        "2D": {
+          "tag": "R",
+          "clue": "Bees make it, and sweethearts call each other it",
+          "easy": "Sweet thing bees make",
+          "why": "Honey is the bee's product and a pet name."
+        },
+        "3D": {
+          "tag": "R",
+          "clue": "Khatam ho gaya, in English",
+          "easy": "Finished",
+          "why": "Khatam means over, done, ended."
+        },
+        "4D": {
+          "tag": "R",
+          "clue": "Freed, like a parrot from its pinjra",
+          "easy": "Set free",
+          "why": "To liberate is to set free."
+        },
+        "5D": {
+          "tag": "GK",
+          "clue": "Three-stripe brand on Team India's kit since 2023",
+          "easy": "German sportswear brand",
+          "why": "Adidas became Team India's kit sponsor in 2023.",
+          "source": "https://www.bcci.tv/news/article/bcci-and-adidas-announce-multi-year-partnership-as-official-kit-sponsor-of-the-indian-cricket-team"
+        },
+        "6D": {
+          "tag": "C",
+          "clue": "Net goes up for a number",
+          "easy": "Number after nine",
+          "why": "NET read upwards gives TEN. Definition: a number."
+        },
+        "7D": {
+          "tag": "N",
+          "clue": "Mention a friend under a meme",
+          "easy": "Label in a post",
+          "why": "Tagging is how a meme reaches exactly the right person."
+        },
+        "8D": {
+          "tag": "R",
+          "clue": "Upyog, in English",
+          "easy": "Employ",
+          "why": "Upyog means use."
+        },
+        "14D": {
+          "tag": "N",
+          "clue": "Death, as Orkut met in 2014",
+          "easy": "Death, end",
+          "why": "Google shut Orkut down in 2014."
+        },
+        "16D": {
+          "tag": "R",
+          "clue": "What runners touch, or what an army keeps",
+          "easy": "Foundations",
+          "why": "Baseball has bases, and so does an army."
+        },
+        "17D": {
+          "tag": "N",
+          "clue": "Home ___, the film that made every kid want to booby-trap the house",
+          "easy": "By yourself",
+          "why": "Home Alone (1990) taught a generation about paint cans on staircases."
+        },
+        "18D": {
+          "tag": "N",
+          "clue": "Gilli's partner on a long summer afternoon",
+          "easy": "Stick, in Hindi",
+          "why": "Gilli-danda: hit the small gilli with the big danda, and pray it misses the window."
+        },
+        "20D": {
+          "tag": "R",
+          "clue": "Papa",
+          "easy": "Father",
+          "why": "Papa, dad, pitaji."
+        },
+        "21D": {
+          "tag": "C",
+          "clue": "Time found in a camera",
+          "easy": "Age, period",
+          "why": "Hidden word: cam-ERA. Definition: time."
+        },
+        "22D": {
+          "tag": "R",
+          "clue": "Smidge, or a horse's mouthpiece",
+          "easy": "Small piece",
+          "why": "A bit is a small piece, and the metal bar in a horse's mouth."
+        }
+      },
+      "warnings": []
+    }
+  ]
+}

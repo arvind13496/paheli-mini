@@ -11,6 +11,8 @@ import { todayIST, addDays } from "../lib/dates.js";
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const REPEAT_WINDOW_DAYS = 14;
 const TAGS = new Set(["R", "GK", "N"]);
+// Levels: Mini is the daily 5x5 (no `level` field). Midi and Complex are bigger; Complex may use cryptic clues (tag C).
+export const LEVEL_SIZE = { mini: 5, midi: 7, complex: 9 };
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 // The easier ("Aasaan") clue is required for every puzzle dated from this day on. (The 12 Nov 2026 puzzle went out without one.)
 export const EASY_FROM = "2026-11-13";
@@ -35,7 +37,10 @@ function checkRecord(rec, misspellings = new Map(), { published = false, date = 
   if (!rec || typeof rec !== "object") return { errors: ["Record is not an object"], warnings, answers: [] };
   if (!isStr(rec, "title")) errors.push("Missing title");
   if (!isStr(rec, "constructor")) errors.push("Missing constructor");
-  const shape = validateShape(rec.grid);
+  const level = rec.level || "mini";
+  if (!LEVEL_SIZE[level]) return { errors: [...errors, `Unknown level "${rec.level}" (use midi or complex, or leave it out for a Mini)`], warnings, answers: [] };
+  const shape = validateShape(rec.grid, [LEVEL_SIZE[level]]);
+  const tags = level === "complex" ? new Set([...TAGS, "C"]) : TAGS;
   if (shape.length) return { errors: [...errors, ...shape], warnings, answers: [] };
 
   const clues = rec.clues && typeof rec.clues === "object" ? rec.clues : {};
@@ -54,7 +59,7 @@ function checkRecord(rec, misspellings = new Map(), { published = false, date = 
   for (const s of slots) {
     const c = clues[s.id];
     if (!c) { errors.push(`${s.id} (${s.answer}) has no clue`); continue; }
-    if (!TAGS.has(c.tag)) errors.push(`${s.id} has an invalid tag "${c.tag}" (use R, GK or N)`);
+    if (!tags.has(c.tag)) errors.push(`${s.id} has an invalid tag "${c.tag}" (use ${[...tags].join(", ")})`);
     const needEasy = !published || !(typeof date === "string" && date < EASY_FROM);
     for (const f of needEasy ? ["clue", "easy", "why"] : ["clue", "why"]) if (!isStr(c, f)) errors.push(`${s.id} (${s.answer}) is missing "${f}"`);
     if (!published && c.tag === "GK" && !isStr(c, "source")) errors.push(`${s.id} (${s.answer}) is a GK clue with no source`);
@@ -76,12 +81,23 @@ function daysApart(a, b) {
 }
 
 /** Repeat rule between entries with different dates. entries: [{date, answers}] */
+// Repeat rule. Within a level: no answer again within 14 days. Across levels (someone may play
+// all three on one day): no answer of 4 or more letters in two levels on the same date.
+export const CROSS_LEVEL_MIN = 4;
 function repeatErrors(entry, others) {
   const errs = [];
+  const lv = entry.level || "mini";
   for (const o of others) {
-    if (o.date === entry.date || daysApart(o.date, entry.date) > REPEAT_WINDOW_DAYS) continue;
-    for (const a of entry.answers) {
-      if (o.answers.includes(a)) errs.push(`${a} was also used on ${o.date} (within ${REPEAT_WINDOW_DAYS} days)`);
+    if (o === entry) continue;
+    if ((o.level || "mini") === lv) {
+      if (o.date === entry.date || daysApart(o.date, entry.date) > REPEAT_WINDOW_DAYS) continue;
+      for (const a of entry.answers) {
+        if (o.answers.includes(a)) errs.push(`${a} was also used on ${o.date} (within ${REPEAT_WINDOW_DAYS} days)`);
+      }
+    } else if (o.date === entry.date) {
+      for (const a of entry.answers) {
+        if (a.length >= CROSS_LEVEL_MIN && o.answers.includes(a)) errs.push(`${a} is also in the ${o.level || "mini"} puzzle on the same day`);
+      }
     }
   }
   return errs;
@@ -112,23 +128,24 @@ export function loadPublished(dir) {
 export function checkBatch(records, published, today, misspellings = loadMisspellings(), manifestDates = null) {
   const errors = [], warnings = {}, skipped = [];
   const publishedDates = new Set(manifestDates || published.map((p) => p.date));
-  const pubEntries = published.map((p) => ({ date: p.date, answers: buildPuzzle(p.record.grid).slots.map((s) => s.answer) }));
+  const pubEntries = published.map((p) => ({ date: p.date, level: p.record.level, answers: buildPuzzle(p.record.grid).slots.map((s) => s.answer) }));
   const batchDates = new Set();
   const checked = [];
   for (const rec of records) {
     const date = rec && rec.date;
-    if (publishedDates.has(date)) { skipped.push(date); continue; }
+    if (!rec.level && publishedDates.has(date)) { skipped.push(date); continue; }
     const tag = date || "(no date)";
     if (typeof date !== "string" || !DATE_RE.test(date)) errors.push(`${tag}: date must be YYYY-MM-DD`);
     else {
       if (date <= today) errors.push(`${tag}: date must be after today (${today})`);
-      if (batchDates.has(date)) errors.push(`${tag}: date appears twice in the batch`);
-      batchDates.add(date);
+      const key = (rec.level || "mini") + " " + date;
+      if (batchDates.has(key)) errors.push(`${tag}: date appears twice in the batch`);
+      batchDates.add(key);
     }
     const r = checkRecord(rec, misspellings);
     r.errors.forEach((e) => errors.push(`${tag}: ${e}`));
     warnings[tag] = r.warnings;
-    checked.push({ date, answers: r.answers });
+    checked.push({ date, level: rec.level, answers: r.answers });
   }
   const all = [...pubEntries, ...checked];
   for (const c of checked) repeatErrors(c, all).forEach((e) => errors.push(`${c.date}: ${e}`));
@@ -150,7 +167,7 @@ export function checkPublished(dir, { today = todayIST(), buffer = 0 } = {}) {
   for (const e of entries) {
     const r = checkRecord(e.record, misspellings, { published: true, date: e.date });
     r.errors.forEach((x) => errors.push(`${e.date}: ${x}`));
-    checked.push({ date: e.date, answers: r.answers });
+    checked.push({ date: e.date, level: e.record.level, answers: r.answers });
   }
   for (const c of checked) repeatErrors(c, checked).forEach((x) => errors.push(`${c.date}: ${x}`));
   if (buffer) {
