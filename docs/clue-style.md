@@ -14,7 +14,24 @@ About 4 riddles (R), 3 desi GK (GK) and 3 nostalgia or internet clues (N) for a 
 
 * **R (Riddle):** a twist or double meaning, with one clean definition. *"Bread that got a tan, or a glass raised at the sangeet"* = TOAST.
 * **GK (Desi GK):** Indian facts with a hook. Every GK clue needs a `source` link that Arvind can check. *"Kiran ___, director of Laapataa Ladies"* = RAO.
-* **N (Nostalgia or internet):** millennial childhood, or current online life. *"Yellow booth where you watched the meter tick on an STD call"* = PCO.
+* **N (Pop, nostalgia and internet):** pop culture first. *"Yellow booth where you watched the meter tick on an STD call"* = PCO.
+
+## The N clues: more pop, less family cliché
+
+Updated 12 Nov after player feedback. Jokes about what uncle does at a shaadi felt cringe. Pop references land better.
+
+Reach for:
+* Bollywood and regional cinema: films, famous dialogues, characters, actors' roles (Phir Hera Pheri, Gangs of Wasseypur, Baahubali).
+* TV and OTT: Shaktimaan, CID, KBC, Roadies, Panchayat, Kota Factory, Scam 1992.
+* Music: Indipop, Coke Studio, indie artists, film soundtracks, antakshari. Use song and album titles, never lyrics.
+* Cricket and sport: IPL, famous matches and moments, commentary lines.
+* Ads, brands and logos: Hutch's pug, Amul's girl, Fevicol, Cadbury's cricket-field dance.
+* Internet and memes: Orkut, Binod, "Rasode mein kaun tha", YouTube and creators, BGMI, UPI, reels.
+* Mix the eras: 90s and 2000s childhood alongside things from the 2020s.
+
+Ease off:
+* Relatives as the punchline (uncle, aunty, Mummy, Dadi) and wedding or sangeet jokes. At most one family clue per puzzle, and never the uncle-at-the-shaadi joke.
+* Generic "desi household" observations with no specific reference behind them. A clue should point at a real show, film, ad, brand, song or meme whenever it can.
 
 ## Every clue needs two texts
 
