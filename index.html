@@ -397,10 +397,12 @@ function sendPageview() {
   const send = () => { try { window.umami && window.umami.track((p) => ({ ...p, url: saved })); } catch (e) {} };
   if (window.umami) send(); else window.addEventListener("load", send, { once: true });
   if (/[?&]utm_/.test(location.search)) {
-    const q = new URLSearchParams(location.search);
-    [...q.keys()].filter((k) => k.startsWith("utm_")).forEach((k) => q.delete(k));
-    const qs = q.toString();
-    const clean = () => history.replaceState(null, "", location.pathname + (qs ? "?" + qs : "") + location.hash);
+    const clean = () => {
+      const q = new URLSearchParams(location.search);
+      [...q.keys()].filter((k) => k.startsWith("utm_")).forEach((k) => q.delete(k));
+      const qs = q.toString();
+      history.replaceState(null, "", location.pathname + (qs ? "?" + qs : "") + location.hash);
+    };
     if (window.umami) clean(); else window.addEventListener("load", () => setTimeout(clean, 0), { once: true });
   }
 }
@@ -570,7 +572,7 @@ function errorScreen(e) {
 }
 $("retry").onclick = () => boot();
 
-function freshS() { return { letters: Array(25).fill(""), elapsedMs: 0, started: false, hints: [], ok: [], wrong: [], rev: [], checks: 0, reveals: 0, usedAuto: false }; }
+function freshS() { return { letters: Array(cells.length).fill(""), elapsedMs: 0, started: false, hints: [], ok: [], wrong: [], rev: [], checks: 0, reveals: 0, usedAuto: false }; }
 function startCard(start) {
   showScreen({
     eyebrow: MODE === "archive" ? `Archive · ${dayLabel(P.date)}` : "",
@@ -1042,7 +1044,7 @@ document.addEventListener("keydown", (e) => {
   if (e.metaKey || e.ctrlKey || e.altKey) return;
   if (!$("modal").hidden) { if (e.key === "Escape") $("modal").hidden = true; return; }
   if (!$("helpMenu").hidden) { if (e.key === "Escape") closeMenu(); return; }
-  if (!$("archiveView").hidden) return;
+  if (!$("archiveView").hidden) { if (e.key === "Escape") $("archClose").click(); return; }
   if (!ready || !S) return;
   if (!S.started && !solved && e.key === "Enter") { $("start").click(); e.preventDefault(); return; }
   if (/^[a-zA-Z]$/.test(e.key)) { typeLetter(e.key.toUpperCase()); e.preventDefault(); }
