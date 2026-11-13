@@ -45,6 +45,7 @@ Shared contracts (the puzzle feed format, `puzzles/manifest.json`, saved-data ke
 |---|---|---|---|
 | 7x7 and 9x9 grid support, level-aware checker, Midi and Complex samples | Web session | PR #11 | Waiting for Arvind to merge; samples waiting for his play-test |
 | Port the Aasaan clue to iOS | iOS session | paheli-ios | Prompt handed over 12 Nov; not confirmed done |
+| Batch b004 (Mini, 19 to 25 Nov, #22 to #28) | Puzzle session started from the iOS session | branch `puzzles-b004` | Writing; PR opens when checks and blind test-solve pass |
 | Player flow with levels | Web session | Figma file above | Landing screen, level cards, result with "Up next" and reminder: proposals, not built |
 
 ## Next up (in order)
