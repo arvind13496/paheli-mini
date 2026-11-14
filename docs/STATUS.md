@@ -2,7 +2,7 @@
 
 The single source of truth for every chat and Claude Code session working on Paheli. Read it before starting. Update it before finishing. If something here is wrong or out of date, fix it here rather than working around it.
 
-Last updated: 13 Nov 2026, by the web Claude Code session.
+Last updated: 14 Nov 2026, by the b004 puzzle session.
 
 ## Where everything lives
 
@@ -36,7 +36,7 @@ Shared contracts (the puzzle feed format, `puzzles/manifest.json`, saved-data ke
 ## What's live
 
 - Web app v1.6.0: daily 5x5 Mini at 00:00 IST, Aasaan clue button (back since 13 Nov), autocheck and check/reveal, streaks on the device, WhatsApp and copy share, report-a-clue, Umami events.
-- Puzzles published through 18 Nov (batches b001 to b003). Next batch due: 19 Nov onward. The nightly check fails when fewer than 3 future days remain.
+- Puzzles published through 25 Nov (batches b001 to b004, once PR #14 merges). Next batch due: 26 Nov onward (b005). The nightly check fails when fewer than 3 future days remain.
 - iOS app: runs on Arvind's iPhone only (free signing, reinstall every 7 days). Not yet ported: the Aasaan clue.
 
 ## In flight
@@ -45,11 +45,12 @@ Shared contracts (the puzzle feed format, `puzzles/manifest.json`, saved-data ke
 |---|---|---|---|
 | 7x7 and 9x9 grid support, level-aware checker, Midi and Complex samples | Web session | PR #11 | Waiting for Arvind to merge; samples waiting for his play-test |
 | Port the Aasaan clue to iOS | iOS session | paheli-ios | Prompt handed over 12 Nov; not confirmed done |
+| Batch b004 (Mini, 19 to 25 Nov, #22 to #28) | Puzzle session started from the iOS session | PR #14 | Checks and blind test-solve passed; waiting for Arvind to merge |
 | Player flow with levels | Web session | Figma file above | Landing screen, level cards, result with "Up next" and reminder: proposals, not built |
 
 ## Next up (in order)
 
-1. Batch b004 (Mini, 19 to 25 Nov) with the new clue style: more pop, fewer family jokes.
+1. Batch b005 (Mini, 26 Nov to 2 Dec), must be merged by 22 Nov, or the 23 Nov nightly check fails (fewer than 3 future days).
 2. Reconcile the two reminder plans (see "Needs a decision"), then build the opt-in nudge and return tracking (plan step 1b).
 3. Levels design doc and Goldfish review, informed by the samples and the Figma flow.
 4. Build Midi, then Complex. The iOS app ports each piece after it ships on the web.
