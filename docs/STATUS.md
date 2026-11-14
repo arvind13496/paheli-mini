@@ -2,7 +2,7 @@
 
 The single source of truth for every chat and Claude Code session working on Paheli. Read it before starting. Update it before finishing. If something here is wrong or out of date, fix it here rather than working around it.
 
-Last updated: 14 Nov 2026, by the web Claude Code session (archive and stamp card; b004 merged).
+Last updated: 14 Nov 2026, by the web Claude Code session (archive live in v1.7.0; PR #11 brought up to date as v1.8.0).
 
 ## Where everything lives
 
@@ -43,9 +43,8 @@ Shared contracts (the puzzle feed format, `puzzles/manifest.json`, saved-data ke
 
 | Work | Owner | Where | State |
 |---|---|---|---|
-| 7x7 and 9x9 grid support, level-aware checker, Midi and Complex samples | Web session | PR #11 | Waiting for Arvind to merge; samples waiting for his play-test |
+| 7x7 and 9x9 grid support, level-aware checker, Midi and Complex samples (web v1.8.0 once merged) | Web session | PR #11 | Up to date with main (archive merged in, conflicts resolved, bumped to v1.8.0). Waiting for Arvind to merge; samples waiting for his play-test |
 | Port the Aasaan clue to iOS | iOS session | paheli-ios | Prompt handed over 12 Nov; not confirmed done |
-| Mini archive and monthly stamp card, web v1.7.0 (spec: claude.ai doc "Paheli Mini: archive spec", https://claude.ai/artifact/HSQ2QGqQq7gWd68RrxskTy) | Web session | branch `claude/archive-stamp-card` (PR) | Waiting for Arvind to merge. Conflicts with PR #11 in `index.html` (both bump to v1.7.0): whichever merges second takes v1.8.0 and keeps both header changes |
 | iOS port of the archive and stamp card | iOS session | paheli-ios | Pending: starts after the web PR merges. `PlayerStore` mirrors the two new keys; see the spec's build plan step 6 |
 | Player flow with levels | Web session | Figma file above | Landing screen, level cards, result with "Up next" and reminder: proposals, not built |
 

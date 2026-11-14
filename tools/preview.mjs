@@ -20,7 +20,7 @@ export function buildPreview(batch, { fragment = false } = {}) {
   let html = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
   const manifestPath = path.join(ROOT, "puzzles", "manifest.json");
   const launch = fs.existsSync(manifestPath) ? JSON.parse(fs.readFileSync(manifestPath, "utf8")).launch : batch.records.map((r) => r.date).sort()[0];
-  const records = batch.records.map(({ date, title, constructor, grid, clues }) => ({ date, title, constructor, grid, clues }));
+  const records = batch.records.map(({ date, level, title, constructor, grid, clues }) => ({ date, ...(level ? { level } : {}), title, constructor, grid, clues }));
   html = html.replace(/<script defer src="https:\/\/cloud\.umami\.is[^>]*><\/script>\n?/, "");
   html = html.replace(/<title>[^<]*<\/title>/, `<title>Paheli Mini Preview</title>`);
   html = html.replace(/^import \{([^}]+)\} from "\.\/lib\/(\w+)\.js\?v=[^"]+";$/gm, (_, names, mod) => `const {${names}} = ${inlineModule(mod + ".js")};`);
