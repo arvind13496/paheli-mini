@@ -130,10 +130,10 @@ test("published puzzles need an easier clue only from EASY_FROM on", () => {
   assert.deepEqual(checkPublished(dir, { today: "2026-11-12" }).errors, []);
 });
 
-// ---------- levels (Midi 7x7, Complex 9x9) ----------
+// ---------- levels (Midi 7x7, Mega 9x9) ----------
 const levels = JSON.parse(fs.readFileSync(new URL("./fixtures/levels.json", import.meta.url))).records;
 
-test("a 7x7 Midi and a 9x9 Complex with cryptic clues pass", () => {
+test("a 7x7 Midi and a 9x9 Mega with cryptic clues pass", () => {
   assert.deepEqual(errs(levels.map(clone)), []);
 });
 
@@ -144,16 +144,16 @@ test("a Mini must be 5x5, and a Midi 7x7", () => {
   assert.ok(errs([wrong]).some((x) => /Grid must have 7 rows/.test(x)));
 });
 
-test("the cryptic tag is only allowed in a Complex", () => {
+test("the cryptic tag is only allowed in a Mega", () => {
   const r = clone(levels[0]); r.clues["1A"].tag = "C";
   assert.ok(errs([r]).some((x) => /1A has an invalid tag "C"/.test(x)));
 });
 
 test("across levels on the same day, 4+ letter answers can't repeat but short ones can", () => {
-  const midi = clone(levels[0]), complex = { ...clone(levels[1]), date: levels[0].date };
-  assert.deepEqual(errs([midi, complex]), [], "THE and TEN (3 letters) may appear in both");
-  complex.grid[6] = "ACHAR#SON"; // 20A becomes ACHAR, which the Midi also has
-  assert.ok(errs([midi, complex]).some((x) => /ACHAR is also in the midi puzzle on the same day/.test(x)));
+  const midi = clone(levels[0]), mega = { ...clone(levels[1]), date: levels[0].date };
+  assert.deepEqual(errs([midi, mega]), [], "THE and TEN (3 letters) may appear in both");
+  mega.grid[6] = "ACHAR#SON"; // 20A becomes ACHAR, which the Midi also has
+  assert.ok(errs([midi, mega]).some((x) => /ACHAR is also in the midi puzzle on the same day/.test(x)));
 });
 
 test("a Mini and a Midi may share a date", () => {
@@ -169,9 +169,9 @@ function levelBatch(dir) {
   const mini = { ...clone(samples[1]), date: "2026-12-01" };
   const midi = { ...clone(levels[0]), date: "2026-12-01" };
   const midi2 = { ...clone(levels[0]), date: "2026-12-20", title: "Second Midi" };
-  const complex = { ...clone(levels[1]), date: "2026-12-02" };
+  const mega = { ...clone(levels[1]), date: "2026-12-02" };
   const file = path.join(dir, "batch.json");
-  fs.writeFileSync(file, JSON.stringify({ batch: "t", records: [mini, midi, midi2, complex] }));
+  fs.writeFileSync(file, JSON.stringify({ batch: "t", records: [mini, midi, midi2, mega] }));
   return file;
 }
 
@@ -180,13 +180,13 @@ test("publish --checked writes each level to its own folder and manifest entry",
   const puzzlesDir = path.join(dir, "puzzles");
   const r = await publish(levelBatch(dir), null, { today: "2026-11-20", puzzlesDir });
   assert.deepEqual(r.errors, []);
-  assert.deepEqual(r.published, ["2026-12-01", "midi 2026-12-01", "midi 2026-12-20", "complex 2026-12-02"]);
+  assert.deepEqual(r.published, ["2026-12-01", "midi 2026-12-01", "midi 2026-12-20", "mega 2026-12-02"]);
   const m = JSON.parse(fs.readFileSync(path.join(puzzlesDir, "manifest.json"), "utf8"));
   assert.deepEqual({ launch: m.launch, dates: m.dates }, { launch: "2026-12-01", dates: ["2026-12-01"] }, "Mini stays at the top level");
-  assert.deepEqual(m.levels, { midi: { launch: "2026-12-01", dates: ["2026-12-01", "2026-12-20"] }, complex: { launch: "2026-12-02", dates: ["2026-12-02"] } });
-  assert.ok(fs.existsSync(path.join(puzzlesDir, "midi", "2026-12-01.json")) && fs.existsSync(path.join(puzzlesDir, "complex", "2026-12-02.json")));
+  assert.deepEqual(m.levels, { midi: { launch: "2026-12-01", dates: ["2026-12-01", "2026-12-20"] }, mega: { launch: "2026-12-02", dates: ["2026-12-02"] } });
+  assert.ok(fs.existsSync(path.join(puzzlesDir, "midi", "2026-12-01.json")) && fs.existsSync(path.join(puzzlesDir, "mega", "2026-12-02.json")));
   const loaded = loadPublished(puzzlesDir);
-  assert.deepEqual(loaded.entries.map((e) => `${e.level || "mini"} ${e.date} ${e.record.grid.length}`), ["mini 2026-12-01 5", "midi 2026-12-01 7", "midi 2026-12-20 7", "complex 2026-12-02 9"]);
+  assert.deepEqual(loaded.entries.map((e) => `${e.level || "mini"} ${e.date} ${e.record.grid.length}`), ["mini 2026-12-01 5", "midi 2026-12-01 7", "midi 2026-12-20 7", "mega 2026-12-02 9"]);
   assert.deepEqual(checkPublished(puzzlesDir, { today: "2026-11-20" }).errors, []);
   // Publishing again skips everything, level by level.
   const again = await publish(path.join(dir, "batch.json"), null, { today: "2026-11-20", puzzlesDir });
@@ -200,14 +200,14 @@ test("the buffer check runs per level, and a paused level is ignored", async () 
   await publish(levelBatch(dir), null, { today: "2026-11-20", puzzlesDir });
   const e = checkPublished(puzzlesDir, { today: "2026-12-02", buffer: 1 }).errors;
   assert.ok(e.some((x) => /^midi: No puzzle published for today/.test(x)));
-  assert.ok(e.some((x) => /^complex: Only 0 future/.test(x)));
-  assert.ok(!e.some((x) => /^complex: No puzzle published for today/.test(x)));
-  // Pause Complex: take it out of the manifest and leave its files.
+  assert.ok(e.some((x) => /^mega: Only 0 future/.test(x)));
+  assert.ok(!e.some((x) => /^mega: No puzzle published for today/.test(x)));
+  // Pause Mega: take it out of the manifest and leave its files.
   const mp = path.join(puzzlesDir, "manifest.json");
-  const m = JSON.parse(fs.readFileSync(mp, "utf8")); delete m.levels.complex;
+  const m = JSON.parse(fs.readFileSync(mp, "utf8")); delete m.levels.mega;
   fs.writeFileSync(mp, JSON.stringify(m));
-  assert.ok(!checkPublished(puzzlesDir, { today: "2026-12-02", buffer: 1 }).errors.some((x) => /complex/.test(x)));
-  assert.deepEqual(levelManifest(m, "complex"), { launch: null, dates: [] });
+  assert.ok(!checkPublished(puzzlesDir, { today: "2026-12-02", buffer: 1 }).errors.some((x) => /mega/.test(x)));
+  assert.deepEqual(levelManifest(m, "mega"), { launch: null, dates: [] });
 });
 
 test("published mode flags a level file missing from the manifest", async () => {

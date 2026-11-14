@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Paheli checker. Batch mode: node tools/check.mjs batches/<id>.json
 // Published mode: node tools/check.mjs puzzles/ [--buffer 3] [--used]
-// Feed layout: Mini lives at puzzles/<date>.json with manifest { launch, dates }. Midi and Complex live at
+// Feed layout: Mini lives at puzzles/<date>.json with manifest { launch, dates }. Midi and Mega live at
 // puzzles/<level>/<date>.json with manifest.levels.<level> = { launch, dates }.
 import fs from "node:fs";
 import path from "node:path";
@@ -13,9 +13,9 @@ import { todayIST, addDays } from "../lib/dates.js";
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const REPEAT_WINDOW_DAYS = 14;
 const TAGS = new Set(["R", "GK", "N"]);
-// Levels: Mini is the daily 5x5 (no `level` field). Midi and Complex are bigger; Complex may use cryptic clues (tag C).
-export const LEVEL_SIZE = { mini: 5, midi: 7, complex: 9 };
-export const EXTRA_LEVELS = ["midi", "complex"];
+// Levels: Mini is the daily 5x5 (no `level` field). Midi and Mega are bigger; Mega may use cryptic clues (tag C).
+export const LEVEL_SIZE = { mini: 5, midi: 7, mega: 9 };
+export const EXTRA_LEVELS = ["midi", "mega"];
 /** { launch, dates } for one level, from the manifest. Mini is the manifest's own top-level fields. */
 export function levelManifest(manifest, level = "mini") {
   const m = !manifest ? null : level === "mini" ? manifest : manifest.levels && manifest.levels[level];
@@ -47,9 +47,9 @@ function checkRecord(rec, misspellings = new Map(), { published = false, date = 
   if (!isStr(rec, "title")) errors.push("Missing title");
   if (!isStr(rec, "constructor")) errors.push("Missing constructor");
   const level = rec.level || "mini";
-  if (!LEVEL_SIZE[level]) return { errors: [...errors, `Unknown level "${rec.level}" (use midi or complex, or leave it out for a Mini)`], warnings, answers: [] };
+  if (!LEVEL_SIZE[level]) return { errors: [...errors, `Unknown level "${rec.level}" (use midi or mega, or leave it out for a Mini)`], warnings, answers: [] };
   const shape = validateShape(rec.grid, [LEVEL_SIZE[level]]);
-  const tags = level === "complex" ? new Set([...TAGS, "C"]) : TAGS;
+  const tags = level === "mega" ? new Set([...TAGS, "C"]) : TAGS;
   if (shape.length) return { errors: [...errors, ...shape], warnings, answers: [] };
 
   const clues = rec.clues && typeof rec.clues === "object" ? rec.clues : {};

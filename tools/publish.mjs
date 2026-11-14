@@ -3,7 +3,7 @@
 // Reads only Status and Notes from the sheet. Content always comes from the batch file. Never commits.
 // Without a sheet: node tools/publish.mjs batches/<id>.json --checked   publishes every record that passes the checker
 // (since 12 Nov 2026 the checks and a blind test-solve replace the review sheet).
-// A record with "level": "midi" or "complex" goes to puzzles/<level>/ and manifest.levels.<level>.
+// A record with "level": "midi" or "mega" goes to puzzles/<level>/ and manifest.levels.<level>.
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";

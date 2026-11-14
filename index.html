@@ -191,7 +191,7 @@ header{display:grid;gap:4px}
 .report .addr{display:flex;gap:0 var(--s2);align-items:center;flex-wrap:wrap}
 .report .addr button{border:0;background:none;font-family:var(--f-ui);font-size:12.5px;color:var(--ink);text-decoration:underline;text-underline-offset:3px;min-height:44px;padding:0 var(--s1);margin-left:calc(-1 * var(--s1));cursor:pointer}
 .newtoast{position:fixed;left:50%;top:calc(12px + env(safe-area-inset-top,0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:var(--s2) var(--s4);font-family:var(--f-ui);font-size:14px;z-index:40;display:flex;gap:var(--s3);align-items:center;max-width:calc(100% - 32px)}
-/* Narrow phones: the masthead ("Paheli COMPLEX"), three icons, the timer and the Autocheck pill must fit one row */
+/* Narrow phones: the masthead ("Paheli MEGA"), three icons, the timer and the Autocheck pill must fit one row */
 .mast{min-width:0}
 .mark{white-space:nowrap}
 @media (max-width:430px){
@@ -204,16 +204,16 @@ header{display:grid;gap:4px}
   .pill::before{content:"Auto";font-size:9px}
 }
 @media (max-width:360px){.icon{width:30px}.pill::before{content:"A"}.mark{font-size:24px}}
-/* Levels. Each has a colour (Mini marigold, Midi azulejo blue, Complex red oxide), used by its landing row, result band and stamps. */
+/* Levels. Each has a colour (Mini marigold, Midi azulejo blue, Mega red oxide), used by its landing row, result band and stamps. */
 body{--lv:var(--marigold)}
 body[data-level="midi"]{--lv:#233E8B}
-body[data-level="complex"]{--lv:#8B2E1F}
+body[data-level="mega"]{--lv:#8B2E1F}
 .app.multi .mark{cursor:pointer}
 .app.landing .timer > :not(#archiveBtn){display:none}
 .app.landing .kb,.app.landing .legend{display:none}
 .veil-card .pick.lvrow{border-left:6px solid var(--marigold);align-items:center;padding-block:var(--s4)}
 .veil-card .pick.lvrow[data-level="midi"]{border-left-color:#233E8B}
-.veil-card .pick.lvrow[data-level="complex"]{border-left-color:#8B2E1F}
+.veil-card .pick.lvrow[data-level="mega"]{border-left-color:#8B2E1F}
 .veil-card .pick.lvrow:disabled{opacity:.5;cursor:default}
 .veil-card .pick.lvrow .pick-t{font-size:17px}
 .veil-card .pick.lvrow .pick-t small{font-size:11px;font-weight:600;letter-spacing:.08em;color:var(--ink-soft);margin-left:var(--s2)}
@@ -405,12 +405,12 @@ const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (m) => ({ "&": "&amp;", "<
 // Nothing is saved and nothing is sent to analytics.
 const PREVIEW = window.PAHELI_PREVIEW || null;
 function memoryStorage() { const m = new Map(); return { getItem: (k) => (m.has(k) ? m.get(k) : null), setItem: (k, v) => m.set(k, String(v)), removeItem: (k) => m.delete(k) }; }
-// Levels: Mini (5x5) is the original daily. Midi (7x7) and Complex (9x9) are live once the manifest lists them
-// under "levels" with a launch date that has arrived. ?level=midi|complex|mini picks one; with no level, and at
+// Levels: Mini (5x5) is the original daily. Midi (7x7) and Mega (9x9) are live once the manifest lists them
+// under "levels" with a launch date that has arrived. ?level=midi|mega|mini picks one; with no level, and at
 // least one extra level live, the first screen is a landing that waits for the player to pick.
-const LEVELS = { mini: "Mini", midi: "Midi", complex: "Complex" };
-const LEVEL_SIZE = { mini: 5, midi: 7, complex: 9 };
-const EXTRA = ["midi", "complex"];
+const LEVELS = { mini: "Mini", midi: "Midi", mega: "Mega" };
+const LEVEL_SIZE = { mini: 5, midi: 7, mega: 9 };
+const EXTRA = ["midi", "mega"];
 const paramLevel = PREVIEW ? null : new URLSearchParams(location.search).get("level");
 let LEVEL = Object.hasOwn(LEVELS, paramLevel || "") ? paramLevel : "mini";
 // Each level saves its own solves, progress and archive (lib/state.js); settings are shared.

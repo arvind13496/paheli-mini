@@ -2,7 +2,7 @@
 
 A daily desi mini crossword: a 5x5 grid of riddles, desi GK and millennial nostalgia. A new puzzle every day at midnight IST. By Arvind Lakhani.
 
-The app also supports two bigger daily levels, Midi (7x7) and Complex (9x9, with some cryptic clues). A batch record with `"level": "midi"` or `"complex"` is published to `puzzles/<level>/` and listed in the manifest under `levels`; a level shows in the app from its first date. See `docs/STATUS.md` ("Feed").
+The app also supports two bigger daily levels, Midi (7x7) and Mega (9x9, with some cryptic clues). A batch record with `"level": "midi"` or `"mega"` is published to `puzzles/<level>/` and listed in the manifest under `levels`; a level shows in the app from its first date. See `docs/STATUS.md` ("Feed").
 
 Live: https://arvind13496.github.io/paheli-mini/
 

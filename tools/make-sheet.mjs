@@ -20,7 +20,7 @@ export async function makeSheet(batchPath, outPath) {
   const batch = JSON.parse(fs.readFileSync(batchPath, "utf8"));
   const manifestPath = path.join(ROOT, "puzzles", "manifest.json");
   const manifest = fs.existsSync(manifestPath) ? JSON.parse(fs.readFileSync(manifestPath, "utf8")) : { launch: null, dates: [] };
-  // Published dates and numbering are per level (Mini, Midi, Complex).
+  // Published dates and numbering are per level (Mini, Midi, Mega).
   const lm = (lv) => (lv === "mini" ? manifest : (manifest.levels && manifest.levels[lv]) || {});
   const lvOf = (r) => r.level || "mini";
   const records = batch.records.filter((r) => !(lm(lvOf(r)).dates || []).includes(r.date)).sort((a, b) => (a.date < b.date ? -1 : 1));

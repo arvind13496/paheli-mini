@@ -37,15 +37,15 @@ Run on a phone (390 px wide) and on desktop. For local checks, run `python3 -m h
 - [ ] With a puzzle file blocked in devtools, its archive row shows "Couldn't load" with Retry; offline, unloaded rows grey out with "Needs a connection".
 - [ ] Live: Umami shows `archive-open` (days, unsolved), and `puzzle-start` / `puzzle-solve` carry `mode` (`daily` or `archive`); archive solves send `streak` as null.
 
-### Levels: Mini, Midi, Complex (v1.9.0)
-To try levels locally before any are published, add a `levels` entry to `puzzles/manifest.json` and files under `puzzles/midi/` and `puzzles/complex/` (the records in `tests/fixtures/levels.json` work), and don't commit them.
+### Levels: Mini, Midi, Mega (v1.9.0)
+To try levels locally before any are published, add a `levels` entry to `puzzles/manifest.json` and files under `puzzles/midi/` and `puzzles/mega/` (the records in `tests/fixtures/levels.json` work), and don't commit them.
 - [ ] With no level in the manifest, the site behaves as before: no landing, no archive tabs, and `?level=midi` falls back to today's Mini.
 - [ ] With a level live, the plain link opens the landing "Aaj ki paheli": one row per live level with its size and today's status (New, In progress, Solved · time, or Running late and not tappable). Nothing starts until a row is tapped.
-- [ ] Tapping Midi opens `?level=midi`: the masthead says "Paheli MIDI", the grid is 7x7, and numbering starts at No. 1 on the Midi's launch day. Complex is 9x9, shows the "Cryptic" legend, and fits a 375px and a 320px phone with no sideways scroll (also with Autocheck on).
-- [ ] Solving a Midi gives "Streak 1" on its own; the Mini streak is unchanged. Share text starts "Paheli Midi #N". The result card's band and stamp are blue (Complex: red oxide).
-- [ ] The result card offers "Play today's Mini / Midi / Complex" for the levels not yet solved today.
+- [ ] Tapping Midi opens `?level=midi`: the masthead says "Paheli MIDI", the grid is 7x7, and numbering starts at No. 1 on the Midi's launch day. Mega is 9x9, shows the "Cryptic" legend, and fits a 375px and a 320px phone with no sideways scroll (also with Autocheck on).
+- [ ] Solving a Midi gives "Streak 1" on its own; the Mini streak is unchanged. Share text starts "Paheli Midi #N". The result card's band and stamp are blue (Mega: red oxide).
+- [ ] The result card offers "Play today's Mini / Midi / Mega" for the levels not yet solved today.
 - [ ] Start the Mini, type a letter, switch to the Midi and type, then go back: both keep their letters and time.
-- [ ] The Archive shows Mini / Midi / Complex tabs. Each lists only that level's past days and its own stamp card; days before a level's launch are flat. Archive play at `?level=midi&play=<date>` saves under the Midi's own archive.
+- [ ] The Archive shows Mini / Midi / Mega tabs. Each lists only that level's past days and its own stamp card; days before a level's launch are flat. Archive play at `?level=midi&play=<date>` saves under the Midi's own archive.
 - [ ] Tapping "Paheli" in the masthead goes back to the landing.
 - [ ] A level before its launch date, or one removed from the manifest, is not on the landing, and its link falls back to the start.
 - [ ] Live: Umami events carry `level`; `landing-open` and `level-pick` appear.
