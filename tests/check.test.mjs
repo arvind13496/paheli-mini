@@ -160,3 +160,62 @@ test("a Mini and a Midi may share a date", () => {
   const mini = { ...clone(samples[1]), date: levels[0].date };
   assert.ok(!errs([mini, clone(levels[0])]).some((x) => /appears twice/.test(x)));
 });
+
+// ---------- per-level feed: puzzles/<level>/<date>.json and manifest.levels ----------
+import { publish } from "../tools/publish.mjs";
+import { loadPublished, levelManifest } from "../tools/check.mjs";
+
+function levelBatch(dir) {
+  const mini = { ...clone(samples[1]), date: "2026-12-01" };
+  const midi = { ...clone(levels[0]), date: "2026-12-01" };
+  const midi2 = { ...clone(levels[0]), date: "2026-12-20", title: "Second Midi" };
+  const complex = { ...clone(levels[1]), date: "2026-12-02" };
+  const file = path.join(dir, "batch.json");
+  fs.writeFileSync(file, JSON.stringify({ batch: "t", records: [mini, midi, midi2, complex] }));
+  return file;
+}
+
+test("publish --checked writes each level to its own folder and manifest entry", async () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "paheli-"));
+  const puzzlesDir = path.join(dir, "puzzles");
+  const r = await publish(levelBatch(dir), null, { today: "2026-11-20", puzzlesDir });
+  assert.deepEqual(r.errors, []);
+  assert.deepEqual(r.published, ["2026-12-01", "midi 2026-12-01", "midi 2026-12-20", "complex 2026-12-02"]);
+  const m = JSON.parse(fs.readFileSync(path.join(puzzlesDir, "manifest.json"), "utf8"));
+  assert.deepEqual({ launch: m.launch, dates: m.dates }, { launch: "2026-12-01", dates: ["2026-12-01"] }, "Mini stays at the top level");
+  assert.deepEqual(m.levels, { midi: { launch: "2026-12-01", dates: ["2026-12-01", "2026-12-20"] }, complex: { launch: "2026-12-02", dates: ["2026-12-02"] } });
+  assert.ok(fs.existsSync(path.join(puzzlesDir, "midi", "2026-12-01.json")) && fs.existsSync(path.join(puzzlesDir, "complex", "2026-12-02.json")));
+  const loaded = loadPublished(puzzlesDir);
+  assert.deepEqual(loaded.entries.map((e) => `${e.level || "mini"} ${e.date} ${e.record.grid.length}`), ["mini 2026-12-01 5", "midi 2026-12-01 7", "midi 2026-12-20 7", "complex 2026-12-02 9"]);
+  assert.deepEqual(checkPublished(puzzlesDir, { today: "2026-11-20" }).errors, []);
+  // Publishing again skips everything, level by level.
+  const again = await publish(path.join(dir, "batch.json"), null, { today: "2026-11-20", puzzlesDir });
+  assert.equal(again.published.length, 0);
+  assert.equal(again.alreadyPublished.length, 4);
+});
+
+test("the buffer check runs per level, and a paused level is ignored", async () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "paheli-"));
+  const puzzlesDir = path.join(dir, "puzzles");
+  await publish(levelBatch(dir), null, { today: "2026-11-20", puzzlesDir });
+  const e = checkPublished(puzzlesDir, { today: "2026-12-02", buffer: 1 }).errors;
+  assert.ok(e.some((x) => /^midi: No puzzle published for today/.test(x)));
+  assert.ok(e.some((x) => /^complex: Only 0 future/.test(x)));
+  assert.ok(!e.some((x) => /^complex: No puzzle published for today/.test(x)));
+  // Pause Complex: take it out of the manifest and leave its files.
+  const mp = path.join(puzzlesDir, "manifest.json");
+  const m = JSON.parse(fs.readFileSync(mp, "utf8")); delete m.levels.complex;
+  fs.writeFileSync(mp, JSON.stringify(m));
+  assert.ok(!checkPublished(puzzlesDir, { today: "2026-12-02", buffer: 1 }).errors.some((x) => /complex/.test(x)));
+  assert.deepEqual(levelManifest(m, "complex"), { launch: null, dates: [] });
+});
+
+test("published mode flags a level file missing from the manifest", async () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "paheli-"));
+  const puzzlesDir = path.join(dir, "puzzles");
+  await publish(levelBatch(dir), null, { today: "2026-11-20", puzzlesDir });
+  const mp = path.join(puzzlesDir, "manifest.json");
+  const m = JSON.parse(fs.readFileSync(mp, "utf8")); m.levels.midi.dates = ["2026-12-01"];
+  fs.writeFileSync(mp, JSON.stringify(m));
+  assert.ok(checkPublished(puzzlesDir, { today: "2026-11-20" }).errors.some((x) => /puzzles\/midi\/2026-12-20\.json is not in the manifest/.test(x)));
+});
