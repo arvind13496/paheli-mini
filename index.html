@@ -659,11 +659,12 @@ function previewPicker() {
   const card = document.querySelector(".veil-card");
   card.classList.add("picker");
   card.querySelectorAll(".pick").forEach((b) => b.remove());
-  PREVIEW.records.slice().sort((a, b) => (a.date < b.date ? -1 : 1)).forEach((r) => {
+  const lvRank = (r) => Object.keys(LEVELS).indexOf(r.level || "mini");
+  PREVIEW.records.slice().sort((a, b) => lvRank(a) - lvRank(b) || (a.date < b.date ? -1 : 1)).forEach((r) => {
     const b = document.createElement("button");
     b.className = "btn alt pick";
     const t = document.createElement("span"); t.className = "pick-t"; t.textContent = r.title;
-    const m = document.createElement("span"); m.className = "pick-m"; m.textContent = r.level ? `${LEVELS[r.level]} · ${r.grid.length}x${r.grid.length}` : `No. ${numberFor(r.date, PREVIEW.launch)} · ${formatShort(r.date).replace(/ \d{4}$/, "")}`;
+    const m = document.createElement("span"); m.className = "pick-m"; m.textContent = r.level ? `${LEVELS[r.level]} · ${formatShort(r.date).replace(/ \d{4}$/, "")}` : `No. ${numberFor(r.date, PREVIEW.launch)} · ${formatShort(r.date).replace(/ \d{4}$/, "")}`;
     b.append(t, m);
     b.onclick = () => { card.querySelectorAll(".pick").forEach((x) => x.remove()); num = numberFor(r.date, PREVIEW.launch); startRecord(r, r.date); };
     card.appendChild(b);
