@@ -143,7 +143,7 @@ header{display:grid;gap:4px}
 .sheet > * + *{margin-top:var(--s4)}
 .sheet > .share + .sheet-actions{margin-top:var(--s5)}
 .sheet > .countdown{margin-top:var(--s4)}
-.sheet > #playToday,.sheet > .sheet-actions.solo{margin-top:var(--s3)}
+.sheet > #moveOn,.sheet > #backRow{margin-top:var(--s3)}
 .sheet > .why{margin-top:var(--s6)}
 .sheet > .report{margin-top:var(--s3)} /* links carry 44px tap height, so the visible gap is about s5 */
 .share{position:relative;border:1px solid var(--rule);padding:var(--s6) var(--s5) var(--s5);display:grid;gap:0;background:var(--paper);color:var(--ink)}
@@ -191,6 +191,48 @@ header{display:grid;gap:4px}
 .report .addr{display:flex;gap:0 var(--s2);align-items:center;flex-wrap:wrap}
 .report .addr button{border:0;background:none;font-family:var(--f-ui);font-size:12.5px;color:var(--ink);text-decoration:underline;text-underline-offset:3px;min-height:44px;padding:0 var(--s1);margin-left:calc(-1 * var(--s1));cursor:pointer}
 .newtoast{position:fixed;left:50%;top:calc(12px + env(safe-area-inset-top,0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:var(--s2) var(--s4);font-family:var(--f-ui);font-size:14px;z-index:40;display:flex;gap:var(--s3);align-items:center;max-width:calc(100% - 32px)}
+/* Archive: header label in archive play, the archive screen, and the monthly stamp card */
+.archbar{font-family:var(--f-ui);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
+.app.in-archive .play,.app.in-archive .legend,.app.in-archive .foot,.app.in-archive .timer,.app.in-archive .archbar{display:none!important}
+.archive{display:grid;gap:var(--s5);width:min(100%,520px);margin:var(--s2) auto 0}
+.arch-top{display:flex;justify-content:space-between;align-items:center;gap:var(--s3)}
+.arch-top h1{font-family:var(--f-mast);font-weight:400;font-size:30px;line-height:1.1;margin:0}
+.arch-top .btn{font-size:14px;padding:var(--s2) var(--s4)}
+.arch-note{margin:calc(-1 * var(--s3)) 0 0;color:var(--ink-soft);font-style:italic;font-size:15px}
+.arch-months{display:grid;gap:var(--s4)}
+.arch-months .mcard{background:var(--paper);border:1px solid var(--rule);padding:var(--s4)}
+.arch-list{list-style:none;margin:0;padding:0;border-top:1px solid var(--rule)}
+.arch-list li{border-bottom:1px solid var(--hair);display:flex;align-items:center}
+.arow{flex:1 1 auto;min-width:0;display:flex;justify-content:space-between;gap:var(--s3);align-items:center;padding:var(--s3) var(--s1);border:0;background:none;text-align:left;cursor:pointer;min-height:60px}
+.arow:hover{background:var(--paper)}
+.arow:disabled{cursor:default;opacity:.45}
+.arow:disabled:hover{background:none}
+.arow .l{display:grid;gap:2px;min-width:0}
+.arow .m{font-family:var(--f-ui);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft)}
+.arow .t{font-family:var(--f-clue);font-size:16.5px;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.arow .s{flex:none;font-family:var(--f-ui);font-size:12.5px;color:var(--ink-soft);text-align:right}
+.arow .s.on{color:var(--ink);font-weight:600}
+.arch-list .retry{flex:none;border:1px solid var(--ink);background:var(--paper);font-family:var(--f-ui);font-weight:600;font-size:12.5px;padding:var(--s1) var(--s3);border-radius:999px;cursor:pointer;margin-right:var(--s1)}
+.mcard{display:grid;gap:var(--s2)}
+.mcard-h{display:flex;justify-content:space-between;align-items:baseline;gap:var(--s3);font-family:var(--f-ui);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+.mcard-h a{color:var(--ink);text-underline-offset:3px;letter-spacing:.08em;min-height:32px;display:inline-flex;align-items:center}
+.mgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:var(--s1) 6px}
+.mgrid .wd{font-family:var(--f-ui);font-size:10px;font-weight:600;color:var(--ink-soft);text-align:center}
+.day{border:0;background:none;padding:0;display:grid;gap:2px;justify-items:center;align-content:start;font-family:var(--f-ui);font-size:10px;line-height:1.2;color:var(--ink-soft);cursor:pointer;min-width:0}
+.day:disabled{cursor:default}
+.day.today{color:var(--ink);font-weight:700}
+.stamp{width:100%;max-width:44px;aspect-ratio:1;display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(5,1fr);border:1px solid var(--hair);background:var(--paper)}
+.stamp i{display:block;min-width:0}
+/* A stamp is the day's black-square pattern only, each black square a marigold tile (the solve-tile motif, shrunk) */
+.stamp i.b{background:var(--marigold) radial-gradient(circle,#FFF3D6 0 20%,transparent 24%)}
+.day.full .stamp{border-color:var(--ink);background:#FFF8E8}
+.day.arch .stamp{border:1px dashed var(--ink-soft);background:#FFFCF4}
+.day.arch .stamp i.b{opacity:.5}
+.day.today .stamp{outline:2px solid var(--ink);outline-offset:1px}
+.day.future .stamp,.day.none .stamp{background:var(--page);border-color:transparent}
+.day.future,.day.none{color:#A19E95}
+.share .mcard{margin-top:var(--s4);padding-top:var(--s3);border-top:1px solid var(--hair)}
+.share .stamp{max-width:30px}
 .newtoast button{border:1px solid var(--paper);background:var(--paper);color:var(--ink);font-family:var(--f-ui);font-weight:600;padding:var(--s1) var(--s3);border-radius:999px;cursor:pointer}
 </style></head>
 <body>
@@ -198,8 +240,16 @@ header{display:grid;gap:4px}
 <div class="app">
   <header>
     <div class="mast"><div class="mark">Paheli <small id="level">Mini</small></div>
-    <div class="timer"><span class="pill" id="autoPill" hidden>Autocheck</span><span id="time">0:00</span><button class="icon" id="pause" aria-label="Pause"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg></button><button class="icon" id="helpBtn" aria-label="Check and reveal options"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M5.6 5.6l3.6 3.6M14.8 14.8l3.6 3.6M18.4 5.6l-3.6 3.6M9.2 14.8l-3.6 3.6"/></svg></button></div></div>
+    <div class="timer"><button class="icon" id="archiveBtn" aria-label="Archive" title="Archive"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3.5" y="5" width="17" height="15.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/><path d="M7.5 13.5h3v3h-3z" fill="currentColor" stroke="none"/></svg></button><span class="pill" id="autoPill" hidden>Autocheck</span><span id="time">0:00</span><button class="icon" id="pause" aria-label="Pause"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg></button><button class="icon" id="helpBtn" aria-label="Check and reveal options"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M5.6 5.6l3.6 3.6M14.8 14.8l3.6 3.6M18.4 5.6l-3.6 3.6M9.2 14.8l-3.6 3.6"/></svg></button></div></div>
+    <div class="archbar" id="archBar" hidden></div>
   </header>
+
+  <section class="archive" id="archiveView" hidden aria-labelledby="archTitle">
+    <div class="arch-top"><h1 id="archTitle">Archive</h1><button class="btn alt" id="archClose">Back</button></div>
+    <p class="arch-note">Every past Paheli Mini. Playing one here doesn't change your streak.</p>
+    <div class="arch-months" id="archMonths"></div>
+    <ol class="arch-list" id="archList"></ol>
+  </section>
 
   <div class="play">
     <div class="left">
@@ -259,6 +309,7 @@ header{display:grid;gap:4px}
       <div class="tag" id="shareTag"></div>
       <div class="stats" id="shareStats"></div>
       <div class="streak" id="streakLine"></div>
+      <div class="mcard" id="resultMonth" hidden></div>
       <p class="note" id="storageNote">Saved on this browser</p>
     </div>
     <div class="sheet-actions">
@@ -266,8 +317,12 @@ header{display:grid;gap:4px}
       <a class="btn go" id="wa" href="#" target="_blank" rel="noopener">Send on WhatsApp</a>
     </div>
     <p class="countdown" id="countdown"></p>
-    <button class="btn go" id="playToday" hidden>Play today's paheli</button>
-    <div class="sheet-actions solo">
+    <div class="sheet-actions" id="moveOn" hidden>
+      <button class="btn alt" id="nextUnplayed" hidden>Next unplayed day</button>
+      <button class="btn go" id="playToday">Play today's paheli</button>
+    </div>
+    <div class="sheet-actions solo" id="backRow">
+      <button class="btn alt" id="playAgain" hidden>Play again</button>
       <button class="btn alt" id="closeModal">Back to grid</button>
     </div>
     <div class="why"><h3>Why these answers</h3><ul id="whyList"></ul></div>
@@ -301,12 +356,12 @@ header{display:grid;gap:4px}
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script type="module">
-import { todayIST, istHourStamp, numberFor, formatIST, formatShort, countdownText, appNow } from "./lib/dates.js?v=1.7.0";
-import { buildPuzzle, gridHash } from "./lib/grid.js?v=1.7.0";
-import { readPuzzleFile } from "./lib/codec.js?v=1.7.0";
-import { createState } from "./lib/state.js?v=1.7.0";
+import { todayIST, istHourStamp, numberFor, formatIST, formatShort, countdownText, appNow } from "./lib/dates.js?v=1.8.0";
+import { buildPuzzle, gridHash } from "./lib/grid.js?v=1.8.0";
+import { readPuzzleFile } from "./lib/codec.js?v=1.8.0";
+import { createState } from "./lib/state.js?v=1.8.0";
 
-const APP_VERSION = "1.7.0";
+const APP_VERSION = "1.8.0";
 const SITE = "https://arvind13496.github.io/paheli-mini/";
 const REPORT_EMAIL = "arv.experiments@gmail.com";
 const TAGS = { R: "Riddle", GK: "GK", N: "Pop", C: "Cryptic" };
@@ -323,11 +378,20 @@ let cells = [], entries = [], cellSlots = [], S = null, solved = false, solveSta
 let sel = 0, dir = "A", timerId = null, runStart = 0, N = 5;
 const LEVELS = { mini: "Mini", midi: "Midi", complex: "Complex" };
 let AUTO = state.getSettings().autocheck === true;
+// "daily" plays today's puzzle (counts for streaks). "archive" plays a past date from ?play=YYYY-MM-DD,
+// saved under its own keys and never counted. replay = "Play again" on a solved archive day: nothing is saved.
+let MODE = "daily", replay = false;
+const WD = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const MONTH = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const ymd = (d) => { const [y, m, dd] = d.split("-").map(Number); return { y, m, d: dd, wd: new Date(Date.UTC(y, m - 1, dd)).getUTCDay() }; };
+/** "Sat 31 Oct" */
+function dayLabel(date) { const x = ymd(date); return `${WD[x.wd]} ${x.d} ${MON[x.m - 1]}`; }
 
 // ---------- analytics ----------
 function track(name, data = {}) {
   if (PREVIEW) return;
-  try { window.umami && window.umami.track(name, { ...data, puzzle: num, v: APP_VERSION }); } catch (e) { /* analytics never breaks the game */ }
+  try { window.umami && window.umami.track(name, { ...data, mode: MODE, puzzle: num, v: APP_VERSION }); } catch (e) { /* analytics never breaks the game */ }
 }
 function sendPageview() {
   if (PREVIEW) return;
@@ -335,10 +399,12 @@ function sendPageview() {
   const send = () => { try { window.umami && window.umami.track((p) => ({ ...p, url: saved })); } catch (e) {} };
   if (window.umami) send(); else window.addEventListener("load", send, { once: true });
   if (/[?&]utm_/.test(location.search)) {
-    const q = new URLSearchParams(location.search);
-    [...q.keys()].filter((k) => k.startsWith("utm_")).forEach((k) => q.delete(k));
-    const qs = q.toString();
-    const clean = () => history.replaceState(null, "", location.pathname + (qs ? "?" + qs : "") + location.hash);
+    const clean = () => {
+      const q = new URLSearchParams(location.search);
+      [...q.keys()].filter((k) => k.startsWith("utm_")).forEach((k) => q.delete(k));
+      const qs = q.toString();
+      history.replaceState(null, "", location.pathname + (qs ? "?" + qs : "") + location.hash);
+    };
     if (window.umami) clean(); else window.addEventListener("load", () => setTimeout(clean, 0), { once: true });
   }
 }
@@ -380,11 +446,17 @@ async function boot() {
   const now = appNow();
   const today = todayIST(now);
   bootDate = today;
+  // ?play=YYYY-MM-DD opens a past date in archive mode. Today or later is rejected (separate from the debug ?date=).
+  const play = new URLSearchParams(location.search).get("play");
+  const want = play && /^\d{4}-\d{2}-\d{2}$/.test(play) && play < today ? play : null;
+  if (play && !want) history.replaceState(null, "", urlFor(null, location.hash));
+  MODE = want ? "archive" : "daily";
+  const target = want || today;
   blankBoard();
   showScreen({ title: "Loading…" });
   const [mRes, pRes] = await Promise.allSettled([
     fetch(`puzzles/manifest.json?h=${istHourStamp(now)}`),
-    fetch(`puzzles/${today}.json`),
+    fetch(`puzzles/${target}.json`),
   ]);
   if (mRes.status === "rejected") return showScreen({ title: "You're offline", text: "Check your connection and tap Retry.", retry: "Retry" });
   try {
@@ -395,8 +467,13 @@ async function boot() {
   if (today < manifest.launch) {
     return countdownScreen(manifest.launch, (left) => ({ eyebrow: "Coming soon", title: "Paheli Mini", text: `Paheli Mini starts ${formatIST(manifest.launch).replace(/ \d{4}$/, "")}. First one in ${left}.` }));
   }
-  num = numberFor(today, manifest.launch);
-  if (!manifest.dates.includes(today)) {
+  if (want && (want < manifest.launch || !manifest.dates.includes(want))) {
+    history.replaceState(null, "", urlFor(null, location.hash));
+    return boot();
+  }
+  num = numberFor(target, manifest.launch);
+  routeHash();
+  if (MODE === "daily" && !manifest.dates.includes(today)) {
     track("puzzle-missing");
     const tomorrow = todayIST(now + 86400000);
     return countdownScreen(tomorrow, (left) => ({ eyebrow: `No. ${num}`, title: "Running late", text: `Today's paheli is running late. Next one in ${left}.` }));
@@ -407,7 +484,37 @@ async function boot() {
     if (!pRes.value.ok) throw new Error("puzzle " + pRes.value.status);
     rec = readPuzzleFile(await pRes.value.json());
   } catch (e) { return errorScreen(e); }
-  startRecord(rec, today);
+  recCache.set(target, Promise.resolve(rec));
+  startRecord(rec, target);
+}
+
+// ---------- navigation ----------
+/** This page's URL with ?play set or removed. Keeps other params (the localhost ?date= clock), drops utm_*. */
+function urlFor(play, hash = "") {
+  const q = new URLSearchParams(location.search);
+  [...q.keys()].filter((k) => k === "play" || k.startsWith("utm_")).forEach((k) => q.delete(k));
+  if (play) q.set("play", play);
+  const qs = q.toString();
+  return location.pathname + (qs ? "?" + qs : "") + hash;
+}
+/** Today or later opens the daily game; a past date opens archive play (or its result, if solved). */
+function openDate(date) {
+  location.assign(urlFor(date < todayIST(appNow()) ? date : null));
+}
+function goToday() { location.assign(urlFor(null)); }
+
+// Puzzle files by date, decoded, fetched once per page. Used for archive titles and stamp patterns.
+const recCache = new Map();
+function loadRecord(date) {
+  if (!recCache.has(date)) {
+    const p = fetch(`puzzles/${date}.json`)
+      .then((r) => { if (!r.ok) throw new Error("puzzle " + r.status); return r.json(); },
+            () => { const e = new Error("offline"); e.offline = true; throw e; })
+      .then(readPuzzleFile);
+    p.catch(() => recCache.delete(date));
+    recCache.set(date, p);
+  }
+  return recCache.get(date);
 }
 
 function startRecord(rec, today) {
@@ -426,10 +533,14 @@ function startRecord(rec, today) {
   const wd = new Date(Date.parse(P.date)).getUTCDay();
   $("board").classList.toggle("tile-weekend", wd === 0 || wd === 6);
 
-  const done = state.getSolve(P.date);
+  const archive = MODE === "archive";
+  $("archBar").hidden = !archive;
+  if (archive) $("archBar").textContent = `#${num} · ${dayLabel(P.date)} · Archive`;
+  replay = false;
+  const done = state.getSolve(P.date) || (archive ? state.getArchiveSolve(P.date) : null);
   if (done) { ready = true; return showSolved(done); }
-  const prog = state.getProgress(P.date, hash);
-  S = prog ? { ...prog } : { letters: Array(cells.length).fill(""), elapsedMs: 0, started: false, hints: [], ok: [], wrong: [], rev: [], checks: 0, reveals: 0, usedAuto: false };
+  const prog = archive ? state.getArchiveProgress(P.date, hash) : state.getProgress(P.date, hash);
+  S = prog ? { ...prog } : freshS();
   if (!Array.isArray(S.hints)) S.hints = [];
   solved = false;
   showStart();
@@ -465,18 +576,21 @@ function errorScreen(e) {
 }
 $("retry").onclick = () => boot();
 
-function showStart() {
-  const paused = S.elapsedMs > 0;
+function freshS() { return { letters: Array(cells.length).fill(""), elapsedMs: 0, started: false, hints: [], ok: [], wrong: [], rev: [], checks: 0, reveals: 0, usedAuto: false }; }
+function startCard(start) {
   showScreen({
+    eyebrow: MODE === "archive" ? `Archive · ${dayLabel(P.date)}` : "",
     title: P.title,
     by: `No. ${num} · By ${P.constructor}`,
-    start: paused ? "Resume" : "Shuru karo",
+    start,
   });
 }
+function showStart() { startCard(S.elapsedMs > 0 ? "Resume" : "Shuru karo"); }
 
 function persist() {
-  if (!P || solved || !S) return;
-  state.saveProgress({ date: P.date, hash, ...S });
+  if (!P || solved || !S || replay) return;
+  if (MODE === "archive") state.saveArchiveProgress({ date: P.date, hash, ...S });
+  else state.saveProgress({ date: P.date, hash, ...S });
 }
 
 // ---------- rendering ----------
@@ -608,19 +722,20 @@ $("start").onclick = () => {
 $("pause").onclick = () => {
   if (!ready || !S || solved || !S.started || !timerId) return;
   stopTimer();
-  showScreen({ title: P.title, by: `No. ${num} · By ${P.constructor}`, start: "Resume" });
+  startCard("Resume");
 };
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) { if (timerId) $("pause").click(); return; }
   if (PREVIEW) return;
   const t = todayIST(appNow());
+  if (MODE === "archive") { if (t !== bootDate) $("newPuzzleToast").hidden = false; return; }
   if (!P) { if (manifest && ready === false && bootDate !== t) location.reload(); return; }
   if (t !== P.date) {
     if (S && !S.started && !solved) location.reload();
     else $("newPuzzleToast").hidden = false;
   }
 });
-$("newPuzzlePlay").onclick = () => location.reload();
+$("newPuzzlePlay").onclick = () => (MODE === "archive" ? goToday() : location.reload());
 window.addEventListener("pagehide", () => { if (timerId) stopTimer(); });
 
 $("prev").onclick = () => { if (canPlay()) nextEntry(-1); };
@@ -696,9 +811,11 @@ function tagFor(st) {
 function solve() {
   stopTimer(); solved = true;
   solveStats = { sec: Math.round(S.elapsedMs / 1000), hints: S.hints.length, checks: S.checks, reveals: S.reveals, auto: !!S.usedAuto };
-  state.recordSolve(P.date, solveStats);
+  if (replay) { /* "Play again": nothing is saved */ }
+  else if (MODE === "archive") state.recordArchiveSolve(P.date, solveStats);
+  else state.recordSolve(P.date, solveStats);
   const st = state.streaks(manifest.dates, todayIST(appNow()));
-  track("puzzle-solve", { seconds: solveStats.sec, hints: solveStats.hints, checks: solveStats.checks, reveals: solveStats.reveals, autocheck: solveStats.auto, streak: state.available ? st.current : null });
+  track("puzzle-solve", { seconds: solveStats.sec, hints: solveStats.hints, checks: solveStats.checks, reveals: solveStats.reveals, autocheck: solveStats.auto, streak: MODE === "daily" && state.available ? st.current : null, ...(replay ? { replay: true } : {}) });
   $("board").classList.add("solved"); update();
   setTimeout(() => openModal(solveStats), 650);
 }
@@ -709,6 +826,10 @@ function showSolved(done) {
   openModal(done);
 }
 function shareText(st, streak, source) {
+  // Archive: marked "(archive)", no streak (it describes today, not the day played); the link still lands on today's puzzle.
+  if (MODE === "archive") {
+    return `Paheli Mini #${num} · ${P.title} (archive)\nSolved in ${fmt(st.sec * 1000)} · ${tagFor(st)}\n${helpLine(st)}\n${SITE}?utm_source=${source}&utm_medium=share&utm_campaign=archive`;
+  }
   const streakPart = state.available ? ` · Streak ${streak}` : "";
   return `Paheli Mini #${num} · ${P.title}\nSolved in ${fmt(st.sec * 1000)} · ${tagFor(st)}\n${helpLine(st)}${streakPart}\n${SITE}?utm_source=${source}&utm_medium=share`;
 }
@@ -720,17 +841,29 @@ function openModal(st) {
   $("shareTime").textContent = fmt(st.sec * 1000);
   $("shareTag").textContent = tagFor(st);
   $("shareStats").textContent = helpLine(st);
+  const archive = MODE === "archive";
+  const live = archive && !replay && !!state.getSolve(P.date);
+  if (archive) $("shareSub").textContent += live ? " · Solved on the day" : " · Archive";
   $("streakLine").textContent = state.available ? `Streak ${sk.current} · Best ${sk.best}` : "Streaks can't be saved in this browser";
-  $("storageNote").hidden = !state.available;
+  $("streakLine").hidden = archive;
+  $("storageNote").hidden = !state.available || replay;
+  $("playAgain").hidden = !archive;
+  $("backRow").classList.toggle("solo", !archive);
+  const today = todayIST(appNow());
+  $("resultMonth").hidden = !!PREVIEW;
+  if (!PREVIEW) renderMonth($("resultMonth"), today.slice(0, 7), today, true);
   if (PREVIEW) { $("streakLine").textContent = "Preview · not saved"; $("storageNote").hidden = true; }
   $("wa").href = "https://wa.me/?text=" + encodeURIComponent(shareText(st, sk.current, "whatsapp"));
   $("copy").dataset.text = shareText(st, sk.current, "copy");
   clearInterval(countdownTimer);
-  if (PREVIEW) { $("countdown").hidden = true; $("playToday").hidden = false; $("playToday").textContent = "Back to puzzle list"; }
+  const nu = archive ? nextUnplayed() : null;
+  $("nextUnplayed").hidden = !nu; $("nextUnplayed").dataset.date = nu || "";
+  $("moveOn").classList.toggle("solo", !nu);
+  if (PREVIEW) { $("countdown").hidden = true; $("moveOn").hidden = false; $("playToday").textContent = "Back to puzzle list"; }
   const tick = () => {
     if (PREVIEW) return;
     const isToday = P.date === todayIST(appNow());
-    $("playToday").hidden = isToday; $("countdown").hidden = !isToday;
+    $("moveOn").hidden = isToday; $("countdown").hidden = !isToday;
     if (!isToday) { clearInterval(countdownTimer); return; }
     const ms = msUntilIST(todayIST(appNow() + 86400000));
     $("countdown").innerHTML = `Next paheli in <b>${countdownText(ms)}</b>`;
@@ -746,10 +879,26 @@ function openModal(st) {
     li.appendChild(document.createTextNode(` (${e.num} ${e.dir === "A" ? "Across" : "Down"}): ${e.why}`));
     ul.appendChild(li);
   });
-  $("modal").hidden = false; $("copy").focus();
+  if ($("archiveView").hidden) { $("modal").hidden = false; $("copy").focus(); }
 }
 $("closeModal").onclick = () => { $("modal").hidden = true; };
-$("playToday").onclick = () => (PREVIEW ? previewPicker() : location.reload());
+$("playToday").onclick = () => (PREVIEW ? previewPicker() : goToday());
+$("nextUnplayed").onclick = () => { const d = $("nextUnplayed").dataset.date; if (d) openDate(d); };
+// "Play again" on a solved archive day: an empty grid, the same game, and nothing is saved.
+$("playAgain").onclick = () => {
+  if (MODE !== "archive" || !P) return;
+  replay = true; solved = false; S = freshS();
+  $("modal").hidden = true; $("board").classList.remove("solved");
+  dir = "A"; sel = entries[0].cells[0];
+  S.started = true; showVeil(false); startTimer(); updateTime(); update();
+  track("puzzle-start", { replay: true });
+};
+/** The nearest unsolved past day after this one, else the newest one before it. */
+function nextUnplayed() {
+  const today = todayIST(appNow()), sv = state.allSolves(), ar = state.allArchiveSolves();
+  const open = manifest.dates.filter((d) => d >= manifest.launch && d < today && d !== P.date && !sv[d] && !ar[d]).sort();
+  return open.find((d) => d > P.date) || open[open.length - 1] || null;
+}
 $("copy").onclick = () => {
   track("share-copy");
   const t = $("copy").dataset.text || "";
@@ -761,6 +910,119 @@ $("copyAddress").onclick = () => {
   navigator.clipboard?.writeText(REPORT_EMAIL).then(() => toast("Email address copied."), () => toast(REPORT_EMAIL)) ?? toast(REPORT_EMAIL);
 };
 $("modal").addEventListener("click", (e) => { if (e.target.id === "modal") $("modal").hidden = true; });
+
+// ---------- archive screen and stamp cards ----------
+const pad2 = (n) => String(n).padStart(2, "0");
+function prevMonth(ym) { const [y, m] = ym.split("-").map(Number); return m === 1 ? `${y - 1}-12` : `${y}-${pad2(m - 1)}`; }
+
+/**
+ * One month as a stamp card. Solved on the day: full stamp. Solved in the archive: lighter, dashed edge.
+ * Missed: blank, no copy. Today: outlined. Future and no-puzzle days: empty and not tappable.
+ * A stamp is that day's black-square pattern, read from its puzzle file (no stored copy).
+ */
+function renderMonth(el, ym, today, withLink) {
+  const [y, m] = ym.split("-").map(Number);
+  const days = new Date(Date.UTC(y, m, 0)).getUTCDate();
+  const lead = (new Date(Date.UTC(y, m - 1, 1)).getUTCDay() + 6) % 7; // weeks start on Monday
+  const sv = state.allSolves(), ar = state.allArchiveSolves(), published = new Set(manifest.dates);
+  el.innerHTML = "";
+  const head = document.createElement("div"); head.className = "mcard-h";
+  const name = document.createElement("span"); name.textContent = `${MONTH[m - 1]} ${y}`; head.appendChild(name);
+  if (withLink) {
+    const a = document.createElement("a"); a.href = "#archive"; a.textContent = "Archive"; a.id = "archiveLink";
+    a.onclick = () => { archFromApp = true; };
+    head.appendChild(a);
+  }
+  const grid = document.createElement("div"); grid.className = "mgrid";
+  "MTWTFSS".split("").forEach((c) => { const w = document.createElement("span"); w.className = "wd"; w.textContent = c; w.setAttribute("aria-hidden", "true"); grid.appendChild(w); });
+  for (let i = 0; i < lead; i++) grid.appendChild(document.createElement("span"));
+  for (let d = 1; d <= days; d++) {
+    const date = `${ym}-${pad2(d)}`;
+    const kind = date > today ? "future"
+      : date < manifest.launch || !published.has(date) ? "none"
+      : sv[date] ? "full" : ar[date] ? "arch" : "open";
+    const b = document.createElement("button");
+    b.className = `day ${kind}` + (date === today ? " today" : "");
+    b.disabled = kind === "future" || kind === "none";
+    const what = kind === "full" ? "solved on the day" : kind === "arch" ? "solved in the archive" : date === today ? "today's paheli" : kind === "open" ? "play from the archive" : "";
+    b.setAttribute("aria-label", `${d} ${MONTH[m - 1]}${what ? ", " + what : ""}`);
+    const n = document.createElement("span"); n.textContent = d;
+    const st = document.createElement("span"); st.className = "stamp";
+    for (let k = 0; k < 25; k++) st.appendChild(document.createElement("i"));
+    b.append(n, st);
+    if (kind === "full" || kind === "arch") {
+      loadRecord(date).then((rec) => { rec.grid.join("").split("").forEach((ch, k) => { if (ch === "#" && st.children[k]) st.children[k].className = "b"; }); }, () => {});
+    }
+    if (!b.disabled) b.onclick = () => openDate(date);
+    grid.appendChild(b);
+  }
+  el.append(head, grid);
+}
+
+let archFromApp = false;
+function routeHash() {
+  if (PREVIEW || !manifest) return;
+  const on = location.hash === "#archive" && todayIST(appNow()) >= manifest.launch;
+  const app = document.querySelector(".app");
+  if (on === !$("archiveView").hidden) return;
+  if (on) {
+    if (timerId) $("pause").click();
+    $("modal").hidden = true; closeMenu();
+    $("archiveView").hidden = false; app.classList.add("in-archive");
+    window.scrollTo(0, 0);
+    renderArchive(true);
+  } else {
+    $("archiveView").hidden = true; app.classList.remove("in-archive");
+    archFromApp = false;
+    if (solved && solveStats && P) openModal(solveStats);
+  }
+}
+window.addEventListener("hashchange", routeHash);
+window.addEventListener("online", () => { if (!$("archiveView").hidden) renderArchive(false); });
+$("archiveBtn").onclick = () => { archFromApp = true; location.hash = "archive"; };
+$("archClose").onclick = () => {
+  if (archFromApp) history.back();
+  else { history.replaceState(null, "", location.pathname + location.search); routeHash(); }
+};
+
+const rowObserver = "IntersectionObserver" in window
+  ? new IntersectionObserver((list) => list.forEach((e) => { if (e.isIntersecting) { rowObserver.unobserve(e.target); fillRow(e.target); } }), { rootMargin: "300px" })
+  : null;
+function fillRow(li) {
+  const b = li.querySelector(".arow"), t = li.querySelector(".t");
+  loadRecord(li.dataset.date).then((rec) => { t.textContent = rec.title; b.disabled = false; }, (e) => {
+    b.disabled = true;
+    if (e && e.offline) { t.textContent = "Needs a connection"; return; }
+    t.textContent = "Couldn't load";
+    if (li.querySelector(".retry")) return;
+    const r = document.createElement("button"); r.className = "retry"; r.textContent = "Retry";
+    r.onclick = () => { r.remove(); t.textContent = "…"; fillRow(li); };
+    li.appendChild(r);
+  });
+}
+
+/** Stamp cards (one per month, newest first), then every past manifest date, newest first. */
+function renderArchive(opened) {
+  const today = todayIST(appNow());
+  const past = manifest.dates.filter((d) => d >= manifest.launch && d < today).sort().reverse();
+  const sv = state.allSolves(), ar = state.allArchiveSolves(), inProg = state.archiveProgressDate();
+  const months = $("archMonths"); months.innerHTML = "";
+  for (let ym = today.slice(0, 7); ym >= manifest.launch.slice(0, 7); ym = prevMonth(ym)) {
+    const c = document.createElement("div"); c.className = "mcard"; renderMonth(c, ym, today, false); months.appendChild(c);
+  }
+  const ol = $("archList"); ol.innerHTML = "";
+  past.forEach((d) => {
+    const li = document.createElement("li"); li.dataset.date = d;
+    const b = document.createElement("button"); b.className = "arow";
+    b.innerHTML = `<span class="l"><span class="m">No. ${numberFor(d, manifest.launch)} · ${dayLabel(d)}</span><span class="t">…</span></span><span class="s"></span>`;
+    const [label, on] = sv[d] ? ["Solved on the day", true] : ar[d] ? [`Solved in archive · ${fmt(ar[d].sec * 1000)}`, true] : inProg === d ? ["In progress", true] : ["Unplayed", false];
+    const s = b.querySelector(".s"); s.textContent = label; s.classList.toggle("on", on);
+    b.onclick = () => openDate(d);
+    li.appendChild(b); ol.appendChild(li);
+    if (rowObserver) rowObserver.observe(li); else fillRow(li);
+  });
+  if (opened) track("archive-open", { days: past.length, unsolved: past.filter((d) => !sv[d] && !ar[d]).length });
+}
 
 let tt;
 function toast(m) { const t = $("toast"); t.textContent = m; t.classList.add("show"); clearTimeout(tt); tt = setTimeout(() => t.classList.remove("show"), 2200); }
@@ -787,6 +1049,7 @@ document.addEventListener("keydown", (e) => {
   if (e.metaKey || e.ctrlKey || e.altKey) return;
   if (!$("modal").hidden) { if (e.key === "Escape") $("modal").hidden = true; return; }
   if (!$("helpMenu").hidden) { if (e.key === "Escape") closeMenu(); return; }
+  if (!$("archiveView").hidden) { if (e.key === "Escape") $("archClose").click(); return; }
   if (!ready || !S) return;
   if (!S.started && !solved && e.key === "Enter") { $("start").click(); e.preventDefault(); return; }
   if (/^[a-zA-Z]$/.test(e.key)) { typeLetter(e.key.toUpperCase()); e.preventDefault(); }
@@ -799,6 +1062,7 @@ document.addEventListener("keydown", (e) => {
   else if (e.key === " ") { if (canPlay()) { tapCell(sel); e.preventDefault(); } }
 });
 
+if (PREVIEW) $("archiveBtn").hidden = true;
 state.migrateLegacy();
 sendPageview();
 if (!state.available) track("storage-unavailable");
