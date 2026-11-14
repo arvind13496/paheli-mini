@@ -2,7 +2,7 @@
 
 The single source of truth for every chat and Claude Code session working on Paheli. Read it before starting. Update it before finishing. If something here is wrong or out of date, fix it here rather than working around it.
 
-Last updated: 14 Nov 2026, by the web Claude Code session (levels code for Midi and Mega, v1.9.0).
+Last updated: 14 Nov 2026, by the web Claude Code session (first week of Midi and Mega puzzles).
 
 ## Where everything lives
 
@@ -46,12 +46,13 @@ Shared contracts (the puzzle feed format, `puzzles/manifest.json`, saved-data ke
 | Port the Aasaan clue to iOS | iOS session | paheli-ios | Prompt handed over 12 Nov; not confirmed done |
 | iOS port of the archive and stamp card | iOS session | paheli-ios | Pending: starts after the web PR merges. `PlayerStore` mirrors the two new keys; see the spec's build plan step 6 |
 | Midi and Mega on the web, code (v1.9.0): per-level feed, tools, saved data, landing screen, per-level archive and stamps | Web session | branch `claude/levels-live` (PR) | Waiting for Arvind to merge. Changes nothing for players until a level is published |
-| First week of Midi and Mega puzzles (7 days each, checks plus blind test-solve) | Web session | not started | Next, after the code PR. A level goes live when its batch merges; Arvind plays both in a preview first |
+| First week of Midi and Mega puzzles, 18 to 24 Nov (7 each; Mega has 8 cryptic clues a day) | Web session | branch `levels-week1` (PR) | Checker, GK source check and blind test-solve done. Waiting for Arvind to play the preview and merge. Needs the code PR (#18) merged first. Merging this is the launch: both levels show from 18 Nov |
 | iOS port of levels | iOS session | paheli-ios | Pending: after the web code merges. Feed paths, manifest `levels`, and per-level keys are in "Shared saved-data keys" and "Feed" below |
 | Player flow with levels | Web session | Figma file above | Landing screen, level cards, result with "Up next" and reminder: proposals, not built |
 
 ## Next up (in order)
 
+0. Second week of Midi and Mega (25 Nov to 1 Dec): must be merged by 21 Nov, or the 22 Nov nightly check fails for both levels (fewer than 3 future days). Mega needs more grid layouts: six of the first seven share one diamond layout.
 1. Batch b005 (Mini, 26 Nov to 2 Dec), must be merged by 22 Nov, or the 23 Nov nightly check fails (fewer than 3 future days).
 2. Reconcile the two reminder plans (see "Needs a decision"), then build the opt-in nudge and return tracking (plan step 1b).
 3. First week of Midi and Mega puzzles; Arvind plays both in a preview; publish (this is the launch). Then weekly batches per level, each at least 7 days ahead.
