@@ -79,11 +79,15 @@ v1 is scoped to its **first month**. After four weekly batches, Arvind reviews t
 
 Cookie-free Umami can't track individual returning players. The `streak` value sent with each solve is the stand-in for retention.
 
+## Decisions after approval
+
+*   **14 Nov 2026: past puzzles get an archive, plus a monthly stamp card.** Arvind reversed the non-goal "An archive of past puzzles. A missed day is gone." Anyone can play any past Mini from #1 (29 Oct 2026) to yesterday. Archive solves are saved under their own keys (`paheli:v1:archive`, `paheli:v1:archive-progress`) and never count toward streaks, so `streaks()` is unchanged. Share text says "(archive)" with no streak. Analytics events gain `mode` (`daily` or `archive`), plus a new `archive-open` event. The stamp card shows each month's days as stamps of that day's black-square pattern. Spec: claude.ai doc "Paheli Mini: archive spec", https://claude.ai/artifact/HSQ2QGqQq7gWd68RrxskTy. Shipped in web v1.7.0; iOS ports it after.
+
 ## Non-Goals
 
 *   Leaderboards or in-app friends. Sharing to WhatsApp is the v1 substitute.
 *   Accounts, sign-in or cross-device streaks. The solved-dates list keeps this possible later.
-*   An archive of past puzzles. A missed day is gone.
+*   ~~An archive of past puzzles. A missed day is gone.~~ Reversed on 14 Nov 2026; see "Decisions after approval".
 *   Grids larger than 5x5, or a weekend special.
 *   A difficulty selector or difficulty labels.
 *   Hindi or other Indian scripts.
@@ -294,6 +298,8 @@ Three localStorage keys, each re-read before every write so two tabs can't overw
 | `paheli:v1:settings` | `{ "autocheck": false }` |
 | `paheli:v1:solves` | `{ "<date>": { at, sec, hints, checks, reveals, auto } }`, kept forever (about 60 bytes a day) |
 | `paheli:v1:progress` | One in-progress puzzle: `{ date, hash, letters[25], elapsedMs, started, hints[], ok[], wrong[], rev[], checks, reveals, usedAuto }` |
+| `paheli:v1:archive` | Added 14 Nov 2026. Archive solves (past days played later), same shape as `solves`. Never read by `streaks()` |
+| `paheli:v1:archive-progress` | Added 14 Nov 2026. One in-progress archive puzzle, same shape as `progress`; the last one played wins |
 
 *   `hash` is computed by the app with `gridHash(grid)`. Progress for a different grid is thrown away.
 *   **Progress belongs to one date.** These rules stop a stale tab from wiping or overwriting another tab's newer puzzle:
@@ -529,7 +535,7 @@ https://arvind13496.github.io/paheli-mini/?utm_source=whatsapp&utm_medium=share
 ## Future Improvements
 
 *   **Accounts and cross-device streaks:** upload `paheli:v1:solves` and merge by date.
-*   **Archive:** past files already exist. An archive needs a list page, and its solves must not count toward streaks.
+*   **Archive:** built in v1.7.0 (see "Decisions after approval"). Still to come: an archive tab per level once Midi and Complex ship, and a month share from the stamp card.
 *   **Server-side release (Alternative C):** once leaderboards arrive.
 *   **Automatic generation:** through the paid Claude API, with approval only for flagged puzzles.
 *   **Google Sheets review (Alternative F).**

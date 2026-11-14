@@ -22,6 +22,21 @@ Run on a phone (390 px wide) and on desktop. For local checks, run `python3 -m h
 - [ ] A private window shows "Streaks can't be saved in this browser", and the share text has no streak.
 - [ ] With two tabs open, solving in one tab doesn't erase the other's solve.
 
+### Archive and stamp card (v1.7.0)
+- [ ] The calendar icon in the header opens the Archive (`#archive`) before and after today's solve. A running timer pauses; Back returns to the puzzle with Resume, or to the result card if today is solved.
+- [ ] The Archive shows one stamp card per month (newest first), then every past published day newest first: "No. N · Sat 31 Oct", the title, and a state (Unplayed, In progress, Solved on the day, Solved in archive · time). Today and future dates are not listed.
+- [ ] Stamps: a day solved on the day is a full marigold stamp of its black-square pattern; a day solved in the archive is lighter with a dashed edge; a missed day is blank with no text; today is outlined; future and no-puzzle days are flat and can't be tapped.
+- [ ] Tapping a stamp opens that day's result, a blank past day opens archive play, and today opens the daily game.
+- [ ] Archive play (`?play=2026-10-31`) shows "#3 · Sat 31 Oct · Archive" under the masthead and "Archive · Sat 31 Oct" on the start card.
+- [ ] Solving an archive day: the result card has no streak line, the sub-line ends "· Archive", the buttons are "Next unplayed day" and "Play today's paheli", and the share text reads "Paheli Mini #3 · <title> (archive)", has no streak and ends with `utm_campaign=archive`.
+- [ ] After an archive solve, today's streak is unchanged, and the day shows "Solved in archive" in the list and a dashed stamp.
+- [ ] Start today's puzzle, type a letter, open an archive day and type in it, then go back to today: today's letters and time are still there (and the archive day's letters are still there when reopened).
+- [ ] A day solved on the day, opened from the archive, shows its old result with "Solved on the day" and "Play again". Play again starts an empty grid; solving it saves nothing (the old time stays).
+- [ ] `?play=` with today's or a future date, or an unpublished date, opens today's puzzle and drops `play` from the address bar.
+- [ ] After winning today, this month's stamp card shows under the streak line, with an "Archive" link.
+- [ ] With a puzzle file blocked in devtools, its archive row shows "Couldn't load" with Retry; offline, unloaded rows grey out with "Needs a connection".
+- [ ] Live: Umami shows `archive-open` (days, unsolved), and `puzzle-start` / `puzzle-solve` carry `mode` (`daily` or `archive`); archive solves send `streak` as null.
+
 - [ ] CUJ 4: in a tab left open on the result card past midnight, the countdown is replaced by "Play today's paheli".
 - [ ] Midnight in an open tab: returning to an unstarted puzzle reloads it, and a started one shows the "A new paheli is out" toast.
 - [ ] CUJ 5: with the device time zone set to London, the India date and puzzle still show.

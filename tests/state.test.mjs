@@ -95,3 +95,56 @@ test("storage that throws on write is unavailable but harmless", () => {
   solve(st, "2026-10-29");
   assert.deepEqual(st.streaks(["2026-10-29"], "2026-10-29"), { current: 0, best: 0 });
 });
+
+// ---------- archive ----------
+const STATS = { sec: 90, hints: 0, checks: 0, reveals: 0, auto: false };
+const DAYS = ["2026-10-29", "2026-10-30", "2026-10-31", "2026-11-01"];
+
+test("an archive solve leaves streaks() unchanged, even for a missed day", () => {
+  const st = createState(memoryStorage());
+  ["2026-10-29", "2026-11-01"].forEach((d) => solve(st, d));
+  const before = st.streaks(DAYS, "2026-11-01");
+  st.recordArchiveSolve("2026-10-30", STATS);
+  st.recordArchiveSolve("2026-10-31", STATS);
+  assert.deepEqual(st.streaks(DAYS, "2026-11-01"), before);
+  assert.deepEqual(before, { current: 1, best: 1 });
+  assert.equal(st.getSolve("2026-10-30"), null, "archive solves never land in solves");
+  assert.equal(st.getArchiveSolve("2026-10-30").sec, 90);
+});
+
+test("archive solves are stored under paheli:v1:archive, merged by date across tabs", () => {
+  const storage = memoryStorage();
+  const a = createState(storage), b = createState(storage);
+  a.recordArchiveSolve("2026-10-29", STATS);
+  b.recordArchiveSolve("2026-10-30", STATS);
+  const raw = JSON.parse(storage.getItem("paheli:v1:archive"));
+  assert.deepEqual(Object.keys(raw).sort(), ["2026-10-29", "2026-10-30"]);
+  assert.equal(storage.getItem("paheli:v1:solves"), null);
+});
+
+test("archive progress and today's progress don't overwrite each other", () => {
+  const st = createState(memoryStorage());
+  st.saveProgress({ date: "2026-11-01", hash: "t", letters: ["T"] });
+  st.saveArchiveProgress({ date: "2026-10-30", hash: "a", letters: ["A"] });
+  assert.equal(st.getProgress("2026-11-01", "t").letters[0], "T");
+  assert.equal(st.getArchiveProgress("2026-10-30", "a").letters[0], "A");
+  st.saveProgress({ date: "2026-11-01", hash: "t", letters: ["U"] });
+  assert.equal(st.getArchiveProgress("2026-10-30", "a").letters[0], "A");
+  // Solving the archive day clears only the archive slot; solving today clears only today's.
+  st.recordArchiveSolve("2026-10-30", STATS);
+  assert.equal(st.getArchiveProgress("2026-10-30", "a"), null);
+  assert.equal(st.getProgress("2026-11-01", "t").letters[0], "U");
+  st.saveArchiveProgress({ date: "2026-10-31", hash: "b", letters: ["B"] });
+  solve(st, "2026-11-01");
+  assert.equal(st.getProgress("2026-11-01", "t"), null);
+  assert.equal(st.getArchiveProgress("2026-10-31", "b").letters[0], "B");
+});
+
+test("the archive progress slot holds the last archive day played, older or newer", () => {
+  const st = createState(memoryStorage());
+  st.saveArchiveProgress({ date: "2026-10-31", hash: "a", letters: [] });
+  st.saveArchiveProgress({ date: "2026-10-29", hash: "b", letters: [] });
+  assert.equal(st.archiveProgressDate(), "2026-10-29");
+  assert.equal(st.getArchiveProgress("2026-10-31", "a"), null);
+  assert.equal(st.getArchiveProgress("2026-10-29", "x"), null, "a changed grid hash drops progress");
+});
