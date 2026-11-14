@@ -1,6 +1,8 @@
 #!/usr/bin/env node
-// Paheli Mini checker. Batch mode: node tools/check.mjs batches/<id>.json
+// Paheli checker. Batch mode: node tools/check.mjs batches/<id>.json
 // Published mode: node tools/check.mjs puzzles/ [--buffer 3] [--used]
+// Feed layout: Mini lives at puzzles/<date>.json with manifest { launch, dates }. Midi and Mega live at
+// puzzles/<level>/<date>.json with manifest.levels.<level> = { launch, dates }.
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -11,8 +13,15 @@ import { todayIST, addDays } from "../lib/dates.js";
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const REPEAT_WINDOW_DAYS = 14;
 const TAGS = new Set(["R", "GK", "N"]);
-// Levels: Mini is the daily 5x5 (no `level` field). Midi and Complex are bigger; Complex may use cryptic clues (tag C).
-export const LEVEL_SIZE = { mini: 5, midi: 7, complex: 9 };
+// Levels: Mini is the daily 5x5 (no `level` field). Midi and Mega are bigger; Mega may use cryptic clues (tag C).
+export const LEVEL_SIZE = { mini: 5, midi: 7, mega: 9 };
+export const EXTRA_LEVELS = ["midi", "mega"];
+/** { launch, dates } for one level, from the manifest. Mini is the manifest's own top-level fields. */
+export function levelManifest(manifest, level = "mini") {
+  const m = !manifest ? null : level === "mini" ? manifest : manifest.levels && manifest.levels[level];
+  return { launch: (m && m.launch) || null, dates: m && Array.isArray(m.dates) ? m.dates : [] };
+}
+const label = (e) => (e.level && e.level !== "mini" ? `${e.level} ${e.date}` : e.date);
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 // The easier ("Aasaan") clue is required for every puzzle dated from this day on. (The 12 Nov 2026 puzzle went out without one.)
 export const EASY_FROM = "2026-11-13";
@@ -38,9 +47,9 @@ function checkRecord(rec, misspellings = new Map(), { published = false, date = 
   if (!isStr(rec, "title")) errors.push("Missing title");
   if (!isStr(rec, "constructor")) errors.push("Missing constructor");
   const level = rec.level || "mini";
-  if (!LEVEL_SIZE[level]) return { errors: [...errors, `Unknown level "${rec.level}" (use midi or complex, or leave it out for a Mini)`], warnings, answers: [] };
+  if (!LEVEL_SIZE[level]) return { errors: [...errors, `Unknown level "${rec.level}" (use midi or mega, or leave it out for a Mini)`], warnings, answers: [] };
   const shape = validateShape(rec.grid, [LEVEL_SIZE[level]]);
-  const tags = level === "complex" ? new Set([...TAGS, "C"]) : TAGS;
+  const tags = level === "mega" ? new Set([...TAGS, "C"]) : TAGS;
   if (shape.length) return { errors: [...errors, ...shape], warnings, answers: [] };
 
   const clues = rec.clues && typeof rec.clues === "object" ? rec.clues : {};
@@ -103,7 +112,7 @@ function repeatErrors(entry, others) {
   return errs;
 }
 
-/** Loads published puzzles from a folder. Returns { manifest, entries: [{date, record, file}], errors }. */
+/** Loads published puzzles from a folder, all levels. Returns { manifest, entries: [{date, level?, record}], errors }. */
 export function loadPublished(dir) {
   const errors = [];
   const manifestPath = path.join(dir, "manifest.json");
@@ -111,30 +120,39 @@ export function loadPublished(dir) {
   let manifest;
   try { manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8")); } catch (e) { return { manifest: null, entries: [], errors: ["manifest.json is not valid JSON"] }; }
   const entries = [];
-  for (const name of fs.readdirSync(dir).filter((f) => /^\d{4}-\d{2}-\d{2}\.json$/.test(f)).sort()) {
-    const date = name.slice(0, 10);
-    try {
-      const file = JSON.parse(fs.readFileSync(path.join(dir, name), "utf8"));
-      if (file.date !== date) errors.push(`${name}: date inside the file is ${file.date}`);
-      entries.push({ date, record: readPuzzleFile(file) });
-    } catch (e) {
-      errors.push(`${name}: could not be read (${e.message})`);
+  for (const level of ["mini", ...EXTRA_LEVELS]) {
+    const sub = level === "mini" ? dir : path.join(dir, level);
+    if (!fs.existsSync(sub)) continue;
+    for (const name of fs.readdirSync(sub).filter((f) => /^\d{4}-\d{2}-\d{2}\.json$/.test(f)).sort()) {
+      const date = name.slice(0, 10), shown = level === "mini" ? name : `${level}/${name}`;
+      try {
+        const file = JSON.parse(fs.readFileSync(path.join(sub, name), "utf8"));
+        if (file.date !== date) errors.push(`${shown}: date inside the file is ${file.date}`);
+        const record = readPuzzleFile(file);
+        if (level === "mini") { delete record.level; entries.push({ date, record }); }
+        else entries.push({ date, level, record: { ...record, level } });
+      } catch (e) {
+        errors.push(`${shown}: could not be read (${e.message})`);
+      }
     }
   }
   return { manifest, entries, errors };
 }
 
 /** Batch mode. records: plaintext batch records; published: [{date, record}]; today: "YYYY-MM-DD". */
-export function checkBatch(records, published, today, misspellings = loadMisspellings(), manifestDates = null) {
+export function checkBatch(records, published, today, misspellings = loadMisspellings(), manifestDates = null, manifest = null) {
   const errors = [], warnings = {}, skipped = [];
-  const publishedDates = new Set(manifestDates || published.map((p) => p.date));
-  const pubEntries = published.map((p) => ({ date: p.date, level: p.record.level, answers: buildPuzzle(p.record.grid).slots.map((s) => s.answer) }));
+  const lvOf = (x) => x.level || (x.record && x.record.level) || "mini";
+  const publishedKeys = new Set(published.filter((p) => !(manifestDates && lvOf(p) === "mini")).map((p) => `${lvOf(p)} ${p.date}`));
+  for (const d of manifestDates || []) publishedKeys.add(`mini ${d}`);
+  for (const lv of EXTRA_LEVELS) for (const d of levelManifest(manifest, lv).dates) publishedKeys.add(`${lv} ${d}`);
+  const pubEntries = published.map((p) => ({ date: p.date, level: lvOf(p), answers: buildPuzzle(p.record.grid).slots.map((s) => s.answer) }));
   const batchDates = new Set();
   const checked = [];
   for (const rec of records) {
     const date = rec && rec.date;
-    if (!rec.level && publishedDates.has(date)) { skipped.push(date); continue; }
-    const tag = date || "(no date)";
+    if (publishedKeys.has(`${(rec && rec.level) || "mini"} ${date}`)) { skipped.push(label({ level: rec.level, date })); continue; }
+    const tag = date ? label({ level: rec.level, date }) : "(no date)";
     if (typeof date !== "string" || !DATE_RE.test(date)) errors.push(`${tag}: date must be YYYY-MM-DD`);
     else {
       if (date <= today) errors.push(`${tag}: date must be after today (${today})`);
@@ -148,7 +166,7 @@ export function checkBatch(records, published, today, misspellings = loadMisspel
     checked.push({ date, level: rec.level, answers: r.answers });
   }
   const all = [...pubEntries, ...checked];
-  for (const c of checked) repeatErrors(c, all).forEach((e) => errors.push(`${c.date}: ${e}`));
+  for (const c of checked) repeatErrors(c, all).forEach((e) => errors.push(`${label(c)}: ${e}`));
   return { errors, warnings, skipped };
 }
 
@@ -156,25 +174,32 @@ export function checkBatch(records, published, today, misspellings = loadMisspel
 export function checkPublished(dir, { today = todayIST(), buffer = 0 } = {}) {
   const { manifest, entries, errors } = loadPublished(dir);
   if (!manifest) return { errors };
-  const dates = Array.isArray(manifest.dates) ? manifest.dates : [];
-  const fileDates = entries.map((e) => e.date);
-  const mSet = new Set(dates), fSet = new Set(fileDates);
-  for (const d of dates) if (!fSet.has(d)) errors.push(`manifest lists ${d} but puzzles/${d}.json is missing or unreadable`);
-  for (const d of fileDates) if (!mSet.has(d)) errors.push(`puzzles/${d}.json is not in the manifest`);
-  if (dates.length && manifest.launch !== [...dates].sort()[0]) errors.push(`manifest launch (${manifest.launch}) is not the earliest date`);
+  for (const k of Object.keys(manifest.levels || {})) if (!EXTRA_LEVELS.includes(k)) errors.push(`manifest has an unknown level "${k}"`);
+  // Every level is checked on its own, so one level running short never hides another's problems.
+  for (const level of ["mini", ...EXTRA_LEVELS]) {
+    const mini = level === "mini", pre = mini ? "" : `${level}: `, dirName = mini ? "puzzles" : `puzzles/${level}`;
+    const listed = mini || !!(manifest.levels && manifest.levels[level]);
+    const { launch, dates } = levelManifest(manifest, level);
+    const fileDates = entries.filter((e) => (e.level || "mini") === level).map((e) => e.date);
+    const mSet = new Set(dates), fSet = new Set(fileDates);
+    for (const d of dates) if (!fSet.has(d)) errors.push(`${pre}manifest lists ${d} but ${dirName}/${d}.json is missing or unreadable`);
+    // A level taken out of the manifest (paused) may keep its files.
+    if (listed) for (const d of fileDates) if (!mSet.has(d)) errors.push(`${dirName}/${d}.json is not in the manifest`);
+    if (dates.length && launch !== [...dates].sort()[0]) errors.push(`${pre}manifest launch (${launch}) is not the earliest date`);
+    if (buffer && listed) {
+      const future = dates.filter((d) => d > today).length;
+      if (launch && today >= launch && !mSet.has(today)) errors.push(`${pre}No puzzle published for today (${today})`);
+      if (future < buffer) errors.push(`${pre}Only ${future} future day(s) published; the minimum is ${buffer}`);
+    }
+  }
   const misspellings = loadMisspellings();
   const checked = [];
   for (const e of entries) {
     const r = checkRecord(e.record, misspellings, { published: true, date: e.date });
-    r.errors.forEach((x) => errors.push(`${e.date}: ${x}`));
-    checked.push({ date: e.date, level: e.record.level, answers: r.answers });
+    r.errors.forEach((x) => errors.push(`${label(e)}: ${x}`));
+    checked.push({ date: e.date, level: e.level, answers: r.answers });
   }
-  for (const c of checked) repeatErrors(c, checked).forEach((x) => errors.push(`${c.date}: ${x}`));
-  if (buffer) {
-    const future = dates.filter((d) => d > today).length;
-    if (manifest.launch && today >= manifest.launch && !mSet.has(today)) errors.push(`No puzzle published for today (${today})`);
-    if (future < buffer) errors.push(`Only ${future} future day(s) published; the minimum is ${buffer}`);
-  }
+  for (const c of checked) repeatErrors(c, checked).forEach((x) => errors.push(`${label(c)}: ${x}`));
   return { errors };
 }
 
@@ -204,8 +229,8 @@ function main(argv) {
     const batch = JSON.parse(fs.readFileSync(target, "utf8"));
     if (!Array.isArray(batch.records)) { console.error("Not a batch file: expected a \"records\" array"); return 1; }
     const loaded = fs.existsSync(path.join(puzzlesDir, "manifest.json")) ? loadPublished(puzzlesDir) : { entries: [], manifest: null };
-    const { errors, warnings, skipped } = checkBatch(batch.records, loaded.entries, today, loadMisspellings(), loaded.manifest && loaded.manifest.dates);
-    for (const rec of batch.records) if (warnings[rec.date]) rec.warnings = warnings[rec.date];
+    const { errors, warnings, skipped } = checkBatch(batch.records, loaded.entries, today, loadMisspellings(), loaded.manifest && loaded.manifest.dates, loaded.manifest);
+    for (const rec of batch.records) { const w = warnings[label(rec)]; if (w) rec.warnings = w; }
     fs.writeFileSync(target, JSON.stringify(batch, null, 2) + "\n");
     skipped.forEach((d) => console.log(`${d}: already published, skipped`));
     Object.entries(warnings).forEach(([d, ws]) => ws.forEach((w) => console.log(`warning ${d}: ${w}`)));

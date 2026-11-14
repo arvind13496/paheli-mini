@@ -148,3 +148,40 @@ test("the archive progress slot holds the last archive day played, older or newe
   assert.equal(st.getArchiveProgress("2026-10-31", "a"), null);
   assert.equal(st.getArchiveProgress("2026-10-29", "x"), null, "a changed grid hash drops progress");
 });
+
+// ---------- levels ----------
+test("each level keeps its own solves, progress, archive and streak", () => {
+  const storage = memoryStorage();
+  const mini = createState(storage), midi = createState(storage, "midi"), mega = createState(storage, "mega");
+  ["2026-10-29", "2026-10-30"].forEach((d) => solve(mini, d));
+  solve(midi, "2026-10-30");
+  midi.recordArchiveSolve("2026-10-29", STATS);
+  mini.saveProgress({ date: "2026-10-31", hash: "m", letters: ["M"] });
+  midi.saveProgress({ date: "2026-10-31", hash: "d", letters: ["D"] });
+  mega.saveArchiveProgress({ date: "2026-10-29", hash: "c", letters: ["C"] });
+  const days = ["2026-10-29", "2026-10-30", "2026-10-31"];
+  assert.equal(mini.streaks(days, "2026-10-31").current, 2);
+  assert.equal(midi.streaks(days, "2026-10-31").current, 1);
+  assert.equal(mega.streaks(days, "2026-10-31").current, 0);
+  assert.equal(mini.getProgress("2026-10-31", "m").letters[0], "M");
+  assert.equal(midi.getProgress("2026-10-31", "d").letters[0], "D");
+  assert.equal(midi.progressDate(), "2026-10-31");
+  assert.equal(mega.progressDate(), null);
+  assert.equal(mini.getArchiveSolve("2026-10-29"), null);
+  assert.equal(mini.archiveProgressDate(), null);
+  solve(midi, "2026-10-31");
+  assert.ok(mini.getProgress("2026-10-31", "m"), "a Midi solve keeps the Mini's progress");
+});
+
+test("Mini keeps the original key names; other levels add their name; settings are shared", () => {
+  const storage = memoryStorage();
+  const mini = createState(storage), midi = createState(storage, "midi");
+  solve(mini, "2026-10-29"); solve(midi, "2026-10-29");
+  midi.recordArchiveSolve("2026-10-28", STATS);
+  midi.saveProgress({ date: "2026-10-30", hash: "d" });
+  midi.saveArchiveProgress({ date: "2026-10-27", hash: "d" });
+  midi.setSettings({ autocheck: true });
+  for (const k of ["paheli:v1:solves", "paheli:v1:midi:solves", "paheli:v1:midi:archive", "paheli:v1:midi:progress", "paheli:v1:midi:archive-progress"]) assert.ok(storage.getItem(k), k);
+  assert.equal(mini.getSettings().autocheck, true);
+  assert.throws(() => createState(storage, "giga"));
+});

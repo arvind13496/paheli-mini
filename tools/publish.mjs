@@ -1,13 +1,15 @@
 #!/usr/bin/env node
 // Publishes approved puzzles: node tools/publish.mjs batches/<id>.json review/<id>.xlsx
 // Reads only Status and Notes from the sheet. Content always comes from the batch file. Never commits.
+// Without a sheet: node tools/publish.mjs batches/<id>.json --checked   publishes every record that passes the checker
+// (since 12 Nov 2026 the checks and a blind test-solve replace the review sheet).
+// A record with "level": "midi" or "mega" goes to puzzles/<level>/ and manifest.levels.<level>.
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import ExcelJS from "exceljs";
 import { encode } from "../lib/codec.js";
 import { todayIST } from "../lib/dates.js";
-import { checkBatch, loadPublished } from "./check.mjs";
+import { checkBatch, loadPublished, levelManifest } from "./check.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -20,6 +22,8 @@ function cellText(v) {
 }
 
 export async function readDecisions(sheetPath) {
+  // Loaded only when a sheet is read, so --checked and the tests work without `npm install`.
+  const { default: ExcelJS } = await import("exceljs");
   const wb = new ExcelJS.Workbook();
   await wb.xlsx.readFile(sheetPath);
   const ws = wb.worksheets[0];
@@ -41,46 +45,58 @@ export async function readDecisions(sheetPath) {
 
 export async function publish(batchPath, sheetPath, { today = todayIST(), puzzlesDir = path.join(ROOT, "puzzles") } = {}) {
   const batch = JSON.parse(fs.readFileSync(batchPath, "utf8"));
-  const decisions = await readDecisions(sheetPath);
+  const decisions = sheetPath ? await readDecisions(sheetPath) : null;
   fs.mkdirSync(puzzlesDir, { recursive: true });
   const manifestPath = path.join(puzzlesDir, "manifest.json");
   const manifest = fs.existsSync(manifestPath) ? JSON.parse(fs.readFileSync(manifestPath, "utf8")) : { launch: null, dates: [] };
   const published = fs.existsSync(manifestPath) ? loadPublished(puzzlesDir).entries : [];
-  const publishedDates = new Set(manifest.dates);
+  const lvOf = (r) => r.level || "mini";
+  const tag = (r) => (lvOf(r) === "mini" ? r.date : `${r.level} ${r.date}`);
+  const datesOf = {};
+  const publishedDates = (lv) => (datesOf[lv] ||= new Set(levelManifest(manifest, lv).dates));
 
   const report = { published: [], alreadyPublished: [], notApproved: [], refused: [] };
   const approved = [];
   for (const rec of batch.records) {
-    if (publishedDates.has(rec.date)) { report.alreadyPublished.push(rec.date); continue; }
-    const d = decisions.get(rec.date);
-    if (!d || d.status !== "approved") { report.notApproved.push({ date: rec.date, status: d ? d.status || "(blank)" : "(not in sheet)", notes: d ? d.notes : "" }); continue; }
-    if (rec.date <= today) { report.refused.push({ date: rec.date, reason: `date is not after today (${today})` }); continue; }
+    if (publishedDates(lvOf(rec)).has(rec.date)) { report.alreadyPublished.push(tag(rec)); continue; }
+    const d = decisions ? decisions.get(rec.date) : { status: "approved", notes: "" };
+    if (!d || d.status !== "approved") { report.notApproved.push({ date: tag(rec), status: d ? d.status || "(blank)" : "(not in sheet)", notes: d ? d.notes : "" }); continue; }
+    if (rec.date <= today) { report.refused.push({ date: tag(rec), reason: `date is not after today (${today})` }); continue; }
     approved.push(rec);
   }
 
-  const { errors } = checkBatch(approved, published, today, undefined, manifest.dates);
-  const failed = new Set(approved.filter((r) => errors.some((e) => e.startsWith(`${r.date}:`))).map((r) => r.date));
+  const { errors } = checkBatch(approved, published, today, undefined, manifest.dates, manifest);
+  const failed = new Set(approved.filter((r) => errors.some((e) => e.startsWith(`${tag(r)}:`))).map(tag));
   for (const d of failed) report.refused.push({ date: d, reason: "checker failed" });
 
-  for (const rec of approved.filter((r) => !failed.has(r.date))) {
+  const touched = new Set();
+  for (const rec of approved.filter((r) => !failed.has(tag(r)))) {
+    const lv = lvOf(rec), dir = lv === "mini" ? puzzlesDir : path.join(puzzlesDir, lv);
     const clues = {};
     for (const [id, c] of Object.entries(rec.clues)) clues[id] = { tag: c.tag, clue: c.clue, easy: c.easy, why: c.why };
-    const data = encode({ title: rec.title, constructor: rec.constructor, grid: rec.grid, clues });
-    fs.writeFileSync(path.join(puzzlesDir, `${rec.date}.json`), JSON.stringify({ schema: 1, date: rec.date, data }) + "\n");
-    publishedDates.add(rec.date);
-    report.published.push(rec.date);
+    const data = encode({ ...(lv === "mini" ? {} : { level: lv }), title: rec.title, constructor: rec.constructor, grid: rec.grid, clues });
+    fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(path.join(dir, `${rec.date}.json`), JSON.stringify({ schema: 1, date: rec.date, data }) + "\n");
+    publishedDates(lv).add(rec.date);
+    touched.add(lv);
+    report.published.push(tag(rec));
   }
-  if (report.published.length) {
-    const dates = [...publishedDates].sort();
-    fs.writeFileSync(manifestPath, JSON.stringify({ launch: manifest.launch || dates[0], dates }, null, 2) + "\n");
+  if (touched.size) {
+    // Mini keeps the top-level launch and dates, so older app builds read the manifest unchanged.
+    const out = { launch: manifest.launch || null, dates: manifest.dates || [] };
+    if (touched.has("mini")) { out.dates = [...publishedDates("mini")].sort(); out.launch = manifest.launch || out.dates[0]; }
+    const levels = { ...(manifest.levels || {}) };
+    for (const lv of touched) if (lv !== "mini") { const dates = [...publishedDates(lv)].sort(); levels[lv] = { launch: (manifest.levels && manifest.levels[lv] && manifest.levels[lv].launch) || dates[0], dates }; }
+    if (Object.keys(levels).length) out.levels = levels;
+    fs.writeFileSync(manifestPath, JSON.stringify(out, null, 2) + "\n");
   }
   return { ...report, errors };
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  const [batchPath, sheetPath] = process.argv.slice(2);
-  if (!batchPath || !sheetPath) { console.error("Usage: node tools/publish.mjs batches/<id>.json review/<id>.xlsx"); process.exit(1); }
-  const r = await publish(batchPath, sheetPath);
+  const [batchPath, second] = process.argv.slice(2);
+  if (!batchPath || !second) { console.error("Usage: node tools/publish.mjs batches/<id>.json review/<id>.xlsx | --checked"); process.exit(1); }
+  const r = await publish(batchPath, second === "--checked" ? null : second);
   r.published.forEach((d) => console.log(`published  ${d}`));
   r.alreadyPublished.forEach((d) => console.log(`skipped    ${d} (already published)`));
   r.notApproved.forEach((x) => console.log(`not approved ${x.date}: ${x.status}${x.notes ? ` | ${x.notes}` : ""}`));

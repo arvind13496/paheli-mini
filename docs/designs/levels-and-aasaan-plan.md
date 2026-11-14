@@ -1,6 +1,6 @@
 # Plan: Aasaan clue, three levels, iOS follow-on
 
-Status: plan, agreed 12 Nov 2026. Not yet a reviewed design. The levels part gets a full design doc and a Goldfish review before any build (step 3 below).
+Status: plan, agreed 12 Nov 2026. Update 14 Nov 2026: Arvind chose to build levels straight away, without the step 3 design doc and review, and to launch on the main link. The levels code shipped as web v1.9.0 and follows "Feed", "Rules per level" and "App (web)" below; `docs/STATUS.md` records what was built. The 9x9 level, called "Complex" below, was renamed Mega on 14 Nov (id `mega`). Still open from this plan: the reminder (step 1b), return tracking, and a scheduled weekly batch.
 
 This plan reverses two earlier decisions in `daily-puzzle-system.md`:
 - the Aasaan easier clue, removed in v1.1.0 on 2 Nov, comes back;

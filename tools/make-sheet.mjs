@@ -14,15 +14,17 @@ export const COLUMNS = [
   ["Clue", 42], ["Easier clue", 32], ["Why", 42], ["Source", 28], ["Warnings", 28], ["Self-solve", 18],
   ["Status", 15], ["Notes", 32],
 ];
-const TAG_NAMES = { R: "Riddle", GK: "GK", N: "Pop" };
+const TAG_NAMES = { R: "Riddle", GK: "GK", N: "Pop", C: "Cryptic" };
 
 export async function makeSheet(batchPath, outPath) {
   const batch = JSON.parse(fs.readFileSync(batchPath, "utf8"));
   const manifestPath = path.join(ROOT, "puzzles", "manifest.json");
   const manifest = fs.existsSync(manifestPath) ? JSON.parse(fs.readFileSync(manifestPath, "utf8")) : { launch: null, dates: [] };
-  const published = new Set(manifest.dates || []);
-  const records = batch.records.filter((r) => !published.has(r.date)).sort((a, b) => (a.date < b.date ? -1 : 1));
-  const launch = manifest.launch || [...batch.records.map((r) => r.date)].sort()[0];
+  // Published dates and numbering are per level (Mini, Midi, Mega).
+  const lm = (lv) => (lv === "mini" ? manifest : (manifest.levels && manifest.levels[lv]) || {});
+  const lvOf = (r) => r.level || "mini";
+  const records = batch.records.filter((r) => !(lm(lvOf(r)).dates || []).includes(r.date)).sort((a, b) => (a.date < b.date ? -1 : 1));
+  const launchOf = (lv) => lm(lv).launch || [...batch.records.filter((r) => lvOf(r) === lv).map((r) => r.date)].sort()[0];
 
   const wb = new ExcelJS.Workbook();
   const ws = wb.addWorksheet(`Batch ${batch.batch}`, { views: [{ state: "frozen", ySplit: 1 }] });
@@ -40,8 +42,8 @@ export async function makeSheet(batchPath, outPath) {
       const row = ws.getRow(rowNo++);
       row.values = [
         i === 0 ? rec.date : null,
-        i === 0 ? numberFor(rec.date, launch) : null,
-        i === 0 ? rec.title : null,
+        i === 0 ? numberFor(rec.date, launchOf(lvOf(rec))) : null,
+        i === 0 ? (rec.level ? `${rec.title} (${rec.level})` : rec.title) : null,
         i === 0 ? rec.grid.map((r) => r.replace(/#/g, "■").split("").join(" ")).join("\n") : null,
         s.id, s.answer, TAG_NAMES[c.tag] || c.tag || "",
         c.clue || "", c.easy || "", c.why || "", c.source || "",
