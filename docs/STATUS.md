@@ -2,7 +2,7 @@
 
 The single source of truth for every chat and Claude Code session working on Paheli. Read it before starting. Update it before finishing. If something here is wrong or out of date, fix it here rather than working around it.
 
-Last updated: 14 Nov 2026, by the iOS Claude Code session (iOS bundles the web fonts).
+Last updated: 15 Nov 2026, by the web session (Midi and Mega launch early, from 16 Nov).
 
 ## Where everything lives
 
@@ -35,7 +35,8 @@ Shared contracts (the puzzle feed format, `puzzles/manifest.json`, saved-data ke
 
 ## What's live
 
-- Web app v1.8.0 (7x7 and 9x9 grids can be drawn; merged 14 Nov): daily 5x5 Mini at 00:00 IST, archive of every past Mini with a monthly stamp card (14 Nov), Aasaan clue button (back since 13 Nov), autocheck and check/reveal, streaks on the device, WhatsApp and copy share, report-a-clue, Umami events.
+- Web app v1.9.0 (levels, arvind13496/paheli-mini#18, merged 14 Nov): daily 5x5 Mini, plus Midi (7x7) and Mega (9x9) behind a landing screen with per-level numbering, streaks, archive and stamps. Before that, v1.8.0 (7x7 and 9x9 grids can be drawn): daily 5x5 Mini at 00:00 IST, archive of every past Mini with a monthly stamp card (14 Nov), Aasaan clue button (back since 13 Nov), autocheck and check/reveal, streaks on the device, WhatsApp and copy share, report-a-clue, Umami events.
+- Midi and Mega: first week, 18 to 24 Nov, published (arvind13496/paheli-mini#19, merged 14 Nov). Mega has 8 cryptic clues a day.
 - Puzzles published through 25 Nov (batches b001 to b004). Next batch due: 26 Nov onward (b005), merged by 22 Nov. The nightly check fails when fewer than 3 future days remain.
 - iOS app: runs on Arvind's iPhone only (free signing, reinstall every 7 days). Matches web v1.9.0: the Aasaan clue (paheli-ios `822d728`), the archive and stamp card (arvind13496/paheli-ios#2), and Midi and Mega with the landing (arvind13496/paheli-ios#3), all on paheli-ios `main`. Uses the web fonts (Young Serif, Libre Franklin, Source Serif 4) since arvind13496/paheli-ios#4. Puzzle files are fetched fresh on each launch with an on-device copy for offline. 26 unit tests pass on the iPhone 16.
 
@@ -43,16 +44,16 @@ Shared contracts (the puzzle feed format, `puzzles/manifest.json`, saved-data ke
 
 | Work | Owner | Where | State |
 |---|---|---|---|
-| Midi and Mega on the web, code (v1.9.0): per-level feed, tools, saved data, landing screen, per-level archive and stamps | Web session | branch `claude/levels-live` (PR) | Waiting for Arvind to merge. Changes nothing for players until a level is published |
-| First week of Midi and Mega puzzles, 18 to 24 Nov (7 each; Mega has 8 cryptic clues a day) | Web session | branch `levels-week1` (PR) | Checker, GK source check and blind test-solve done. Waiting for Arvind to play the preview and merge. Needs the code PR (#18) merged first. Merging this is the launch: both levels show from 18 Nov |
+| Midi and Mega launch early: 16 and 17 Nov puzzles (2 each), both levels' launch moved to 16 Nov | Web session | branch `claude/levels-launch-early` (PR) | Checker, GK source check and blind test-solve done. Waiting for Arvind to play the preview and merge. If it merges after 16 Nov starts, drop the days already past and move the launch to the first remaining day |
+| Second week of Midi and Mega, 25 Nov to 1 Dec (7 each; Mega with new grid layouts) | Web session | branch `claude/ecstatic-euclid-58adcd` (arvind13496/paheli-mini#21) | In progress. Must merge by 21 Nov. Rebased on this PR once it merges |
 | Player flow with levels | Web session | Figma file above | Landing screen, level cards, result with "Up next" and reminder: proposals, not built |
 
 ## Next up (in order)
 
-0. Second week of Midi and Mega (25 Nov to 1 Dec): must be merged by 21 Nov, or the 22 Nov nightly check fails for both levels (fewer than 3 future days). Mega needs more grid layouts: six of the first seven share one diamond layout.
+0. Second week of Midi and Mega (25 Nov to 1 Dec), arvind13496/paheli-mini#21: must be merged by 21 Nov, or the 22 Nov nightly check fails for both levels (fewer than 3 future days).
 1. Batch b005 (Mini, 26 Nov to 2 Dec), must be merged by 22 Nov, or the 23 Nov nightly check fails (fewer than 3 future days).
 2. Reconcile the two reminder plans (see "Needs a decision"), then build the opt-in nudge and return tracking (plan step 1b).
-3. First week of Midi and Mega puzzles; Arvind plays both in a preview; publish (this is the launch). Then weekly batches per level, each at least 7 days ahead.
+3. Weekly batches per level after week 2, each at least 7 days ahead.
 4. iOS ports each new web feature after it merges (iOS is at web v1.9.0).
 
 ## Shared saved-data keys
@@ -77,6 +78,7 @@ The iOS `PlayerStore` mirrors these names and JSON shapes.
 
 ## Decisions (newest first)
 
+- 15 Nov: Midi and Mega launch early, from 16 Nov, overriding the 7-days-first rule only in timing (Arvind). The launch PR adds 16 and 17 Nov puzzles and moves both levels' manifest `launch` to 16 Nov, so Midi #1 and Mega #1 are 16 Nov and the first week's puzzles become #3 to #9. 15 Nov was skipped: it was nearly over (IST) when the work started.
 - 14 Nov: The 9x9 level is named **Mega** (was "Complex" in earlier notes and plans). Its id is `mega` everywhere: `?level=mega`, `puzzles/mega/`, manifest `levels.mega`, keys `paheli:v1:mega:*`. Nothing was live under the old name.
 - 14 Nov: Midi and Mega go straight to the main link, as soon as each has 7 days of puzzles: no beta link, no design-doc gate, no accounts or transfer code (streaks stay per browser). Safeguards kept: the manifest off switch, one play-through by Arvind in a preview before launch, at least 7 days of puzzles ahead per level.
 - 14 Nov: Levels in the app (v1.9.0). Address: `?level=mini|midi|mega` (plus `&play=<date>` for that level's archive). With more than one level live and no `level`, the first screen is the landing (three rows with today's status). Each level has its own numbering, streak, in-progress puzzle, archive and stamp card. Share text names the level ("Paheli Midi #4 · ..."). Analytics: `level` on every event, new `landing-open` and `level-pick`. Colours: Mini marigold, Midi azulejo blue, Mega red oxide.
