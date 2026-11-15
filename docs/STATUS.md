@@ -2,7 +2,7 @@
 
 The single source of truth for every chat and Claude Code session working on Paheli. Read it before starting. Update it before finishing. If something here is wrong or out of date, fix it here rather than working around it.
 
-Last updated: 15 Nov 2026, by the web session (Midi and Mega launch early, from 16 Nov).
+Last updated: 15 Nov 2026, by the web session (Midi and Mega launch early from 16 Nov; second week of Midi and Mega).
 
 ## Where everything lives
 
@@ -45,7 +45,7 @@ Shared contracts (the puzzle feed format, `puzzles/manifest.json`, saved-data ke
 | Work | Owner | Where | State |
 |---|---|---|---|
 | Midi and Mega launch early: 16 and 17 Nov puzzles (2 each), both levels' launch moved to 16 Nov | Web session | branch `claude/levels-launch-early` (PR) | Checker, GK source check and blind test-solve done. Waiting for Arvind to play the preview and merge. If it merges after 16 Nov starts, drop the days already past and move the launch to the first remaining day |
-| Second week of Midi and Mega, 25 Nov to 1 Dec (7 each; Mega with new grid layouts) | Web session | branch `claude/ecstatic-euclid-58adcd` (arvind13496/paheli-mini#21) | In progress. Must merge by 21 Nov. Rebased on this PR once it merges |
+| Second week of Midi and Mega, 25 Nov to 1 Dec (7 each; Mega has 8 cryptic clues a day and 7 different grid layouts, none the week-1 diamond) | Web session | branch `claude/ecstatic-euclid-58adcd` (arvind13496/paheli-mini#21) | Checker, GK source check and blind test-solve done. Waiting for Arvind to play the preview and merge. Built on the early-launch PR (#22): merge #22 first. Must merge by 21 Nov |
 | Player flow with levels | Web session | Figma file above | Landing screen, level cards, result with "Up next" and reminder: proposals, not built |
 
 ## Next up (in order)
