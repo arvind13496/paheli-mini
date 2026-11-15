@@ -2,7 +2,7 @@
 
 The single source of truth for every chat and Claude Code session working on Paheli. Read it before starting. Update it before finishing. If something here is wrong or out of date, fix it here rather than working around it.
 
-Last updated: 15 Nov 2026, by the web session (Midi and Mega launch early from 16 Nov; second week of Midi and Mega).
+Last updated: 16 Nov 2026, by the iOS Claude Code session (iOS play screen redesigned for keyboard-up play). Before that: 15 Nov, by the web session (Midi and Mega launch early from 16 Nov; second week of Midi and Mega).
 
 ## Where everything lives
 
@@ -38,7 +38,7 @@ Shared contracts (the puzzle feed format, `puzzles/manifest.json`, saved-data ke
 - Web app v1.9.0 (levels, arvind13496/paheli-mini#18, merged 14 Nov): daily 5x5 Mini, plus Midi (7x7) and Mega (9x9) behind a landing screen with per-level numbering, streaks, archive and stamps. Before that, v1.8.0 (7x7 and 9x9 grids can be drawn): daily 5x5 Mini at 00:00 IST, archive of every past Mini with a monthly stamp card (14 Nov), Aasaan clue button (back since 13 Nov), autocheck and check/reveal, streaks on the device, WhatsApp and copy share, report-a-clue, Umami events.
 - Midi and Mega: first week, 18 to 24 Nov, published (arvind13496/paheli-mini#19, merged 14 Nov). Mega has 8 cryptic clues a day.
 - Puzzles published through 25 Nov (batches b001 to b004). Next batch due: 26 Nov onward (b005), merged by 22 Nov. The nightly check fails when fewer than 3 future days remain.
-- iOS app: runs on Arvind's iPhone only (free signing, reinstall every 7 days). Matches web v1.9.0: the Aasaan clue (paheli-ios `822d728`), the archive and stamp card (arvind13496/paheli-ios#2), and Midi and Mega with the landing (arvind13496/paheli-ios#3), all on paheli-ios `main`. Uses the web fonts (Young Serif, Libre Franklin, Source Serif 4) since arvind13496/paheli-ios#4. Puzzle files are fetched fresh on each launch with an on-device copy for offline. 26 unit tests pass on the iPhone 16.
+- iOS app: runs on Arvind's iPhone only (free signing, reinstall every 7 days). Matches web v1.9.0: the Aasaan clue (paheli-ios `822d728`), the archive and stamp card (arvind13496/paheli-ios#2), and Midi and Mega with the landing (arvind13496/paheli-ios#3), all on paheli-ios `main`. Uses the web fonts (Young Serif, Libre Franklin, Source Serif 4) since arvind13496/paheli-ios#4. Play screen redesigned in Figma and ported (arvind13496/paheli-ios#5, #6): header with the timer centred and pause plus a "more" menu (check, reveal, clear, archive); the grid is pinned and fixed at the column width (361pt on iPhone 16), the same for every clue and on archive days; the clue bar is always two lines tall. The easier-clue button reads "Clue" on iOS (web still says "Aasaan clue"); the tag after use and the toast still say "Aasaan clue". Puzzle files are fetched fresh on each launch with an on-device copy for offline. 26 unit tests pass on the iPhone 16.
 
 ## In flight
 
