@@ -2,7 +2,7 @@
 
 The single source of truth for every chat and Claude Code session working on Paheli. Read it before starting. Update it before finishing. If something here is wrong or out of date, fix it here rather than working around it.
 
-Last updated: 14 Nov 2026, by the iOS Claude Code session (iOS bundles the web fonts).
+Last updated: 15 Nov 2026, by the web session (second week of Midi and Mega).
 
 ## Where everything lives
 
@@ -35,7 +35,8 @@ Shared contracts (the puzzle feed format, `puzzles/manifest.json`, saved-data ke
 
 ## What's live
 
-- Web app v1.8.0 (7x7 and 9x9 grids can be drawn; merged 14 Nov): daily 5x5 Mini at 00:00 IST, archive of every past Mini with a monthly stamp card (14 Nov), Aasaan clue button (back since 13 Nov), autocheck and check/reveal, streaks on the device, WhatsApp and copy share, report-a-clue, Umami events.
+- Web app v1.9.0 (levels, arvind13496/paheli-mini#18, merged 14 Nov): daily 5x5 Mini, and Midi (7x7) and Mega (9x9) from 18 Nov behind a landing screen with per-level numbering, streaks, archive and stamps. Before that, v1.8.0 (7x7 and 9x9 grids can be drawn): daily 5x5 Mini at 00:00 IST, archive of every past Mini with a monthly stamp card (14 Nov), Aasaan clue button (back since 13 Nov), autocheck and check/reveal, streaks on the device, WhatsApp and copy share, report-a-clue, Umami events.
+- Midi and Mega: first week, 18 to 24 Nov, published (arvind13496/paheli-mini#19, merged 14 Nov); both levels go live on 18 Nov. Mega has 8 cryptic clues a day.
 - Puzzles published through 25 Nov (batches b001 to b004). Next batch due: 26 Nov onward (b005), merged by 22 Nov. The nightly check fails when fewer than 3 future days remain.
 - iOS app: runs on Arvind's iPhone only (free signing, reinstall every 7 days). Matches web v1.9.0: the Aasaan clue (paheli-ios `822d728`), the archive and stamp card (arvind13496/paheli-ios#2), and Midi and Mega with the landing (arvind13496/paheli-ios#3), all on paheli-ios `main`. Uses the web fonts (Young Serif, Libre Franklin, Source Serif 4) since arvind13496/paheli-ios#4. Puzzle files are fetched fresh on each launch with an on-device copy for offline. 26 unit tests pass on the iPhone 16.
 
@@ -43,8 +44,7 @@ Shared contracts (the puzzle feed format, `puzzles/manifest.json`, saved-data ke
 
 | Work | Owner | Where | State |
 |---|---|---|---|
-| Midi and Mega on the web, code (v1.9.0): per-level feed, tools, saved data, landing screen, per-level archive and stamps | Web session | branch `claude/levels-live` (PR) | Waiting for Arvind to merge. Changes nothing for players until a level is published |
-| First week of Midi and Mega puzzles, 18 to 24 Nov (7 each; Mega has 8 cryptic clues a day) | Web session | branch `levels-week1` (PR) | Checker, GK source check and blind test-solve done. Waiting for Arvind to play the preview and merge. Needs the code PR (#18) merged first. Merging this is the launch: both levels show from 18 Nov |
+| Second week of Midi and Mega, 25 Nov to 1 Dec (7 each; Mega with new grid layouts and cryptic clues) | Web session | branch `claude/ecstatic-euclid-58adcd` (PR) | Writing. Must merge by 21 Nov |
 | Player flow with levels | Web session | Figma file above | Landing screen, level cards, result with "Up next" and reminder: proposals, not built |
 
 ## Next up (in order)
