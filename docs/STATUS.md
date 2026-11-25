@@ -2,7 +2,7 @@
 
 The single source of truth for every chat and Claude Code session working on Paheli. Read it before starting. Update it before finishing. If something here is wrong or out of date, fix it here rather than working around it.
 
-Last updated: 16 Nov 2026, by the iOS Claude Code session (iOS play screen redesigned for keyboard-up play). Before that: 15 Nov, by the web session (Midi and Mega launch early from 16 Nov; second week of Midi and Mega).
+Last updated: 25 Nov 2026, by the web Claude Code session (Mini batch b005, published late).
 
 ## Where everything lives
 
@@ -37,21 +37,19 @@ Shared contracts (the puzzle feed format, `puzzles/manifest.json`, saved-data ke
 
 - Web app v1.9.0 (levels, arvind13496/paheli-mini#18, merged 14 Nov): daily 5x5 Mini, plus Midi (7x7) and Mega (9x9) behind a landing screen with per-level numbering, streaks, archive and stamps. Before that, v1.8.0 (7x7 and 9x9 grids can be drawn): daily 5x5 Mini at 00:00 IST, archive of every past Mini with a monthly stamp card (14 Nov), Aasaan clue button (back since 13 Nov), autocheck and check/reveal, streaks on the device, WhatsApp and copy share, report-a-clue, Umami events.
 - Midi and Mega: first week, 18 to 24 Nov, published (arvind13496/paheli-mini#19, merged 14 Nov). Mega has 8 cryptic clues a day.
-- Puzzles published through 25 Nov (batches b001 to b004). Next batch due: 26 Nov onward (b005), merged by 22 Nov. The nightly check fails when fewer than 3 future days remain.
+- Mini puzzles published through 2 Dec (batches b001 to b005). b005 went in late, on 25 Nov: the nightly check failed 22 to 25 Nov. Next Mini batch (b006, 3 to 9 Dec) must merge by 29 Nov.
+- Midi and Mega published through 1 Dec. Week 3 (2 to 8 Dec) must merge by 28 Nov.
 - iOS app: runs on Arvind's iPhone only (free signing, reinstall every 7 days). Matches web v1.9.0: the Aasaan clue (paheli-ios `822d728`), the archive and stamp card (arvind13496/paheli-ios#2), and Midi and Mega with the landing (arvind13496/paheli-ios#3), all on paheli-ios `main`. Uses the web fonts (Young Serif, Libre Franklin, Source Serif 4) since arvind13496/paheli-ios#4. Play screen redesigned in Figma and ported (arvind13496/paheli-ios#5, #6): header with the timer centred and pause plus a "more" menu (check, reveal, clear, archive); the grid is pinned and fixed at the column width (361pt on iPhone 16), the same for every clue and on archive days; the clue bar is always two lines tall. The easier-clue button reads "Clue" on iOS (web still says "Aasaan clue"); the tag after use and the toast still say "Aasaan clue". Puzzle files are fetched fresh on each launch with an on-device copy for offline. 26 unit tests pass on the iPhone 16.
 
 ## In flight
 
 | Work | Owner | Where | State |
 |---|---|---|---|
-| Midi and Mega launch early: 16 and 17 Nov puzzles (2 each), both levels' launch moved to 16 Nov | Web session | branch `claude/levels-launch-early` (PR) | Checker, GK source check and blind test-solve done. Waiting for Arvind to play the preview and merge. If it merges after 16 Nov starts, drop the days already past and move the launch to the first remaining day |
-| Second week of Midi and Mega, 25 Nov to 1 Dec (7 each; Mega has 8 cryptic clues a day and 7 different grid layouts, none the week-1 diamond) | Web session | branch `claude/ecstatic-euclid-58adcd` (arvind13496/paheli-mini#21) | Checker, GK source check and blind test-solve done. Waiting for Arvind to play the preview and merge. Built on the early-launch PR (#22): merge #22 first. Must merge by 21 Nov |
 | Player flow with levels | Web session | Figma file above | Landing screen, level cards, result with "Up next" and reminder: proposals, not built |
 
 ## Next up (in order)
 
-0. Second week of Midi and Mega (25 Nov to 1 Dec), arvind13496/paheli-mini#21: must be merged by 21 Nov, or the 22 Nov nightly check fails for both levels (fewer than 3 future days).
-1. Batch b005 (Mini, 26 Nov to 2 Dec), must be merged by 22 Nov, or the 23 Nov nightly check fails (fewer than 3 future days).
+1. Midi and Mega week 3 (2 to 8 Dec) by 28 Nov, and Mini b006 (3 to 9 Dec) by 29 Nov. Then make the weekly batch a scheduled task that opens the puzzle PR for all three levels, so a batch can't be missed again.
 2. Reconcile the two reminder plans (see "Needs a decision"), then build the opt-in nudge and return tracking (plan step 1b).
 3. Weekly batches per level after week 2, each at least 7 days ahead.
 4. iOS ports each new web feature after it merges (iOS is at web v1.9.0).
@@ -78,6 +76,7 @@ The iOS `PlayerStore` mirrors these names and JSON shapes.
 
 ## Decisions (newest first)
 
+- 25 Nov: Batches get a review by an "Indian newspaper crossword editor" agent (fairness, facts, freshness, desi tone, ready-to-use rewrites) on top of the checker, GK source check and blind test-solve. Asked for by Arvind; first used on b005.
 - 15 Nov: Midi and Mega launch early, from 16 Nov, overriding the 7-days-first rule only in timing (Arvind). The launch PR adds 16 and 17 Nov puzzles and moves both levels' manifest `launch` to 16 Nov, so Midi #1 and Mega #1 are 16 Nov and the first week's puzzles become #3 to #9. 15 Nov was skipped: it was nearly over (IST) when the work started.
 - 14 Nov: The 9x9 level is named **Mega** (was "Complex" in earlier notes and plans). Its id is `mega` everywhere: `?level=mega`, `puzzles/mega/`, manifest `levels.mega`, keys `paheli:v1:mega:*`. Nothing was live under the old name.
 - 14 Nov: Midi and Mega go straight to the main link, as soon as each has 7 days of puzzles: no beta link, no design-doc gate, no accounts or transfer code (streaks stay per browser). Safeguards kept: the manifest off switch, one play-through by Arvind in a preview before launch, at least 7 days of puzzles ahead per level.
