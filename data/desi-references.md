@@ -24,13 +24,13 @@ Every batch session reads this before writing clues, uses a few entries each wee
 - **Jailer 2**: Rajinikanth's sequel, the first Tamil film past ₹800 crore worldwide (released 15 Oct). Oct 2026. Answer: JAILER, RAJINI. Source: https://www.khaleejtimes.com/entertainment/jailer-2-first-tamil-film-to-collect-rs-8-billion-global-box-office. Added 2026-11-25.
 - **FA9LA dance**: Akshaye Khanna's unscripted entry dance to Flipperachi's Arabic track, which hit No. 1 on Shazam's global chart. Dec 2025. Answer: AKSHAYE. Source: https://www.shazam.com/artist/flipperachi/1503390813. Added 2026-11-25. Clue the dance and the actor only, never the film (see "Needs Arvind's call").
 - **Taskaree: The Smuggler's Web**: Neeraj Pandey's Netflix series with Emraan Hashmi as a Mumbai airport customs officer, the first Indian series to top Netflix's global non-English TV list. Jan 2026. Answer: TASKAREE. Source: https://en.wikipedia.org/wiki/Taskaree. Added 2026-11-25.
-- **Panchayat Season 5**: back to Phulera on Prime Video, 3 Dec 2026. Answer: PHULERA, SACHIV, SAGA. Source: https://www.khaleejtimes.com/entertainment/panchayat-season-5-release-date (confirmed: premieres 3 Dec). Added 2026-11-25. Used 2026-12-09 (Mini).
+- **Panchayat Season 5**: back to Phulera on Prime Video, 3 Dec 2026. Answer: PHULERA, SACHIV. Source: https://www.khaleejtimes.com/entertainment/panchayat-season-5-release-date (confirmed: premieres 3 Dec). Added 2026-11-25. Used 2026-12-09 (Mini).
 - **Kyunki 2 ends**: Tulsi's reboot ran 29 Jul 2025 to 20 Oct 2026, 450 episodes against a plan of 167. Answer: TULSI. Source: https://www.outlookindia.com/art-entertainment/television/ektaa-kapoor-bids-an-emotional-goodbye-to-kyunki-saas-bhi-kabhi-bahu-thi-2-after-450-episodes. Added 2026-11-25. Clue the show and Tulsi only, not the lead actor.
 
 ### Music and live shows
 - **Arijit quits playback**: "I am calling it off"; he stopped taking new film songs on 27 Jan 2026, two days after his Padma Shri. Answer: ARIJIT. Source: https://www.businesstoday.in/trending/entertainment/story/arijit-singh-retires-from-playback-singing-says-he-will-continue-making-music-independently-513110-2026-01-27. Added 2026-11-25.
 - **Diljit at the Latin Grammys**: first Indian to perform there, singing "Pokito" with Daddy Yankee ("Punjabi aa gaye oye"). Nov 2026. Answer: POKITO. Source: https://www.aninews.in/news/entertainment/music/punjabi-aa-gaye-oye-diljit-dosanjh-performs-at-latin-grammys-2026-with-daddy-yankee16020261113200945/. Added 2026-11-25.
-- **Diljit's Aura India tour**: 7 cities, Delhi (30 Oct) to Lucknow (5 Dec), via Narendra Modi Stadium (21 Nov). Nov 2026. Answer: AURA. Source: https://www.businesstoday.in/india/story/diljit-dosanjh-brings-aura-home-7-city-india-tour-kicks-off-in-delhi-on-nov-1-7th-show-announced-in-chandigarh-559716-2026-10-06 (lists Lucknow on 5 Dec; a 7th Chandigarh show was announced, so don't call Lucknow the last stop). Added 2026-11-25. Used 2026-12-05 (Mini).
+- **Diljit's Aura India tour**: 7 cities, Delhi (30 Oct) to Lucknow (5 Dec), via Narendra Modi Stadium (21 Nov). Nov 2026. Source: https://www.businesstoday.in/india/story/diljit-dosanjh-brings-aura-home-7-city-india-tour-kicks-off-in-delhi-on-nov-1-7th-show-announced-in-chandigarh-559716-2026-10-06 (lists Lucknow on 5 Dec; a 7th Chandigarh show was announced, so don't call Lucknow the last stop). Added 2026-11-25. Used 2026-12-05 (Mini).
 - **Lollapalooza India 2026**: Linkin Park's first India show headlined the festival at Mahalaxmi Race Course, 24 to 25 Jan. Jan 2026. Answer: LOLLA, LINKIN. Source: https://news.livenationentertainment.com/news/linkin-park-playboi-carti-yungblud-and-kehlani-to-headline-lollapalooza-india-2026. Added 2026-11-25.
 - **Hanumankind's HOMERUN tour**: the "Big Dawgs" rapper's homecoming shows in Kochi (18 Jan) and Bengaluru (1 Feb). Jan 2026. Answer: HOMERUN. Source: https://in.eventfaqs.com/2025/12/23/hanumankind-announces-homerun-tour-in-india-set-for-kochi-and-bengaluru-in-early-2026/. Added 2026-11-25.
 - **Tyla in Mumbai**: the South African singer's first India show, with "Mumbai" written in her hair and a bindi. Dec 2025. Answer: TYLA, BINDI. Source: https://www.freepressjournal.in/lifestyle/desi-queen-tyla-south-african-singer-writes-mumbai-on-her-hair-puts-bindi-on-forehead-for-first-india-concert-watch. Added 2026-11-25.
@@ -62,7 +62,7 @@ Every batch session reads this before writing clues, uses a few entries each wee
 - **Women's ODI World Cup 2025**: India beat South Africa by 52 runs at DY Patil, 2 Nov 2025; Deepti Sharma 58 and 5/39, Player of the Tournament. Answer: DEEPTI. Source: https://www.icc-cricket.com/tournaments/womens-cricket-worldcup-2025/news/live-india-south-africa-eye-maiden-title-at-cwc25-final. Added 2026-11-25.
 - **"Chikiri Chikiri"**: A R Rahman song from Ram Charan's *Peddi*; its hook step spawned lakhs of reels. Nov 2025. Answer: CHIKIRI. Source: https://en.wikipedia.org/wiki/Chikiri_Chikiri. Added 2026-11-25.
 - **Croissant = "Prashant"**: a mispronunciation went viral; Britannia renamed its handle and packs. Mar 2025. Answer: PRASHANT. Source: https://www.exchange4media.com/marketing-news/croissant-is-now-prashant-brands-sink-their-teeth-into-the-viral-marketing-trend-141894.html. Added 2026-11-25.
-- **Vishal Mega Mart security guard memes**: "Ek hi sapna, Vishal Mega Mart security guard". May 2025. Answer: GUARD. Source: https://knowyourmeme.com/memes/vishal-mega-mart-security-guard. Added 2026-11-25. Used 2026-12-03 (Mini).
+- **Vishal Mega Mart security guard memes**: "Ek hi sapna, Vishal Mega Mart security guard". May 2025. Source: https://knowyourmeme.com/memes/vishal-mega-mart-security-guard. Added 2026-11-25. Used 2026-12-03 (Mini).
 - **Saiyaara**: Mohit Suri's debutant romance, ₹570 crore plus worldwide. Jul 2025. Answer: SAIYAARA. Source: https://gulfnews.com/entertainment/saiyaara-fever-rages-on-at-the-uae-and-world-box-office-to-become-the-highest-grossing-love-story-in-indian-cinema-1.500216641. Added 2026-11-25.
 - **SRK at the Met Gala**: debut in all-black Sabyasachi with a giant "K" pendant. May 2025. Answer: KING. Source: https://www.thenationalnews.com/lifestyle/2025/05/06/met-gala-shah-rukh-ambani-poonawalla/. Added 2026-11-25.
 - **Jaideep Ahlawat's "Jaadu" dance** in *Jewel Thief*. Apr 2025. Answer: JAADU. Source: https://theprint.in/feature/im-from-haryana-have-danced-a-lot-since-childhood-jaideep-ahlawat-on-viral-dance-clip/2589569. Added 2026-11-25.
@@ -85,7 +85,7 @@ Every batch session reads this before writing clues, uses a few entries each wee
 ## Classics (nostalgia only)
 
 ### Memes and internet
-- **Priya Prakash Varrier's wink** (Feb 2018), from "Manikya Malaraya Poovi" in *Oru Adaar Love*. Answer: WINK, EYES. Source: https://en.wikipedia.org/wiki/Oru_Adaar_Love. Added 2026-11-26. Used 2026-12-04 (Mini).
+- **Priya Prakash Varrier's wink** (Feb 2018), from "Manikya Malaraya Poovi" in *Oru Adaar Love*. Source: https://en.wikipedia.org/wiki/Oru_Adaar_Love. Added 2026-11-26. Used 2026-12-04 (Mini).
 - **Why This Kolaveri Di** (2011): Dhanush's viral song. Answer: WHY. Source: https://en.wikipedia.org/wiki/Why_This_Kolaveri_Di. Added 2026-11-26.
 - **Binod** (2020) and **Rasode mein kaun tha** (2020, Yashraj Mukhate). Added 2026-11-25.
 - **Pawri ho rahi hai** (Feb 2021): a Pakistani clip India adopted. Don't call it desi-origin. Added 2026-11-25.
@@ -101,10 +101,10 @@ Every batch session reads this before writing clues, uses a few entries each wee
 - **Surf Excel "Daag achhe hain"** (English: "Dirt is good"). Used 2026-11-20 (Midi). **Thums Up "Taste the Thunder"**. Used 2026-11-22 (Mega). **Pepsi "Yeh dil maange more"**. Used 2026-11-21 (Midi).
 
 ### Film, TV and OTT
-- **Sarabhai vs Sarabhai** (2004): Maya, the Cuffe Parade matriarch, vs her "middle class" bahu Monisha. Answer: MAYA, MONISHA, ROSESH. Source: https://en.wikipedia.org/wiki/Sarabhai_vs_Sarabhai. Added 2026-11-26. Used 2026-12-04 (Mini).
-- **Piku** (2015): Deepika's Bengali architect and Amitabh's hypochondriac Bhashkor, road trip from Delhi to Kolkata. Answer: PIKU. Source: https://en.wikipedia.org/wiki/Piku. Added 2026-11-26. Used 2026-12-07 (Mini).
-- **Queen** (2014): Rani takes her honeymoon to Paris and Amsterdam alone. Answer: SOLO, RANI. Source: https://en.wikipedia.org/wiki/Queen_(2013_film). Added 2026-11-26. Used 2026-12-08 (Mini).
-- **Desi Boyz** (2011): Akshay Kumar and John Abraham comedy. Answer: DESI. Source: https://en.wikipedia.org/wiki/Desi_Boyz. Added 2026-11-26. Used 2026-12-06 (Mini).
+- **Sarabhai vs Sarabhai** (2004): Maya, the Cuffe Parade matriarch, vs her "middle class" bahu Monisha. Source: https://en.wikipedia.org/wiki/Sarabhai_vs_Sarabhai. Added 2026-11-26. Used 2026-12-04 (Mini).
+- **Piku** (2015): Deepika's Bengali architect and Amitabh's hypochondriac Bhashkor, road trip from Delhi to Kolkata. Source: https://en.wikipedia.org/wiki/Piku. Added 2026-11-26. Used 2026-12-07 (Mini).
+- **Queen** (2014): Rani takes her honeymoon to Paris and Amsterdam alone. Source: https://en.wikipedia.org/wiki/Queen_(2013_film). Added 2026-11-26. Used 2026-12-08 (Mini).
+- **Desi Boyz** (2011): Akshay Kumar and John Abraham comedy. Source: https://en.wikipedia.org/wiki/Desi_Boyz. Added 2026-11-26. Used 2026-12-06 (Mini).
 - **Panchayat** (Phulera, Sachiv ji), **Kota Factory** (Jeetu Bhaiya), **Scam 1992** ("Risk hai toh ishq hai"). Added 2026-11-25.
 - **Mirzapur**: Kaleen Bhaiya, Guddu. Character names only; see "Needs Arvind's call". Added 2026-11-25.
 - **Kyunki Saas Bhi Kabhi Bahu Thi** (2000s): saas-bahu era. Used 2026-11-28 (Mini).
@@ -121,7 +121,7 @@ Every batch session reads this before writing clues, uses a few entries each wee
 ### Everyday India
 - **Orkut, Nokia Snake, STD/PCO booths, Walkman, Nataraj pencils**.
 - **Funskool**: the Madras-born toy brand of 90s childhoods. Answer: FUN. Source: https://en.wikipedia.org/wiki/Funskool. Added 2026-11-26.
-- **Channapatna toys**: lacquered wooden toys from Karnataka's "toy town", with a GI tag. Answer: TOY. Source: https://en.wikipedia.org/wiki/Channapatna_toys. Added 2026-11-26. Used 2026-12-08 (Mini).
+- **Channapatna toys**: lacquered wooden toys from Karnataka's "toy town", with a GI tag. Source: https://en.wikipedia.org/wiki/Channapatna_toys. Added 2026-11-26. Used 2026-12-08 (Mini).
 
 ## Needs Arvind's call
 
