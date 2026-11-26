@@ -2,7 +2,7 @@
 
 The single source of truth for every chat and Claude Code session working on Paheli. Read it before starting. Update it before finishing. If something here is wrong or out of date, fix it here rather than working around it.
 
-Last updated: 25 Nov 2026, by the web Claude Code session (Midi and Mega week 3; references bank; grid filler in the repo).
+Last updated: 26 Nov 2026, by the scheduled weekly-batch task (Mini b006, 3 to 9 Dec).
 
 ## Where everything lives
 
@@ -37,8 +37,8 @@ Shared contracts (the puzzle feed format, `puzzles/manifest.json`, saved-data ke
 
 - Web app v1.9.0 (levels, arvind13496/paheli-mini#18, merged 14 Nov): daily 5x5 Mini, plus Midi (7x7) and Mega (9x9) behind a landing screen with per-level numbering, streaks, archive and stamps. Before that, v1.8.0 (7x7 and 9x9 grids can be drawn): daily 5x5 Mini at 00:00 IST, archive of every past Mini with a monthly stamp card (14 Nov), Aasaan clue button (back since 13 Nov), autocheck and check/reveal, streaks on the device, WhatsApp and copy share, report-a-clue, Umami events.
 - Midi and Mega: first week, 18 to 24 Nov, published (arvind13496/paheli-mini#19, merged 14 Nov). Mega has 8 cryptic clues a day.
-- Mini puzzles published through 2 Dec (batches b001 to b005). b005 went in late, on 25 Nov: the nightly check failed 22 to 25 Nov. Next Mini batch (b006, 3 to 9 Dec) must merge by 29 Nov.
-- Midi and Mega published through 8 Dec once week 3 merges (this PR). Week 4 (9 to 15 Dec) must merge by 5 Dec.
+- Mini puzzles published through 9 Dec once b006 merges (this PR; must merge by 29 Nov). b005 went in late, on 25 Nov: the nightly check failed 22 to 25 Nov. Next Mini batch (10 to 16 Dec) must merge by 6 Dec.
+- Midi and Mega published through 8 Dec (week 3, arvind13496/paheli-mini#25). Week 4 (9 to 15 Dec) must merge by 5 Dec; the 26 Nov weekly run skipped them because they already had 12 future days.
 - iOS app: runs on Arvind's iPhone only (free signing, reinstall every 7 days). Matches web v1.9.0: the Aasaan clue (paheli-ios `822d728`), the archive and stamp card (arvind13496/paheli-ios#2), and Midi and Mega with the landing (arvind13496/paheli-ios#3), all on paheli-ios `main`. Uses the web fonts (Young Serif, Libre Franklin, Source Serif 4) since arvind13496/paheli-ios#4. Play screen redesigned in Figma and ported (arvind13496/paheli-ios#5, #6): header with the timer centred and pause plus a "more" menu (check, reveal, clear, archive); the grid is pinned and fixed at the column width (361pt on iPhone 16), the same for every clue and on archive days; the clue bar is always two lines tall. The easier-clue button reads "Clue" on iOS (web still says "Aasaan clue"); the tag after use and the toast still say "Aasaan clue". Puzzle files are fetched fresh on each launch with an on-device copy for offline. 26 unit tests pass on the iPhone 16.
 
 ## In flight
@@ -49,7 +49,7 @@ Shared contracts (the puzzle feed format, `puzzles/manifest.json`, saved-data ke
 
 ## Next up (in order)
 
-1. Mini b006 (3 to 9 Dec) by 29 Nov. Then the weekly scheduled task that writes all three levels and opens the puzzle PR, so a batch can't be missed again.
+1. Merge the weekly puzzle PR each week (the task opens it on Sunday).
 2. Reconcile the two reminder plans (see "Needs a decision"), then build the opt-in nudge and return tracking (plan step 1b).
 3. Weekly batches per level after week 2, each at least 7 days ahead.
 4. iOS ports each new web feature after it merges (iOS is at web v1.9.0).
@@ -76,6 +76,7 @@ The iOS `PlayerStore` mirrors these names and JSON shapes.
 
 ## Decisions (newest first)
 
+- 26 Nov: Weekly puzzle batches are automated. The scheduled task 'paheli-weekly-batch' (Claude Desktop, Sundays 10:00 IST, Auto mode) writes the next 7 days for Mini, Midi and Mega; runs the checker, GK source check, blind solve and the Indian crossword editor review; updates data/desi-references.md; and opens one PR for Arvind to merge. It never merges. The task prompt lives at ~/.claude/scheduled-tasks/paheli-weekly-batch/SKILL.md.
 - 25 Nov: `data/desi-references.md` is the references bank. Every batch reads it, uses a few entries, records `used` dates and adds new references. Arvind adds entries any time. It was first cross-checked with Grok and Google Antigravity (every item confirmed against major outlets). Items that touch the avoid list sit under "Needs Arvind's call" until he decides.
 - 25 Nov: The grid filler lives in the repo (`tools/fill/`, Python + wordfreq), because session scratchpads get cleared.
 - 25 Nov: Batches get a review by an "Indian newspaper crossword editor" agent (fairness, facts, freshness, desi tone, ready-to-use rewrites) on top of the checker, GK source check and blind test-solve. Asked for by Arvind; first used on b005.
